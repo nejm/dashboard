@@ -1,0 +1,76 @@
+
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="pull-right btn-group">
+            <button class="btn btn-default" ng-click="openModal('ressource','null')">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
+        </div>
+        <h3 class="panel-title">States</h3>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="panel-body">
+            <div ng-repeat="res in ressources">
+                <div class="panel panel-warning">
+                    <div class="panel-heading">
+                        <div class="pull-right btn-group">
+                            <button class="btn btn-default" ng-click="openModal('service',res.ressource.id)">
+                                <span class="glyphicon glyphicon-plus" ></span>
+                            </button>
+                            <!--<button class="btn btn-default">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>-->
+                        </div>
+                        <h3 class="panel-title">{{res.ressource.name}}</h3>
+                        <div style="clear:both;"></div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                      <ul class="list-group list-group-flush" id={{res.ressource.id}}>
+                      </ul>
+                    </div>
+        </div>
+    </div>
+</div>
+<div class="form-group">
+    <button type="button" class="btn btn-default btn-block"
+        ng-click="importer()">Importer</button>
+</div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title">Opérations</h3>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="panel-body">
+      <button type="button" class="btn btn-default btn-block"
+							ng-click="drawCondition('select')">Select</button>
+						<button type="button" class="btn btn-default btn-block"
+							ng-click="drawCondition('where')">Condition</button>
+						<button type="button" class="btn btn-default btn-block"
+							ng-click="drawCondition('join')">Jointure</button>
+    </div>
+</div>
+
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <h3 class="panel-title">Statistiques</h3>
+        <div style="clear:both;"></div>
+    </div>
+    <div class="panel-body">
+      <button type="button" class="btn btn-default btn-block"
+							ng-click="drawStat('tab')">Tableau</button>
+      <button type="button" class="btn btn-default btn-block"
+              ng-click="drawStat('bar')">Bar</button>
+    </div>
+</div>
+
+<button type="button" class="btn btn-default btn-block"
+        ng-click="drawResult()">Résultat</button>
+
+<button type="button" class="btn btn-primary btn-block"
+        ng-click="generateStat()">Tester</button>
+
+

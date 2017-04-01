@@ -1,0 +1,16 @@
+<js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+  <button class="btn btn-default pull-left" ng-click="removeState(state)">
+      <span class="glyphicon glyphicon-trash"></span>
+  </button>
+<h3>{{state.name}}</h3>
+<hr />
+  <div ng-repeat="att in state.attributes">
+    <h4 style="text-align : left; padding-left : 10px">{{att}}</h4>
+  </div>
+  <div style="position:absolute;  top:50%; left:{{position}};">
+      <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
+          <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
+          </js-plumb-connection>
+      </js-plumb-endpoint>
+  </div>
+</js-plumb-object>

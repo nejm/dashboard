@@ -1,0 +1,46 @@
+
+<js-plumb-object state-object="state" ng-style="{ 'left': state.x, 'top': state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+    <button class="btn btn-default pull-left" ng-click="removeState(state)">
+        <span class="glyphicon glyphicon-trash"></span>
+    </button>
+    <button class="btn btn-default disabled pull-right" id="b{{state.idd}}"  ng-click = "addcond('select', state.idd)" style="margin-left : -25px">
+        <span class="glyphicon glyphicon-plus" ></span>
+    </button>
+    <h3 ng-click="setActiveState(state)">{{state.name}}</h3>
+    <hr />
+    <div style="position:absolute; top:50px; right:0px;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="RightMiddle" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle">
+        </js-plumb-endpoint>
+    </div>
+    <div style="position:absolute; top:50px; left:0px;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
+            <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
+            </js-plumb-connection>
+        </js-plumb-endpoint>
+    </div>
+
+    <div  class="row selectcondition" id="{{state.idd}}" ng-repeat="i in state.count track by $index">
+        <div id="selectdiv{{state.idd}}p{{$index}}">
+            <div class="col-sm-5" style="margin-right : -25px">
+                <select name="op"  ng-change="selectAttributes()" id="op0" class="form-control" style="padding : -15px" ng-model="state.Sattributes[$index].op">
+                    <option value=""></option>
+                    <option value="sum">SUM</option>
+                    <option value="avg">AVG</option>
+                    <option value="min">MIN</option>
+                    <option value="max">MAX</option>
+                </select>
+            </div>
+            <div class="col-sm-6">
+                <select name="op" ng-change="selectAttributes()" id="att0" class="form-control" ng-model="state.Sattributes[$index].attribute">
+                    <option></option>
+                    <option ng-repeat="att in state.vattributes track by $index">{{att}}</option>
+                </select>
+            </div>
+            <div class="col-sm-0">
+                <button class="btn btn-default"  id="db{{state.idd}}p{{$index}}}" ng-click = "removecond(state.idd,$index, 'select')" style="margin-left : -25px">
+                    <span class="glyphicon glyphicon-minus" ></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</js-plumb-object>

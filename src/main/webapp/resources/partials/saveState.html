@@ -1,0 +1,70 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="closeModal()">&times;</button>
+    <h4 class="modal-title">Enregistrer</h4>
+</div>
+<div class="modal-body"><!--{{labelsBar.length*20}}-->
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="inputEmail3" class="col-sm-3">Nom</label>
+            <div class="col-sm-6">
+                <input type="text" ng-model="projectName" class="form-control" id="inputEmail3" placeholder="Name">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-3">Add Profile</label>
+            <div class="col-sm-6">
+                <select class="form-control" ng-model="profile">
+                    <option value="aa">
+                        aa
+                    </option >
+                    <option value="bb">
+                        bb
+                    </option>
+                    <option value="cc">
+                        cc
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-default" ng-click="addUser('p',profile)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+        </div>
+        <div>
+            <div >
+                <table class="table table-striped">
+                    <tr ng-repeat="p in profiles track by $index"><td>{{p}}</td></tr>
+                </table>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="inputPassword3" class="col-sm-3">Add User</label>
+            <div class="col-sm-6">
+                <select class="form-control" ng-model="user">
+                    <option value="dd">
+                        dd
+                    </option>
+                    <option value="ff">
+                        ff
+                    </option>
+                </select>
+            </div>
+            <div class="col-sm-3">
+                <button class="btn btn-default" ng-click="addUser('u',user)">
+                    <span class="glyphicon glyphicon-plus"></span>
+                </button>
+            </div>
+        </div>
+        <div>
+            <table class="table table-striped">
+                <tr ng-repeat="u in users track by $index"><td>{{u}}</td></tr>
+            </table>
+        </div>
+    </form>
+
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" ng-click="exporter(projectName)">Enregistrer</button>
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
+</div>

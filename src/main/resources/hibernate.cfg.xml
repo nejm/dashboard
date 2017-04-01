@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE hibernate-configuration PUBLIC
+
+  "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+
+  "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+
+  
+<hibernate-configuration>
+    <session-factory>
+
+  <!-- JDBC connection settings -->
+
+  <property name="connection.driver_class">oracle.jdbc.OracleDriver</property>
+
+  <property name="connection.url">jdbc:oracle:thin:@//localhost:1521/XE</property>
+
+  <property name="connection.username">system</property>
+
+  <property name="connection.password">eddine1992</property>
+
+  
+
+  <!-- JDBC connection pool, use Hibernate internal connection pool -->
+
+  <property name="connection.pool_size">5</property>
+
+
+  <!-- Defines the SQL dialect used in Hiberante's application -->
+
+  <property name="dialect">org.hibernate.dialect.Oracle10gDialect</property>
+
+
+  <!-- Enable Hibernate's automatic session context management -->
+
+  <property name="current_session_context_class">thread</property>
+
+
+  <!-- Disable the second-level cache  -->
+
+  <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
+
+
+  <!-- Display and format all executed SQL to stdout -->
+
+  <property name="show_sql">true</property>
+
+  <property name="format_sql">true</property>
+
+
+  <mapping class="com.smi.model.Users"/>
+    </session-factory>
+    
+</hibernate-configuration>

@@ -1,0 +1,11 @@
+
+    <js-plumb-object state-object="state" ng-style="{ 'left': state.x, 'top': state.y }" class="state_result" ng-mouseenter="setActiveState(state)" >
+      <button class="btn btn-primary pull-left" ng-click="removeState(state)">
+          <span class="glyphicon glyphicon-trash"></span>
+      </button>
+    <h3 style="color: white">Résultat</h3>
+    <div style="position:absolute; top: -10px; left:50%;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="TopCenter" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle">
+        </js-plumb-endpoint>
+    </div>
+    </js-plumb-object>
