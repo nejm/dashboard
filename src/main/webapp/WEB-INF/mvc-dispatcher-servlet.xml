@@ -46,6 +46,9 @@
         <property name="annotatedClasses">
             <list>
                 <value>com.smi.model.Users</value>
+                <value>com.smi.model.Role</value>
+                <value>com.smi.model.Usersandroles</value>
+                <value>com.smi.model.Statistique</value>
             </list>
         </property>
     </bean>
@@ -60,18 +63,24 @@
     <tx:annotation-driven />
     
     <bean id="userDao" class="com.smi.dao.UserDaoImpl">
-         <property name="sessionFactory" ref="sessionFactory">
-         </property>
-     </bean>
+        <property name="sessionFactory" ref="sessionFactory">
+        </property>
+    </bean>
+    <bean id="userandrole" class="com.smi.dao.UserAndRoleImpl">
+        <property name="sessionFactory" ref="sessionFactory">
+        </property>
+    </bean>
+    <bean id="statDao" class="com.smi.dao.StatistiqueDaoImpl"></bean>
     <bean id="userService" class="com.smi.service.ImplUserService"></bean>
-   
-   <bean
+    <bean id="usersService" class="com.smi.service.UserServiceImpl"></bean>
+    <bean id="statService" class="com.smi.service.StatistiqueServiceImpl"></bean>
+    <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix">
             <value>/WEB-INF/pages/</value>
         </property>
         <property name="suffix">
-            <value>.jsp</value>
+            <value>.xhtml</value>
         </property>
     </bean>
 </beans>

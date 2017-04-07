@@ -28,22 +28,19 @@ public class ImplUserService implements UserDetailsService {
 
     final static Logger logger = Logger.getLogger(ImplUserService.class);
 
-    @Autowired
-    UserDao userDao;
+    UserDao userDao = new UserDaoImpl();
     
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         if (name != null && !name.equals("")) {
-            userDao = new UserDaoImpl();
-            System.out.println("fzeoihfozenfoezn"+userDao);
             Users user = userDao.findByUsername(name);
 
             if (user == null) {
                 throw new UsernameNotFoundException("Username not found");
             }
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                    true, true, true, true, grantedAuthorities(name));
+                    true, true, true, true, grantedAuthorities(user.getUserId()));
         } else {
             return null;
         }
@@ -51,9 +48,12 @@ public class ImplUserService implements UserDetailsService {
 
     }
 
-    public List<GrantedAuthority> grantedAuthorities(String name) {
+    public List<GrantedAuthority> grantedAuthorities(long id) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        for(String s : userDao.findRoles(id)){
+            authorities.add(new SimpleGrantedAuthority(s));
+        }
+        
         return authorities;
     }
 

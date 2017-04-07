@@ -28,7 +28,7 @@
                         <option ng-repeat="att in state.leftAttributes">{{att}}</option>
                     </select>
                 </div>
-                <div class="col-sm-3" style="margin-left: -20px;margin-right: -20px;width:89px">
+                <div class="col-sm-3" style="margin-left: -10px">
                     <select ng-model="state.op[$index]" class="form-control">
                         <option selected="">=</option>
                         <option>></option>
@@ -36,13 +36,13 @@
                         <option>!=</option>
                     </select>
                 </div>
-                <div class="col-sm-4">
+                <div class="col-sm-4" style="margin-left: -10px">
                     <select name="op" class="form-control" ng-model="state.sRightAttributes[$index]">
                         <option ng-repeat="att in state.rightAttributes">{{att}}</option>
                     </select>
                 </div>
-                <div class="col-sm-0">
-                    <button class="btn btn-default pull-left" id="join{{state.idd}}p{{$index}}}" ng-click="removecond(state.idd, $index, 'join')">
+                <div class="col-sm-1">
+                    <button class="btn btn-default" style="margin-left: -10px" id="join{{state.idd}}p{{$index}}" ng-click="removecond(state.idd, $index, 'join')">
                         <span class="glyphicon glyphicon-minus"></span>
                     </button>
                 </div>

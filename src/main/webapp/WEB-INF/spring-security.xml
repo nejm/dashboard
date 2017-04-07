@@ -15,7 +15,9 @@
     
     <http  auto-config="true">
         <http-basic />
-        <intercept-url pattern="/home**" access="hasRole('ROLE_ADMIN')"/>	
+        
+        <intercept-url pattern="/home*" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
+        <intercept-url pattern="/new**" access="hasRole('ROLE_ADMIN')"/>	
         <http-basic />
         <form-login 
             login-page="/login" 
@@ -29,7 +31,7 @@
             logout-success-url="/login?logout"
             logout-url="/logout"        />
         
-        <csrf/>
+        <csrf disabled="true"/>
     </http>
     
     <beans:bean id="userService" class="com.smi.service.ImplUserService">
@@ -37,7 +39,5 @@
     <authentication-manager>
         <authentication-provider user-service-ref="userService"/>
     </authentication-manager>
-   
   
-   
 </beans:beans>

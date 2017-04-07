@@ -24,14 +24,14 @@
         <div class="row wherecondition" id="{{state.idd}}" ng-repeat="i in state.count track by $index">
             <div id="wherediv{{state.idd}}p{{$index}}">
                 <div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-4" >
                         <select name="op" id="att0" class="form-control" ng-model="state.attributesWhere[$index].attribute">
                             <option></option>
                             <option ng-repeat="att in state.attributes track by $index">{{att}}</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-3" style="margin-left : -30px">
+                <div class="col-sm-3" style="margin-left: -8px">
                     <select id="op0" class="form-control" ng-model="state.attributesWhere[$index].op" ng-click="disable('0')">
                         <option><</option>
                         <option>></option>
@@ -41,10 +41,10 @@
                         <option>not null</option>
                     </select>
                 </div>
-                <div class="col-sm-4" style="margin-left : -30px">
+                <div class="col-sm-4" style="margin-left: -8px">
                     <input type="text" id="val{{$index}}" ng-model="state.attributesWhere[$index].value" class="form-control input">
                 </div>
-                <div class="col-sm-0">
+                <div class="col-sm-0 pull-right" style="margin-right: 6px">
                     <button class="btn btn-default"  id="where{{state.idd}}p{{$index}}}" ng-click = "removecond(state.idd, $index, 'where')" style="margin-left : -25px">
                         <span class="glyphicon glyphicon-minus" ></span>
                     </button>
