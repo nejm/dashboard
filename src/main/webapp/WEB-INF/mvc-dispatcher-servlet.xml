@@ -35,6 +35,7 @@
         <property name="dataSource" ref="dataSource" />
         <property name="hibernateProperties">
             <props>
+                <prop key="maxwait">10000</prop>
                 <prop key="hibernate.connection.autocommit">true</prop>
                 <prop key="hibernate.show_sql">true</prop>
                 <prop key="hibernate.dialect">
@@ -49,6 +50,7 @@
                 <value>com.smi.model.Role</value>
                 <value>com.smi.model.Usersandroles</value>
                 <value>com.smi.model.Statistique</value>
+                <value>com.smi.model.Statuser</value>
             </list>
         </property>
     </bean>
@@ -70,10 +72,17 @@
         <property name="sessionFactory" ref="sessionFactory">
         </property>
     </bean>
+    
     <bean id="statDao" class="com.smi.dao.StatistiqueDaoImpl"></bean>
+    <bean id="statuserDao" class="com.smi.dao.StatUserImpl"></bean>
+    
+    
     <bean id="userService" class="com.smi.service.ImplUserService"></bean>
     <bean id="usersService" class="com.smi.service.UserServiceImpl"></bean>
     <bean id="statService" class="com.smi.service.StatistiqueServiceImpl"></bean>
+    <bean id="roleService" class="com.smi.service.RoleServiceImpl"></bean>
+    <bean id="statuserService" class="com.smi.service.StatUserServiceImpl"></bean>
+    
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix">

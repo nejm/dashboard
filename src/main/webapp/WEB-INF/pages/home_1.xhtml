@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      ng-app="my2App">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <!-- Meta, title, CSS, favicons, etc. -->
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+        <title>Dashboard</title>
+
+        <!-- Bootstrap -->
+        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/bootstrap/dist/css/bootstrap.min.css" />
+        <!-- Font Awesome -->
+        <link href="/Dashboard/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <!-- Custom Theme Style -->
+        <link href="/Dashboard/resources/css/custom.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/Dashboard/resources/css/card.min.css" rel="stylesheet" type="text/css"/>
+        <link href="/Dashboard/resources/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
+    </head>
+
+    <body class="nav-md" ng-controller="dashboardController" ng-init="init('${user}')">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title" style="border: 0;">
+                            <a href="/home" class="site_title"><span>Dashboard</span></a>
+                        </div>
+
+                        <div class="clearfix"></div>
+
+                        <!-- menu profile quick info -->
+                        <div class="profile clearfix">
+                            <div class="profile_pic">
+                                <img src="/Dashboard/resources/images/img.png" alt="..." class="img-circle profile_img" />
+                            </div>
+                            <div class="profile_info">
+                                <span>Welcome,</span>
+                                <h2>#{user}</h2>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- /menu profile quick info -->
+
+                        <br />
+
+                        <!-- sidebar menu -->
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                            <div class="menu_section">
+                                <h3>General</h3>
+                                <ul class="nav side-menu">
+                                    <li class="active"><a><i class="fa fa-line-chart"></i>Statistique</a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <a  href="/Dashboard/new">
+                                                    Nouvelle Statistique
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="add()">
+                                                    Modifier Statistique
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-user"></i> Utilisateur</a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <a>
+                                                    Nouvel Utilisateur
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a>
+                                                    Modifier Utilisateur
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-address-card"></i> Role</a> 
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <a>
+                                                    Nouveau Role
+
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a ng-click="add()">
+                                                    Modifier Role
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+
+
+
+                                </ul>
+                            </div>
+
+                        </div>
+                        <!-- /sidebar menu -->
+
+                    </div>
+                </div>
+
+                <!-- top navigation -->
+                <div class="top_nav">
+                    <div class="nav_menu">
+                        <nav>
+                            <div class="nav toggle">
+                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                            </div>
+
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="">
+                                    <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <img src="/Dashboard/resources/images/img.png" alt=""  />${user}
+                                        <span class=" fa fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                        <li><a href="javascript:;"> Profile</a></li>
+                                        <li><a href="javascript:formSubmit()"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
+                                    </ul>
+                                </li>
+
+                                <li role="presentation" class="dropdown">
+                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-envelope-o"></i>
+                                        <span class="badge bg-green"></span>
+                                    </a>
+                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                        <li>
+                                            <a>
+                                                <span class="image"><img src="/Dashboard/resources/images/img.png" alt="Profile Image" /></span>
+                                                <span>
+                                                    <span>John Smith</span>
+                                                    <span class="time">3 mins ago</span>
+                                                </span>
+                                                <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="text-center">
+                                                <a>
+                                                    <strong>See All Alerts</strong>
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <!-- /top navigation -->
+
+                <!-- page content -->
+                <div class="right_col" role="main">
+                    <div class="">
+                        <div class="page-title">
+                            <div class="title_left">
+                                <h3>Home</h3>
+                            </div>
+                            <!--<div class="title_right">
+                                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search for..." />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-default" type="button">Go!</button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>-->
+                        </div>
+
+                        <div class="clearfix"></div>
+                        <div class="panel-group" id="accordion">
+                            <!-- accodeon 1 -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title">
+                                        <i style="cursor: pointer" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            <i class="more-less glyphicon glyphicon-plus pull-right"></i>
+                                            My stats
+                                        </i>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse">
+                                    <div class="panel-body">
+                                        <div  ng-repeat="stat in myStats| limitTo:3 track by $index">
+                                            <!-- a card -->
+                                            <div class="col-md-1" ng-if="$index != 0"/>
+                                            <div class="col-md-3 lib-item" data-category="view">
+                                                <div class="lib-panel">
+                                                    <div class="row box-shadow">
+                                                        <div class="col-md-5">
+                                                            <img class="lib-img-show" src="/Dashboard/resources/images/lines.png" />
+
+                                                        </div>
+                                                        <p style="position: absolute;bottom: 10px; left : 10px">
+                                                            {{stat.creationDate| date : 'dd/MM/yyyy'}}
+                                                        </p>
+                                                        <div class="col-md-7">
+                                                            <div class="lib-row lib-header">
+                                                                {{stat.name | limitTo:8}}
+                                                                <div class="lib-header-seperator"></div>
+                                                            </div>
+                                                            <div style=" height: 80px; margin-bottom: 20px; ">
+                                                                <div class="lib-row lib-desc" style="overflow-y: auto">
+                                                                    {{stat.description}}
+
+                                                                </div>
+                                                                <div style="bottom: 0;" class="pull-right">
+                                                                    <a type="button" class="btn btn-sm btn-success" href="/Dashboard/edit/{{stat.id}}">
+                                                                        <i class="fa fa-edit" />
+                                                                    </a>
+                                                                    <a type="button" class="btn btn-sm btn-primary" href="/Dashboard/home/{{stat.id}}" >
+                                                                        <i class="fa fa-search" />
+                                                                    </a>
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- a card -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- accordeon 1 -->
+                            <!-- accodeon 2 -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingTwo">
+                                    <h4 class="panel-title">
+                                        <i style="cursor: pointer" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                                            <i class="more-less glyphicon glyphicon-plus pull-right"></i>
+                                            Partagé avec moi
+                                        </i>
+                                    </h4>
+                                </div>
+                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+                                    <div class="panel-body">
+                                        <div  ng-repeat="stat in myStats| limitTo:3 track by $index">
+                                            <!-- a card -->
+                                            <div class="col-md-1" ng-if="$index != 0"/>
+                                            <div class="col-md-3 lib-item" data-category="view">
+                                                <div class="lib-panel">
+                                                    <div class="row box-shadow">
+                                                        <div class="col-md-5">
+                                                            <img class="lib-img-show" src="/Dashboard/resources/images/lines.png" />
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <div class="lib-row lib-header">
+                                                                {{stat.name}}
+                                                                <div class="lib-header-seperator"></div>
+                                                            </div>
+                                                            <div class="lib-row lib-desc" style="margin-bottom: 20px; height: 80px; overflow-y: auto">
+                                                                {{stat.description}}
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- a card -->
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- accordeon 2 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- /page content -->
+
+                <!-- footer content -->
+                <form action="/Dashboard/logout" method="post" id="logoutForm">
+                    <input type="hidden" name="${_csrf.parameterName}"
+                           value="${_csrf.token}" />
+                </form>
+
+            </div>
+        </div>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
+        <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/custom.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/factory/Stat.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angularController/dashboardController.js"></script>
+        <script>
+
+                                                                            function formSubmit() {
+                                                                                $("#logoutForm").submit();
+                                                                            }
+                                                                            function toggleIcon(e) {
+                                                                                $(e.target)
+                                                                                        .find(".more-less")
+                                                                                        .toggleClass('glyphicon-plus glyphicon-minus');
+                                                                            }
+                                                                            $('.panel-group').on('hidden.bs.collapse', toggleIcon);
+                                                                            $('.panel-group').on('shown.bs.collapse', toggleIcon);
+        </script>
+    </body>
+</html>

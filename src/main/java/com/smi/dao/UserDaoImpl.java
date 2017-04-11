@@ -62,8 +62,10 @@ public class UserDaoImpl implements UserDao {
         createSessionFactory();
         session = sessionFactory.getCurrentSession();
         session.beginTransaction();
-        List<Users> users = new ArrayList<Users>();
-        users = session.createQuery("SELECT u from Users u").list();
+        List<Users> users = session.createQuery("SELECT u from Users u").list();
+        for(Users u : users){
+            u.setPassword("");
+        }
         return users;
 
     }

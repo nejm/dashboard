@@ -16,55 +16,56 @@
                 <textarea ng-model="statistique.description" class="form-control" id="statdesc" />
             </div>
         </div>
+        <hr />
         <div class="form-group">
-            <label for="inputPassword3" class="col-sm-3">Add Profile</label>
+            <label class="col-sm-3">Add Profile</label>
             <div class="col-sm-6">
                 <select class="form-control" ng-model="profile">
-                    <option value="aa">
-                        aa
-                    </option >
+                    <option ng-repeat=" p in allProfiles" value="{{p.roleName}}">
+                        {{p.roleName}}
+                    </option>
                 </select>
             </div>
             <div class="col-sm-3">
-                <button class="btn btn-default" ng-click="addUser('p',profile)">
-                    <span class="glyphicon glyphicon-plus"></span>
+                <button class="btn btn-default" ng-click="addUser('p', profile)">
+                    <span class="fa fa-plus"></span>
                 </button>
             </div>
         </div>
         <div>
             <div>
                 <table class="table table-striped">
-                    <tr ng-repeat="p in profiles track by $index"><td>{{p}}</td></tr>
+                    <tr ng-repeat="p in profiles track by $index"><td>{{p}} <i class="fa fa-close pull-right" ng-click="removeUser(p,'p')" /></td></tr>
                 </table>
             </div>
+            <hr />
         </div>
         <div class="form-group">
             <label for="inputPassword3" class="col-sm-3">Add User</label>
             <div class="col-sm-6">
                 <select class="form-control" ng-model="user">
-                    <option value="dd">
-                        dd
+                    <option ng-repeat="u in allUsers" value="{{u.username}}">
+                        {{u.username}}
                     </option>
-                    <option value="ff">
-                        ff
-                    </option>
+
                 </select>
             </div>
             <div class="col-sm-3">
-                <button class="btn btn-default" ng-click="addUser('u',user)">
-                    <span class="glyphicon glyphicon-plus"></span>
+                <button class="btn btn-default" ng-click="addUser('u', user)">
+                    <span class="fa fa-plus"></span>
                 </button>
             </div>
         </div>
         <div>
             <table class="table table-striped">
-                <tr ng-repeat="u in users track by $index"><td>{{u}}</td></tr>
+                <tr ng-repeat="u in users track by $index"><td>{{u}}<i class="fa fa-close pull-right" ng-click="removeUser(u,'u')"></i></td></tr>
             </table>
         </div>
     </form>
-
+</div>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-primary" ng-click="exporter()">Enregistrer</button>
+    <button type="button" class="btn btn-primary" ng-click="exporter()" ng-if="!edit">Enregistrer</button>
+    <button type="button" class="btn btn-primary" ng-click="exporter()" ng-if="edit">Modifier</button>
     <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
 </div>

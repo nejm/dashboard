@@ -2,6 +2,7 @@
 package com.smi.dao;
 
 import com.smi.model.Role;
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -40,6 +41,17 @@ public class RoleDaoImpl implements RoleDao{
         session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Query q = session.getNamedQuery("Role.findByRoleId").setLong("roleId", id);
+        
         return (Role) q.uniqueResult();
+    }
+
+    @Override
+    public List<Role> findAll() {
+        createSessionFactory();
+        session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        List<Role> roles = session.getNamedQuery("Role.findAll").list();
+        
+        return roles;
     }
 }

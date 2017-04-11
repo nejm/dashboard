@@ -1,12 +1,15 @@
 myApp.factory('Stat', function ($resource) {
-    return $resource("/Dashboard/rest/statistique", {id: "@id"}, {
+    return $resource("/Dashboard/rest/statistique/:id", {
         update: {
             method: 'PUT'
         }
     });
 })
         .controller('FirstExampleController', function ($rootScope, $scope, $http, $localStorage, $uibModal, $compile, Stat) {
-            $scope.ws = false;
+            $scope.allUsers = [];
+            $scope.myStats = [];
+            $scope.allProfiles = [];
+            $scope.edit = false;
             $scope.statistique = new Stat();
             $scope.idProject = false;
             $scope.username = "";
@@ -129,6 +132,12 @@ myApp.factory('Stat', function ($resource) {
                 $scope.ressource = {};
                 $scope.closeModal();
             };
+
+            $scope.addExistingService = function (service, resource) {                
+                $('#' + resource.ressource.id)
+                        .append($compile("<li><a ng-click=drawService('" + service.service.id + "')>" +
+                                service.service.name + "<i class='fa fa-clone pull-right'></i></a></li>")($scope));
+            }
 
             $scope.addService = function (service, res) {
                 $scope.services[service.id] = {
@@ -861,10 +870,20 @@ myApp.factory('Stat', function ($resource) {
                     if ($scope.stateObjects[i].idd == id)
                         return i;
                 }
+            
             }
             $scope.init = function (id) {
+               
+                $http.get("/Dashboard/rest/roles").then(function (response) {
+                    $scope.allProfiles = response.data;
+                });
+                $http.get("/Dashboard/rest/users").then(function (response) {
+                    $scope.allUsers = response.data;
+                });
                 if (id != 0) {
+                    $scope.edit = true;
                     $scope.idProject = id;
+                    $scope.statistique.id = id;
                     $http.get("/Dashboard/rest/statistique/" + id).then(function (response) {
                         $scope.statistique.name = response.data.name;
                         $scope.statistique.description = response.data.description;
@@ -875,14 +894,17 @@ myApp.factory('Stat', function ($resource) {
                         $scope.ressources = data.ressources;
                         $scope.links = data.links;
                         let s = data.services;
+
                         setTimeout(function () {
-                            for (var i = 0; i < s.length; i++) {
-                                $scope.services[s[i].id] = s[i].data;
-                                $scope.addService(s[i]);
+                            for (var i = 0; i < $scope.ressources.length; i++) {
+                                console.log($scope.ressources[i])
+                                for (var j = 0; j < s.length; j++) {
+                                    $scope.services[s[j].id] = s[j].data;
+                                    console.log(s[j]);
+                                    $scope.addExistingService($scope.services[s[j].id], $scope.ressources[i]);
+                                }
                             }
                         }, 500);
-
-
                     });
                 } else {
                     $scope.dashboardName = 'New Statistique';
@@ -947,10 +969,33 @@ myApp.factory('Stat', function ($resource) {
             $scope.exporter = function () {
                 $scope.statistique.createdBy = $scope.username;
                 $scope.statistique.creationDate = Date.now();
-                $scope.statistique.query = angular.toJson($scope.query);
-                console.log($scope.statistique);
-                $scope.statistique.$save();
-
+                if ($scope.edit) {
+                    $http.post("/Dashboard/rest/statistique/edit",$scope.statistique).then(function(response){
+                        console.log(response.data);
+                        $scope.closeModal();
+                    });
+                    
+                } else {
+                    $http.get("/Dashboard/rest/statistiques/"+ $scope.statistique.name).then(function(response){
+                       let data = response.data;
+                       if(data){
+                           swal("Erreur!", "Choisissez un autre nom !!", "error");
+                       }else{
+                           $http.post("/Dashboard/rest/statistique",$scope.statistique).then(function(response){
+                               let newStatId = response.data;
+                               let share = {
+                                   id_stat : newStatId,
+                                   users : $scope.users,
+                                   profiles : $scope.profiles
+                               }
+                               
+                               $http.post("/Dashboard/rest/statistique/partage",share);
+                           });
+                           
+                           $scope.closeModal();
+                       }
+                    });
+                }
             }
             $scope.saveState = function (username) {
                 let services = [];
@@ -997,8 +1042,6 @@ myApp.factory('Stat', function ($resource) {
                     }
                     $scope.generateStat(false);
                 });
-
-
             }
 
             $scope.new = 20;
@@ -1011,21 +1054,26 @@ myApp.factory('Stat', function ($resource) {
                     $scope.new = 0;
                 });
             }
-
+            
+            $scope.removeUser = function(u,type){
+                if(type == 'u') 
+                    $scope.users.splice($scope.users.indexOf(u),1);
+                else
+                    $scope.profiles.splice($scope.profiles.indexOf(u),1);
+            }
+            
             $scope.users = [];
             $scope.profiles = [];
             $scope.user = "";
             $scope.profile = "";
             $scope.addUser = function (type, obj) {
-                console.log(obj);
-                if (type === 'u') {
-                    $scope.users.push(obj);
-                } else {
-                    $scope.profiles.push(obj);
-                }
+                if(obj != "")
+                    if (type === 'u') {
+                        if( $scope.users.indexOf(obj)== -1)
+                            $scope.users.push(obj);
+                    } else if( $scope.profiles.indexOf(obj) == -1){
+                        $scope.profiles.push(obj);
+                    }
             }
-            $scope.log = '';
-            $scope.$watch('log', function () {
-                console.log($scope.log);
-            })
+
         });

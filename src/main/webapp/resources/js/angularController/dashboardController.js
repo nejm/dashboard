@@ -6,9 +6,18 @@ var my2App = angular.module('my2App', ['ngResource'])
                 }
             });
         })
-        .controller('dashboardController', function ($scope, $http, Stat) {
-            console.log(Stat.query());
-
+        .controller('dashboardController', function ($scope, $http, Stat, $location) {
+            
+            $scope.myStats = [];
+            
+            $scope.init = function(user){
+                
+                $http.get("/Dashboard/rest/statistique/created/"+user).then(function(response){
+                   $scope.myStats = response.data;
+                   console.log($scope.myStats);
+                });
+            }
+            
             $scope.add = function () {
 
                 stat = new Stat();
@@ -22,6 +31,17 @@ var my2App = angular.module('my2App', ['ngResource'])
                 stat.$save();
             }
             
+            $scope.edit = function(id){
+                console.log("edit : "+id);
+                $location.path('/Dashboard/edit/'+id);
+            }
+            $scope.see = function(id){
+                console.log("see : "+id);
+            }
+            
+            $scope.saveDashboard = function(){
+                console.log($('.grid-snap'));
+            }
         });
 
 

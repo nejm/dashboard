@@ -30,10 +30,10 @@ public class HelloController {
     @RequestMapping(value = "/home", method = RequestMethod.GET)
     public ModelAndView homePage(Principal principal) {
         ModelAndView model = new ModelAndView();
-        model.addObject("user",principal.getName().toString().toUpperCase());
+        model.addObject("user",principal.getName().toUpperCase());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         model.addObject("roles",authentication.getAuthorities());
-        model.setViewName("home");
+        model.setViewName("home_1");
         return model;
     }
     
@@ -55,10 +55,11 @@ public class HelloController {
         return model;
     }
     
-    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    @RequestMapping(value = "/create/new", method = RequestMethod.GET)
     public ModelAndView usersPage(Principal principal) {
         ModelAndView model = new ModelAndView();
-        model.setViewName("users");
+        model.addObject("user",principal.getName().toUpperCase());
+        model.setViewName("dashboard");
         return model;
     }
     

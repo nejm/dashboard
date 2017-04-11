@@ -55,7 +55,7 @@ public class Statistique implements Serializable {
     @Basic(optional = false)
     @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private BigDecimal id;
+    private Long id;
     @Column(name = "NAME")
     private String name;
     @Column(name = "DESCRIPTION")
@@ -73,15 +73,15 @@ public class Statistique implements Serializable {
     public Statistique() {
     }
 
-    public Statistique(BigDecimal id) {
+    public Statistique(Long id) {
         this.id = id;
     }
 
-    public BigDecimal getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(BigDecimal id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

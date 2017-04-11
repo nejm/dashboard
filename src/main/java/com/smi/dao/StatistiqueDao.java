@@ -12,7 +12,9 @@ public interface StatistiqueDao {
     
     Statistique findById(long id);
     List<Statistique> findAll();
-    void add(Statistique s);
+    Long add(Statistique s);
     void edit(Statistique s);
-    List<Statistique> findStat();
+    boolean exist(String name);
+    List<Statistique> findMyStat(String name);
+    List<Statistique> findAvailableStat(String name);
 }
