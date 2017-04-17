@@ -9,6 +9,7 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("statDao")
 public class StatistiqueDaoImpl implements StatistiqueDao {
@@ -18,6 +19,7 @@ public class StatistiqueDaoImpl implements StatistiqueDao {
     SessionFactory sessionFactory;
 
     @Override
+    @Transactional
     public List<Statistique> findAll() {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery("Statistique.findAll");
@@ -25,6 +27,7 @@ public class StatistiqueDaoImpl implements StatistiqueDao {
     }
 
     @Override
+    @Transactional
     public Long add(Statistique s) {
         Session session = sessionFactory.getCurrentSession();
         session.save(s);
@@ -32,6 +35,7 @@ public class StatistiqueDaoImpl implements StatistiqueDao {
     }
 
     @Override
+    @Transactional
     public void edit(Statistique s) {
         Session session = sessionFactory.getCurrentSession();
         session.merge(s);
@@ -43,6 +47,7 @@ public class StatistiqueDaoImpl implements StatistiqueDao {
     }
     
     @Override
+    @Transactional
     public List<Statistique> findMyStat(String name){
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery("Statistique.findByCreatedBy").setString("createdBy", name);
@@ -51,6 +56,7 @@ public class StatistiqueDaoImpl implements StatistiqueDao {
     }
 
     @Override
+    @Transactional
     public Statistique findById(long id) {
         Session session = sessionFactory.getCurrentSession();
         Query q = session.getNamedQuery("Statistique.findById").setLong("id", id);
@@ -58,6 +64,7 @@ public class StatistiqueDaoImpl implements StatistiqueDao {
     }
 
     @Override
+    @Transactional
     public boolean exist(String name) {
         Session session = sessionFactory.getCurrentSession();
         List<Statistique> list = session.getNamedQuery("Statistique.findByName").setString("name", name).list();

@@ -8,17 +8,17 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Nejm
  */
 public class RoleDaoImpl implements RoleDao{
-        final static Logger logger = Logger.getLogger(UserDaoImpl.class);
+    final static Logger logger = Logger.getLogger(UserDaoImpl.class);
 
     private  SessionFactory sessionFactory;
 
-    private Session session;
     
     private UserAndRoleImpl userAndRoleDao;
     
@@ -38,7 +38,7 @@ public class RoleDaoImpl implements RoleDao{
     @Override
     public Role findById(long id) {
         createSessionFactory();
-        session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Query q = session.getNamedQuery("Role.findByRoleId").setLong("roleId", id);
         
@@ -48,10 +48,20 @@ public class RoleDaoImpl implements RoleDao{
     @Override
     public List<Role> findAll() {
         createSessionFactory();
-        session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         List<Role> roles = session.getNamedQuery("Role.findAll").list();
-        
+
         return roles;
+    }
+    
+    @Override
+    public Role findByName(String name) {
+        createSessionFactory();
+        Session session = sessionFactory.getCurrentSession();
+        session.beginTransaction();
+        Role role = (Role) session.getNamedQuery("Role.findByRoleName").setString("roleName", name).uniqueResult();
+        
+        return role;
     }
 }

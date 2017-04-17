@@ -17,15 +17,12 @@ myApp.factory('Stat', function ($resource) {
             $scope.zoomlevel = 64;
             $scope.pos_x = 214;
             $scope.pos_y = 148;
-
             $scope.ressource = {};
             $scope.service = {};
             $scope.modalInstance;
-
             $scope.barx = "";
             $scope.bary = "";
             $scope.barAttributes = [];
-
             $scope.ressources = [];
             $scope.services = [];
             $scope.conditions = [];
@@ -36,9 +33,7 @@ myApp.factory('Stat', function ($resource) {
             $scope.links = [];
             $scope.index = 0;
             $rootScope.stateObjects = [];
-
             $scope.stateObjects = [];
-
             $scope.targetEndpointStyle = {
                 endpoint: "Dot",
                 paintStyle: {fillStyle: "#7AB02C", radius: 11},
@@ -46,7 +41,6 @@ myApp.factory('Stat', function ($resource) {
                 isTarget: true,
                 //isSource:true
             };
-
             $scope.sourceEndpointStyle = {
                 endpoint: "Dot",
                 paintStyle: {
@@ -71,7 +65,6 @@ myApp.factory('Stat', function ($resource) {
                     strokeStyle: "#216477"
                 }
             };
-
             $scope.unflatten = function (data) {
                 "use strict";
                 if (Object(data) !== data || Array.isArray(data))
@@ -90,7 +83,6 @@ myApp.factory('Stat', function ($resource) {
                 }
                 return resultholder[""] || resultholder;
             };
-
             $scope.flatten = function (data) {
                 var result = {};
                 function recurse(cur, prop) {
@@ -132,8 +124,7 @@ myApp.factory('Stat', function ($resource) {
                 $scope.ressource = {};
                 $scope.closeModal();
             };
-
-            $scope.addExistingService = function (service, resource) {                
+            $scope.addExistingService = function (service, resource) {
                 $('#' + resource.ressource.id)
                         .append($compile("<li><a ng-click=drawService('" + service.service.id + "')>" +
                                 service.service.name + "<i class='fa fa-clone pull-right'></i></a></li>")($scope));
@@ -155,7 +146,6 @@ myApp.factory('Stat', function ($resource) {
                 }
                 //get the attribute from a REST
                 var url = $scope.services[service.id].service.url + $scope.services[service.id].service.suburl;
-
                 $scope.services[service.id].service.attributes = [];
                 $http.get(url).then(function (response) {
 
@@ -169,9 +159,7 @@ myApp.factory('Stat', function ($resource) {
                 }, function (err) {
                     console.log('Fail to Load REST WS : ' + url);
                 });
-
                 var nom = service.name;
-
                 $('#' + uid)
                         .append($compile("<li><a ng-click=drawService('" + service.id + "')>" +
                                 service.name + "<i class='fa fa-clone pull-right'></i></a></li>")($scope));
@@ -188,7 +176,6 @@ myApp.factory('Stat', function ($resource) {
                     $('#canvasbody').height(nb * 25);
                 }
             };
-
             $scope.drawCondition = function (type) {
                 if (typeof type === 'undefined')
                     return;
@@ -280,7 +267,6 @@ myApp.factory('Stat', function ($resource) {
                         ressourceId: qr.id,
                         ressource: qr.name
                     });
-
                     return $scope.query;
                 } else {
                     let r = $scope.getBro(qr);
@@ -333,7 +319,6 @@ myApp.factory('Stat', function ($resource) {
                 $scope.query.ressources = [];
                 $scope.generateStatistique(t);
                 let url1 = "", url2 = "";
-
                 for (var elem in $scope.services) {
                     if ($scope.services[elem].service.id == $scope.query.ressources[0].ressourceId) {
                         url1 = $scope.services[elem].service.url + $scope.services[elem].service.suburl;
@@ -411,7 +396,6 @@ myApp.factory('Stat', function ($resource) {
 
                         a = true;
                         joined = true;
-
                         res = $.map(res, function (obj1) {
                             let obja = {};
                             for (e in obj1) {
@@ -427,16 +411,13 @@ myApp.factory('Stat', function ($resource) {
                                 }
                                 return obj2;
                             });
-
                         $scope.statAttributes = $scope.getAttributes($scope.query.ressources[0].ressourceId).concat($scope.getAttributes($scope.query.ressources[1].ressourceId))
                         let array = $.map($scope.query.operation[i].attributes, function (value) {
                             return [$scope.query.ressources[0].ressource + ": " + value];
                         });
-
                         let array2 = $.map($scope.query.operation[i].attributes2, function (value) {
                             return [$scope.query.ressources[1].ressource + ": " + value];
                         });
-
                         let arrayop = $.map($scope.query.operation[i].operation, function (value) {
                             return [value];
                         });
@@ -462,7 +443,6 @@ myApp.factory('Stat', function ($resource) {
                     if ($scope.query.operation[i].type == 'select') {
 
                         res = select(res, $scope.query.operation[i].attributes);
-
                         var array = $.map($scope.query.operation[i].attributes, function (value) {
                             return [value];
                         });
@@ -536,7 +516,6 @@ myApp.factory('Stat', function ($resource) {
                     scope: $scope
                 });
             };
-
             $scope.closeModal = function () {
                 if (typeof $scope.modalInstance !== 'undefined' && $scope.modalInstance !== null) {
                     $scope.modalInstance.close();
@@ -547,7 +526,6 @@ myApp.factory('Stat', function ($resource) {
             $scope.removeIndex = function (index, object) {
                 object.splice(index, 1);
             };
-
             $scope.isSourceState = function (id) {
                 for (var i = 0; i < $scope.links.length; i++) {
                     if ($scope.links[i].link.source.idd == id)
@@ -583,7 +561,6 @@ myApp.factory('Stat', function ($resource) {
                     if (state.name === 'join')
                         $scope.links.splice($scope.isTargetState(state.idd)[1], 1);
                     var index = $scope.stateObjects.indexOf(state);
-
                     if (index !== -1) {
                         $scope.stateObjects.splice(index, 1);
                     }
@@ -591,7 +568,6 @@ myApp.factory('Stat', function ($resource) {
                     sweetAlert("Oops...", "Cannot delete parent state!", "error");
                 }
             };
-
             //$scope.stateObjects = [];
 
             /*if(typeof $localStorage.stateObjects !== 'undefined'){
@@ -618,7 +594,7 @@ myApp.factory('Stat', function ($resource) {
                     $scope.stateObjects.push({
                         'id': 0,
                         'idd': idd,
-                        'name': "Résultat",
+                        'name': "RÃ©sultat",
                         'template': 'result',
                         'attributes': attributes,
                         'type': 'f',
@@ -693,17 +669,13 @@ myApp.factory('Stat', function ($resource) {
                     'y': 500
                 });
             };
-
             $scope.stateConnections = [];
-
             $scope.activeState = null;
-
             $scope.setActiveState = function (state) {
                 $scope.activeState = state;
                 ////console.log(state);
                 return state;
             };
-
             $scope.copyAttribute = function (attribute) {
 
                 return attribute;
@@ -733,16 +705,13 @@ myApp.factory('Stat', function ($resource) {
                         }
                     });
                 });
-
                 $scope.links.push({'link': {
                         'source': $scope.getState($rootScope.connections.source),
                         'target': $scope.getState($rootScope.connections.target)
                     }});
                 let source = $scope.getState($rootScope.connections.source);
                 let target = $scope.getState($rootScope.connections.target);
-
                 $('#b' + target.idd).removeClass('disabled');
-
                 if (target.type == 'o') {
                     $scope.attributes = $scope.copyAttribute(source.attributes);
                     target.attributes = $scope.copyAttribute(source.attributes);
@@ -870,15 +839,21 @@ myApp.factory('Stat', function ($resource) {
                     if ($scope.stateObjects[i].idd == id)
                         return i;
                 }
-            
+
             }
             $scope.init = function (id) {
-               
+
                 $http.get("/Dashboard/rest/roles").then(function (response) {
                     $scope.allProfiles = response.data;
+                    console.log($scope.allProfiles);
                 });
                 $http.get("/Dashboard/rest/users").then(function (response) {
                     $scope.allUsers = response.data;
+                    console.log($scope.allUsers);
+                });
+
+                $http.get("/Dashboard/rest/rolesanduser").then(function (response) {
+                    $scope.usersAndRoles = response.data;
                 });
                 if (id != 0) {
                     $scope.edit = true;
@@ -888,13 +863,12 @@ myApp.factory('Stat', function ($resource) {
                         $scope.statistique.name = response.data.name;
                         $scope.statistique.description = response.data.description;
                         $scope.dashboardName = response.data.name;
-                        console.log()
+
                         let data = angular.fromJson(response.data.data);
                         $scope.stateObjects = data.stateObjects;
                         $scope.ressources = data.ressources;
                         $scope.links = data.links;
                         let s = data.services;
-
                         setTimeout(function () {
                             for (var i = 0; i < $scope.ressources.length; i++) {
                                 console.log($scope.ressources[i])
@@ -939,7 +913,6 @@ myApp.factory('Stat', function ($resource) {
             }
 
             $scope.index = [];
-
             $scope.removecond = function (id, index, type) {
                 console.log(id, index, type)
                 $('#' + type + 'div' + id + 'p' + index).remove();
@@ -947,7 +920,6 @@ myApp.factory('Stat', function ($resource) {
 
             $scope.addcond = function (type, id) {
                 let stateId = $scope.getStateById(id);
-
                 if (typeof $scope.index[id] === 'undefined') {
                     $scope.index[id] = 0;
                 }
@@ -970,30 +942,28 @@ myApp.factory('Stat', function ($resource) {
                 $scope.statistique.createdBy = $scope.username;
                 $scope.statistique.creationDate = Date.now();
                 if ($scope.edit) {
-                    $http.post("/Dashboard/rest/statistique/edit",$scope.statistique).then(function(response){
+                    $http.post("/Dashboard/rest/statistique/edit", $scope.statistique).then(function (response) {
                         console.log(response.data);
                         $scope.closeModal();
                     });
-                    
                 } else {
-                    $http.get("/Dashboard/rest/statistiques/"+ $scope.statistique.name).then(function(response){
-                       let data = response.data;
-                       if(data){
-                           swal("Erreur!", "Choisissez un autre nom !!", "error");
-                       }else{
-                           $http.post("/Dashboard/rest/statistique",$scope.statistique).then(function(response){
-                               let newStatId = response.data;
-                               let share = {
-                                   id_stat : newStatId,
-                                   users : $scope.users,
-                                   profiles : $scope.profiles
-                               }
-                               
-                               $http.post("/Dashboard/rest/statistique/partage",share);
-                           });
-                           
-                           $scope.closeModal();
-                       }
+                    $http.get("/Dashboard/rest/statistiques/" + $scope.statistique.name).then(function (response) {
+                        let data = response.data;
+                        if (data) {
+                            swal("Erreur!", "Choisissez un autre nom !!", "error");
+                        } else {
+                            $http.post("/Dashboard/rest/statistique", $scope.statistique).then(function (response) {
+                                let newStatId = response.data;
+                                let share = {
+                                    id_stat: newStatId,
+                                    users: $scope.users,
+                                    profiles: $scope.profiles
+                                }
+
+                                $http.post("/Dashboard/rest/statistique/partage", share);
+                            });
+                            $scope.closeModal();
+                        }
                     });
                 }
             }
@@ -1008,7 +978,6 @@ myApp.factory('Stat', function ($resource) {
                 }
                 console.log(services);
                 $scope.username = username;
-
                 let data = {
                     stateObjects: $scope.stateObjects,
                     links: $scope.links,
@@ -1029,7 +998,7 @@ myApp.factory('Stat', function ($resource) {
                 });
             }
 
-            $scope.getStat = function (sid) {
+            $scope.getStat = function (sid, rep) {
                 $http.get("/Dashboard/rest/statistique/" + sid).then(function (response) {
                     //console.log(response.data);
                     let sdata = angular.fromJson(response.data.data);
@@ -1040,7 +1009,8 @@ myApp.factory('Stat', function ($resource) {
                     for (var i = 0; i < s.length; i++) {
                         $scope.services[s[i].id] = s[i].data;
                     }
-                    $scope.generateStat(false);
+                    console.log($scope.stateObjects);
+                    $scope.generateStat(rep);
                 });
             }
 
@@ -1054,26 +1024,122 @@ myApp.factory('Stat', function ($resource) {
                     $scope.new = 0;
                 });
             }
-            
-            $scope.removeUser = function(u,type){
-                if(type == 'u') 
-                    $scope.users.splice($scope.users.indexOf(u),1);
+
+            $scope.removeUser = function (u, type) {
+                if (type == 'u')
+                    $scope.users.splice($scope.users.indexOf(u), 1);
                 else
-                    $scope.profiles.splice($scope.profiles.indexOf(u),1);
+                    $scope.profiles.splice($scope.profiles.indexOf(u), 1);
             }
-            
+
             $scope.users = [];
             $scope.profiles = [];
             $scope.user = "";
             $scope.profile = "";
             $scope.addUser = function (type, obj) {
-                if(obj != "")
+                if (obj != "")
                     if (type === 'u') {
-                        if( $scope.users.indexOf(obj)== -1)
-                            $scope.users.push(obj);
-                    } else if( $scope.profiles.indexOf(obj) == -1){
+                        if ($scope.users.indexOf(obj) == -1) {
+                            if ($scope.profiles.length == 0) {
+                                $scope.users.push(obj);
+                                $scope.allUsers.splice($scope.allUsers.indexOf(obj),1);
+                            } else {
+                                let found = false
+                                let u = $scope.usersAndRoles[obj];
+                                for (p in $scope.profiles) {
+                                    if (u.indexOf("ROLE_" + $scope.profiles[p]) != -1) {
+                                        found = true;
+                                    }
+                                }
+                                if (!found) {
+                                    $scope.users.push(obj);
+                                } else {
+                                    swal("Error", "Déja partagé avec cet utilisateur !", "error");
+                                }
+                            }
+
+                        }
+                    } else if ($scope.profiles.indexOf(obj) == -1) {
                         $scope.profiles.push(obj);
                     }
+            }
+
+            /** dashboard methods **/
+
+            $scope.dashboardStatistiques = {};
+            $scope.dashboard = [];
+
+            $scope.initDashboard = function (user) {
+                $http.get("/Dashboard/rest/roles").then(function (response) {
+                    $scope.allProfiles = response.data;
+                });
+                $http.get("/Dashboard/rest/users").then(function (response) {
+                    $scope.allUsers = response.data;
+                });
+
+                $http.get("/Dashboard/rest/rolesanduser").then(function (response) {
+                    $scope.usersAndRoles = response.data;
+                });
+                console.log(user);
+                $scope.username = user;
+                $scope.statistiques = {
+                    my: [
+                        "a", "b"
+                    ],
+                    other: [
+                        {name: "Name 1",
+                            data: ["c", "d"]},
+                        {name: "Name 2",
+                            data: ["e", "f"]}
+                    ]
+
+                }
+            }
+
+            $scope.preview = function (stat) {
+                $scope.getStat("11", true);
+            }
+
+            $scope.addStatToDashboard = function (stat) {
+
+                //if($scope.dashboard.length > 4) return;
+                $scope.dashboard.push(stat);
+                var container = $("<li class='ui-state-default' id='d'" + $scope.dashboard.length + "></li>")
+                var text = $("<div id=" + stat + "></div>");
+                let img = "<img src='/Dashboard/resources/images/lines.png' style='float : left; height : 20%; opacity : 0.2' />";
+                text.append(img);
+                let preview = $("<div style='margin-top : 50px'></div>").append("<button ng-click=\"preview('" + stat + "')\" class='btn btn-primary'>Preview " + stat + "</button>");
+                //let name = $("<div></div>").text("Name");
+                text.append(preview);
+                container.append(text);
+                $('#sortable').append($compile(container)($scope));
+            }
+
+            $scope.saveDashboard = function () {
+
+                $scope.modalInstance = $uibModal.open({
+                    templateUrl: '/Dashboard/resources/partials/saveDashboard.html',
+                    scope: $scope
+                });
+            }
+
+            $scope.exporteDashboard = function () {
+
+                $('#sortable li').each(function (index) {
+                    console.log(this.id, " : ", $('#' + this.id + " div").attr('id'));
+                });
+
+                let dashboardObj = {
+                    name: $scope.dashboard.name,
+                    description: $scope.dashboard.description,
+                    dateCreation: Date.now(),
+                    createdBy: $scope.username
+                };
+
+                console.log(dashboardObj);
+                //$http.post("/Dashboard/rest/dashboard/save",dashboardObj).then(function(response){
+                //  console.log(response.data);
+                //})
             }
 
         });

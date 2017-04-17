@@ -51,6 +51,9 @@
                 <value>com.smi.model.Usersandroles</value>
                 <value>com.smi.model.Statistique</value>
                 <value>com.smi.model.Statuser</value>
+                <value>com.smi.model.Dashboard</value>
+                <value>com.smi.model.DashboardStat</value>
+                <value>com.smi.model.DashboardUser</value>
             </list>
         </property>
     </bean>
@@ -75,6 +78,9 @@
     
     <bean id="statDao" class="com.smi.dao.StatistiqueDaoImpl"></bean>
     <bean id="statuserDao" class="com.smi.dao.StatUserImpl"></bean>
+    <bean id="dashboardstatdao" class="com.smi.dao.DashboardStatDaoImpl"></bean>
+    <bean id="dashboardDao" class="com.smi.dao.DashboardDaoImpl"></bean>
+    <bean id="dashboarduserdao" class="com.smi.dao.DashboardUserDaoImpl"></bean>
     
     
     <bean id="userService" class="com.smi.service.ImplUserService"></bean>
@@ -82,6 +88,7 @@
     <bean id="statService" class="com.smi.service.StatistiqueServiceImpl"></bean>
     <bean id="roleService" class="com.smi.service.RoleServiceImpl"></bean>
     <bean id="statuserService" class="com.smi.service.StatUserServiceImpl"></bean>
+    <bean id="dashboardService" class="com.smi.service.DashboardserviceImpl"></bean>
     
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">

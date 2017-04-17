@@ -56,9 +56,10 @@ public class HelloController {
     }
     
     @RequestMapping(value = "/create/new", method = RequestMethod.GET)
-    public ModelAndView usersPage(Principal principal) {
+    public ModelAndView usersPage(/**Principal principal**/) {
         ModelAndView model = new ModelAndView();
-        model.addObject("user",principal.getName().toUpperCase());
+        //model.addObject("user",principal.getName().toUpperCase());
+        model.addObject("user","NEJM");
         model.setViewName("dashboard");
         return model;
     }

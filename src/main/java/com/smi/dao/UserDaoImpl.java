@@ -14,18 +14,19 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository("userDao")
 public class UserDaoImpl implements UserDao {
 
     final static Logger logger = Logger.getLogger(UserDaoImpl.class);
 
-    private  SessionFactory sessionFactory;
+    private SessionFactory sessionFactory;
 
     private Session session;
-    
+
     private UserAndRoleImpl userAndRoleDao;
-    
+
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
@@ -34,26 +35,26 @@ public class UserDaoImpl implements UserDao {
         this.sessionFactory = sessionFactory;
     }
 
-    private void createSessionFactory(){
-         if(sessionFactory == null)
+    private void createSessionFactory() {
+        if (sessionFactory == null) {
             sessionFactory = new Configuration().configure().buildSessionFactory();
+        }
     }
-    
+
     @Override
     public Users findByUsername(String username) {
         createSessionFactory();
         session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         Query q = session.createQuery("SELECT u from Users u where username = :username").setParameter("username", username);
-        if (q.uniqueResult() == null) {
-            return null;
-        }
+        System.out.println(q.list());
         Users u = (Users) q.uniqueResult();
         return u;
     }
-    
-    public List<String> findRoles(long id){
-        userAndRoleDao = new  UserAndRoleImpl();
+
+    @Override
+    public List<String> findRoles(long id) {
+        userAndRoleDao = new UserAndRoleImpl();
         return userAndRoleDao.findByUser(id);
     }
 
@@ -63,7 +64,7 @@ public class UserDaoImpl implements UserDao {
         session = sessionFactory.getCurrentSession();
         session.beginTransaction();
         List<Users> users = session.createQuery("SELECT u from Users u").list();
-        for(Users u : users){
+        for (Users u : users) {
             u.setPassword("");
         }
         return users;
@@ -74,9 +75,8 @@ public class UserDaoImpl implements UserDao {
     public Users findById(long id) {
         createSessionFactory();
         session = sessionFactory.getCurrentSession();
-        session.beginTransaction();
         Query q = session.createQuery("SELECT u from Users u where id = :id").setParameter("id", id);
-    
+        session.beginTransaction();
         if (q.uniqueResult() == null) {
             return null;
         }

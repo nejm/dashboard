@@ -34,7 +34,6 @@ public class UserAndRoleImpl implements UserAndRoleDao{
 
     private  SessionFactory sessionFactory;
 
-    private Session session;
     
     private RoleDao roleDao;
 
@@ -54,7 +53,7 @@ public class UserAndRoleImpl implements UserAndRoleDao{
     @Override
     public List<String> findByUser(long id){
         createSessionFactory();
-        session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         session.beginTransaction();
         Query q = session.getNamedQuery("Usersandroles.findByUserId").setLong("userId", id);
         Query q2;

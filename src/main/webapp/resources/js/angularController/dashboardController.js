@@ -8,31 +8,20 @@ var my2App = angular.module('my2App', ['ngResource'])
         })
         .controller('dashboardController', function ($scope, $http, Stat, $location) {
             
-            $scope.myStats = [];
-            
+            $scope.states = [];
             $scope.init = function(user){
                 
                 $http.get("/Dashboard/rest/statistique/created/"+user).then(function(response){
                    $scope.myStats = response.data;
                    console.log($scope.myStats);
-                });
+                }); 
             }
             
             $scope.add = function () {
 
-                stat = new Stat();
-                stat.id="4";
-                stat.name = "test 2";
-                stat.description = "bla bla bla";
-                stat.data = "[{a : 5},{b : 2}]";
-                stat.createdBy = "nejm";
-                stat.creationDate = Date.now();
-                console.log(stat);
-                stat.$save();
             }
             
             $scope.edit = function(id){
-                console.log("edit : "+id);
                 $location.path('/Dashboard/edit/'+id);
             }
             $scope.see = function(id){

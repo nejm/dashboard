@@ -19,7 +19,6 @@ import com.smi.dao.UserDao;
 import com.smi.dao.UserDaoImpl;
 import com.smi.model.Users;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,13 +30,22 @@ public class UserServiceImpl implements UserService{
     
     @Override
     public Users findByUsername(String username) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+       return userDao.findByUsername(username);
     }
 
     @Override
-    @Transactional
     public List<Users> findAll() {
        return userDao.findAll();
+    }
+
+    @Override
+    public Users findById(long id) {
+       return userDao.findById(id);
+    }
+
+    @Override
+    public List<String> findRoles(long id) {
+      return  userDao.findRoles(id);
     }
     
 }
