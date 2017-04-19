@@ -35,9 +35,9 @@ public class DashboardStatDaoImpl implements DashboardStatDao{
     
     @Override
     @Transactional
-    public List<Statistique> getByDashboardId(Long id) {
+    public List<DashboardStat> getByDashboardId(Long id) {
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.getNamedQuery("DashboardStat.findByIdDashboard");
+        Query query = session.getNamedQuery("DashboardStat.findByIdDashboard").setLong("idDashboard", id);
         return query.list();
     }
 

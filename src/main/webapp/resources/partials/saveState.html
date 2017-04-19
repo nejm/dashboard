@@ -21,7 +21,7 @@
             <label class="col-sm-3">Add Profile</label>
             <div class="col-sm-6">
                 <select class="form-control" ng-model="profile">
-                    <option ng-repeat=" p in allProfiles" value="{{p.roleName}}">
+                    <option ng-repeat=" p in allProfiles" value="{{p}}">
                         {{p.roleName}}
                     </option>
                 </select>
@@ -35,7 +35,7 @@
         <div>
             <div>
                 <table class="table table-striped">
-                    <tr ng-repeat="p in profiles track by $index"><td>{{p}} <i class="fa fa-close pull-right" ng-click="removeUser(p,'p')" /></td></tr>
+                    <tr ng-repeat="p in profiles track by $index"><td>{{p.roleName}} <i class="fa fa-close pull-right" ng-click="removeUser(p,'p')" /></td></tr>
                 </table>
             </div>
             <hr />
@@ -44,7 +44,7 @@
             <label for="inputPassword3" class="col-sm-3">Add User</label>
             <div class="col-sm-6">
                 <select class="form-control" ng-model="user">
-                    <option ng-repeat="u in allUsers" value="{{u.username}}">
+                    <option ng-repeat="u in allUsers" value="{{u}}">
                         {{u.username}}
                     </option>
 
@@ -58,7 +58,7 @@
         </div>
         <div>
             <table class="table table-striped">
-                <tr ng-repeat="u in users track by $index"><td>{{u}}<i class="fa fa-close pull-right" ng-click="removeUser(u,'u')"></i></td></tr>
+                <tr ng-repeat="u in users track by $index"><td>{{u.username}}<i class="fa fa-close pull-right" ng-click="removeUser(u,'u')"></i></td></tr>
             </table>
         </div>
     </form>

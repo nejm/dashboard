@@ -15,20 +15,20 @@
  */
 package com.smi.service;
 
-import com.smi.dao.DashboardDao;
-import com.smi.model.Dashboard;
+import com.smi.model.DashboardUser;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Service;
 
 /**
  *
  * @author Nejm
  */
-public interface DashboardService {
+public interface DashboardUserService {
 
-    List<Dashboard> getDashboards(String username);
-    Dashboard getDashboard(Long id);
-    Long save(Dashboard dashboard);
+    List<DashboardUser> getByUser(String username);
+
+    List<DashboardUser> getByRole(String role_name);
+
+    Long save(DashboardUser dashboard);
+
+    void edit(DashboardUser dashboard);
 }

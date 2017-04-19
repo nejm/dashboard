@@ -76,10 +76,11 @@
                                                     Nouvel Utilisateur
                                                 </a>
                                             </li>
-                                            <li>
+                                            <li >
                                                 <a>
                                                     Modifier Utilisateur
                                                 </a>
+                                                
                                             </li>
                                         </ul>
                                     </li>
@@ -212,7 +213,7 @@
                                                         </p>
                                                         <div class="col-md-7">
                                                             <div class="lib-row lib-header">
-                                                                {{stat.name | limitTo:8}}
+                                                                {{stat.name| limitTo:8}}
                                                                 <div class="lib-header-seperator"></div>
                                                             </div>
                                                             <div style=" height: 80px; margin-bottom: 20px; ">
@@ -316,6 +317,7 @@
                                                                             }
                                                                             $('.panel-group').on('hidden.bs.collapse', toggleIcon);
                                                                             $('.panel-group').on('shown.bs.collapse', toggleIcon);
+   
         </script>
     </body>
 </html>

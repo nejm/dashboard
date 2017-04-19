@@ -89,6 +89,8 @@
     <bean id="roleService" class="com.smi.service.RoleServiceImpl"></bean>
     <bean id="statuserService" class="com.smi.service.StatUserServiceImpl"></bean>
     <bean id="dashboardService" class="com.smi.service.DashboardserviceImpl"></bean>
+    <bean id="dashboardStatService" class="com.smi.service.DashboardStatServiceImpl"></bean>
+    <bean id="dashboardUserService" class="com.smi.service.DashboardUserServiceImpl"></bean>
     
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">

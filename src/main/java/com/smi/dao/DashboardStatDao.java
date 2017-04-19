@@ -16,7 +16,6 @@
 package com.smi.dao;
 
 import com.smi.model.DashboardStat;
-import com.smi.model.Statistique;
 import java.util.List;
 
 /**
@@ -27,5 +26,5 @@ public interface DashboardStatDao {
     
     Long save(DashboardStat dashboard);
     void edit(DashboardStat dashboard);
-    List<Statistique> getByDashboardId(Long id);
+    List<DashboardStat> getByDashboardId(Long id);
 }

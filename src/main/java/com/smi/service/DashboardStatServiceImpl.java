@@ -15,20 +15,33 @@
  */
 package com.smi.service;
 
-import com.smi.dao.DashboardDao;
-import com.smi.model.Dashboard;
+import com.smi.dao.DashboardStatDao;
+import com.smi.model.DashboardStat;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-/**
- *
- * @author Nejm
- */
-public interface DashboardService {
+@Service("dashboardStatService")
+public class DashboardStatServiceImpl implements DashboardStatService{
 
-    List<Dashboard> getDashboards(String username);
-    Dashboard getDashboard(Long id);
-    Long save(Dashboard dashboard);
+    @Autowired 
+    @Qualifier("dashboardstatdao")
+    DashboardStatDao dashboardStatDao;
+    
+    @Override
+    public Long save(DashboardStat dashboard) {
+        return dashboardStatDao.save(dashboard);
+    }
+
+    @Override
+    public void edit(DashboardStat dashboard) {
+        dashboardStatDao.edit(dashboard);
+    }
+
+    @Override
+    public List<DashboardStat> getByDashboardId(Long id) {
+        return dashboardStatDao.getByDashboardId(id);
+    }
+    
 }

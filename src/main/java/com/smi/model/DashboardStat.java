@@ -16,8 +16,6 @@
 package com.smi.model;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
-import java.math.BigInteger;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -51,9 +49,9 @@ public class DashboardStat implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     @Column(name = "ID_DASHBOARD")
-    private BigInteger idDashboard;
+    private Long idDashboard;
     @Column(name = "ID_STAT")
-    private BigInteger idStat;
+    private Long idStat;
 
     public DashboardStat() {
     }
@@ -70,19 +68,19 @@ public class DashboardStat implements Serializable {
         this.id = id;
     }
 
-    public BigInteger getIdDashboard() {
+    public Long getIdDashboard() {
         return idDashboard;
     }
 
-    public void setIdDashboard(BigInteger idDashboard) {
+    public void setIdDashboard(Long idDashboard) {
         this.idDashboard = idDashboard;
     }
 
-    public BigInteger getIdStat() {
+    public Long getIdStat() {
         return idStat;
     }
 
-    public void setIdStat(BigInteger idStat) {
+    public void setIdStat(Long idStat) {
         this.idStat = idStat;
     }
 

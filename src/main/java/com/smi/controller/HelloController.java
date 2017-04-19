@@ -56,10 +56,19 @@ public class HelloController {
     }
     
     @RequestMapping(value = "/create/new", method = RequestMethod.GET)
-    public ModelAndView usersPage(/**Principal principal**/) {
+    public ModelAndView createDashboard(Principal principal) {
         ModelAndView model = new ModelAndView();
-        //model.addObject("user",principal.getName().toUpperCase());
-        model.addObject("user","NEJM");
+        model.addObject("id",0);
+        model.addObject("user",principal.getName().toUpperCase());
+        model.setViewName("dashboard");
+        return model;
+    }
+    
+    @RequestMapping(value = "/dashboard/{id}", method = RequestMethod.GET)
+    public ModelAndView consulterDashboard(@PathVariable("id") long id, Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toUpperCase());
+        model.addObject("id",id);
         model.setViewName("dashboard");
         return model;
     }

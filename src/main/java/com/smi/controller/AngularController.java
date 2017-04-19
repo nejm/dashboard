@@ -1,16 +1,21 @@
 package com.smi.controller;
 
 import com.smi.model.Dashboard;
+import com.smi.model.DashboardStat;
+import com.smi.model.DashboardUser;
 import com.smi.model.Role;
 import com.smi.model.Statistique;
 import com.smi.model.Statuser;
 import com.smi.model.Users;
 import com.smi.service.DashboardService;
+import com.smi.service.DashboardStatService;
+import com.smi.service.DashboardUserService;
 import com.smi.service.RoleService;
 import com.smi.service.StatUserService;
 import com.smi.service.StatistiqueService;
 import com.smi.service.UserService;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -50,6 +55,14 @@ public class AngularController {
     @Qualifier("dashboardService")
     DashboardService dashboardService;
     
+    @Autowired
+    @Qualifier("dashboardUserService")
+    DashboardUserService dashboardUserService;
+    
+    @Autowired
+    @Qualifier("dashboardStatService")
+    DashboardStatService dashboardStatService;
+    
     @RequestMapping(value = "/rest/statistique", method = RequestMethod.GET)
     public ResponseEntity<List<Statistique>> getAll() {
         List<Statistique> stats = statistiqueService.findAll();
@@ -73,11 +86,11 @@ public class AngularController {
         Statistique stat = statistiqueService.findById(id);
         return new ResponseEntity<Statistique>(stat, HttpStatus.OK);
     }
-
+    
+    //get the statistiques created by a user
     @RequestMapping(value = "/rest/statistique/created/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Statistique>> getByName(@PathVariable String name) {
         List<Statistique> stats = statistiqueService.findMyStat(name);
-        System.out.println(":::::::::::" + stats);
         return new ResponseEntity<List<Statistique>>(stats, HttpStatus.OK);
     }
 
@@ -94,18 +107,18 @@ public class AngularController {
 
     @RequestMapping(value = "/rest/statistique/partage", method = RequestMethod.POST)
     public void partage(@RequestBody JSONObject o) {
-        List<String> roles = (List<String>) o.get("profiles");
-        List<String> users = (List<String>) o.get("users");
+        List<HashMap<String,String>> roles = (List<HashMap<String,String>>) o.get("profiles");
+        List<HashMap<String,String>> users = (List<HashMap<String,String>>) o.get("users");
         Statuser statuser = new Statuser();
         statuser.setIdStat(Long.parseLong(o.get("id_stat").toString()));
-        for (String s : roles) {
-            statuser.setRolename(s);
+        for (HashMap<String,String> s : roles) {
+            statuser.setRolename(s.get("roleName"));
             statUserService.save(statuser);
             System.out.println("roles ::: " + statuser.toString());
         }
         statuser.setRolename("");
-        for (String s : users) {
-            statuser.setUsername(s);
+        for (HashMap<String,String> s : users) {
+            statuser.setUsername(s.get("username"));
             statUserService.save(statuser);
         }
     }
@@ -124,15 +137,22 @@ public class AngularController {
     }
 
     @RequestMapping(value = "/rest/statistiques/{name}", method = RequestMethod.GET)
-    public ResponseEntity<Boolean> existingService(@PathVariable String name) {;
+    public ResponseEntity<Boolean> existingService(@PathVariable String name) {
         return new ResponseEntity<Boolean>(statistiqueService.exist(name), HttpStatus.OK);
     }
     
-    @RequestMapping(value = "/rest/dashboards/{name}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Dashboard> getDashboards(@PathVariable String name) {
-        List<Dashboard> dashboards = dashboardService.getDashboards(name);
-        System.out.println("com.smi.controller.AngularController.getDashboards()"+dashboards);
-        return dashboards;
+    @RequestMapping(value = "/rest/dashboards/{id}", method = RequestMethod.GET)
+    public JSONObject getDashboards(@PathVariable Long id) {
+        JSONObject object = new JSONObject();
+        Dashboard dashboard = dashboardService.getDashboard(id);
+        List<DashboardStat> stats = dashboardStatService.getByDashboardId(id);
+        List<Statistique> statistiques = new LinkedList<Statistique>();
+        for(DashboardStat stat : stats){
+            statistiques.add(statistiqueService.findById(stat.getIdStat()));
+        }
+        object.put("dashboard", dashboard);
+        object.put("stats", statistiques);
+        return object;
     }
     
      @RequestMapping(value = "/rest/dashboard/save", method = RequestMethod.POST)
@@ -140,5 +160,36 @@ public class AngularController {
         System.out.println("com.smi.controller.AngularController.getDashboards()"+dashboard);
         return dashboardService.save(dashboard);
    
+    }
+    
+    @RequestMapping(value = "/rest/dashboard/partage", method = RequestMethod.POST)
+    public void partageDashboard(@RequestBody JSONObject o) {
+        List<HashMap<String,String>> roles = (List<HashMap<String,String>>) o.get("profiles");
+        List<HashMap<String,String>> users = (List<HashMap<String,String>>) o.get("users");
+        DashboardUser dashboardUser = new DashboardUser();
+        //System.out.println("com.smi.controller.AngularController.partageDashboard()"+roles);
+        dashboardUser.setIdDashboard(Long.parseLong(o.get("id_dashboard").toString()));
+        for (HashMap<String,String> s : roles) {
+            dashboardUser.setRoleName(s.get("roleName"));
+            //System.out.println("L 165 : "+s.get("roleName"));
+            dashboardUserService.save(dashboardUser);
+        }
+        dashboardUser.setRoleName("");
+        for (HashMap<String,String> s : users) {
+            dashboardUser.setUsername(s.get("username"));
+            dashboardUserService.save(dashboardUser);
+            //System.out.println("L 172 "+s.get("username"));
+        }
+    }
+    
+    @RequestMapping(value = "/rest/dashboard/saveStat", method = RequestMethod.POST)
+    public void statDashboard(@RequestBody JSONObject o) {
+        DashboardStat ds = new DashboardStat();
+        ds.setIdDashboard(Long.parseLong(o.get("id_dashboard").toString()));
+        List<String> stats = (List<String>) o.get("statistiques");
+        for(String idStat : stats){
+            ds.setIdStat(Long.parseLong(idStat));
+            dashboardStatService.save(ds);
+        }
     }
 }

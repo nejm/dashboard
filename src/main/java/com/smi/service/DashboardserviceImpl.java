@@ -74,4 +74,9 @@ public class DashboardserviceImpl implements DashboardService {
         return dashboardDao.save(dashboard);
     }
 
+    @Override
+    public Dashboard getDashboard(Long id) {
+        return dashboardDao.getDashboard(id);
+    }
+
 }
