@@ -32,42 +32,27 @@ public class UserAndRoleImpl implements UserAndRoleDao{
 
     final static Logger logger = Logger.getLogger(UserAndRoleDao.class);
 
-    private  SessionFactory sessionFactory;
-
-    
-    private RoleDao roleDao;
+    private  SessionFactory sessionFactory = null;
 
     public SessionFactory getSessionFactory() {
-        return sessionFactory;
+         if(sessionFactory == null)
+            sessionFactory = new Configuration().configure().buildSessionFactory();
+         return sessionFactory;
     }
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    private void createSessionFactory(){
-         if(sessionFactory == null)
-            sessionFactory = new Configuration().configure().buildSessionFactory();
-    }
     
     @Override
-    public List<String> findByUser(long id){
-        createSessionFactory();
-        Session session = sessionFactory.openSession();
+    public List<Usersandroles> findByUser(long id){
+        Session session = this.getSessionFactory().openSession();
         session.beginTransaction();
-        Query q = session.getNamedQuery("Usersandroles.findByUserId").setLong("userId", id);
-        Query q2;
-        Role role;
-        List<Usersandroles> roles = q.list();
-        roleDao = new RoleDaoImpl();
-        List<String> rolesNames = new ArrayList<String>();
-        for (Usersandroles r : roles) {
-            q2 = session.getNamedQuery("Role.findByRoleId").setLong("roleId", r.getRoleId());
-            role = (Role) q2.uniqueResult();
-            rolesNames.add("ROLE_"+role.getRoleName());
-            
-        }
-        return rolesNames;
+        Query query = session.getNamedQuery("Usersandroles.findAll");
+        List<Usersandroles> l = query.list();
+        session.close();
+        return l;
     }
     
 }

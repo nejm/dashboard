@@ -79,7 +79,8 @@ public class Users implements Serializable {
     private String telephone;
     @Column(name = "EMAIL")
     private String email;
-
+    @Column(name = "PROFILE")
+    private char profile;
 
     public Users() {
     }
@@ -163,11 +164,19 @@ public class Users implements Serializable {
     public String getEmail() {
         return email;
     }
-
+        
     public void setEmail(String email) {
         this.email = email;
     }
 
+    public void setProfile(char profile) {
+        this.profile = profile;
+    }
+
+    public char getProfile() {
+        return profile;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 0;

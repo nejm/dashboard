@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,29 +45,23 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Users findByUsername(String username) {
         createSessionFactory();
-        session = sessionFactory.getCurrentSession();
+        session = sessionFactory.openSession();
         session.beginTransaction();
         Query q = session.createQuery("SELECT u from Users u where username = :username").setParameter("username", username);
-        System.out.println(q.list());
         Users u = (Users) q.uniqueResult();
         return u;
     }
 
     @Override
-    public List<String> findRoles(long id) {
-        userAndRoleDao = new UserAndRoleImpl();
-        return userAndRoleDao.findByUser(id);
-    }
-
-    @Override
     public List<Users> findAll() {
         createSessionFactory();
-        session = sessionFactory.getCurrentSession();
+        session = sessionFactory.openSession();
         session.beginTransaction();
-        List<Users> users = session.createQuery("SELECT u from Users u").list();
+        List<Users> users = session.getNamedQuery("Users.findAll").list();
         for (Users u : users) {
             u.setPassword("");
         }
+        //session.close();
         return users;
 
     }
@@ -74,7 +69,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Users findById(long id) {
         createSessionFactory();
-        session = sessionFactory.getCurrentSession();
+        session = sessionFactory.openSession();
         Query q = session.createQuery("SELECT u from Users u where id = :id").setParameter("id", id);
         session.beginTransaction();
         if (q.uniqueResult() == null) {

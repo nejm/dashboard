@@ -1,6 +1,7 @@
 package com.smi.dao;
 
 import com.smi.model.Statuser;
+import java.util.List;
 
 /**
  *
@@ -10,4 +11,6 @@ public interface StatUserDao {
     
     void save(Statuser statuser);
     void edit(Statuser statuser);
+    List<Statuser> findByUser(String username);
+    List<Statuser> findByRole(String roleName);
 }

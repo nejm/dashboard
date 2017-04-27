@@ -9,15 +9,15 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
         <title>Dashboard</title>
-        
+
         <!-- Bootstrap -->
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/bootstrap/dist/css/bootstrap.min.css" />
         <!-- Font Awesome -->
-        
+
         <link href="/Dashboard/resources/css/custom.min.css" rel="stylesheet" type="text/css"/>
         <link href="/Dashboard/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
         <!-- Custom Theme Style -->
-       
+
 
 
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jsPlumb/dist/css/jsplumb.css" />
@@ -25,16 +25,25 @@
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/style.css" />
 
         <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" />
-        
+
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/datatable.bootstrap.css" />
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/sweetalert.css" />
+        <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
+        <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
+        <style>
+            .log{
+                bottom:0;clear:both;display:block;padding:5px 0 0;
+                position:fixed;z-index:999
+            }
+        </style>
     </head>
 
-    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('#{id}')">
+    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('${id}')">
 
         <div class="container body">
             <div class="main_container">
-                <div class="col-md-3 left_col">
+
+                <div class="col-md-3 left_col" >
                     <div class="left_col scroll-view">
                         <div class="navbar nav_title" style="border: 0;">
                             <a href="Dashboard/home" class="site_title"><span>Dashboard</span></a>
@@ -62,38 +71,61 @@
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li class="active">
-                                        <a ng-click="openModal('ressource', 'null')">Resources<i class="fa fa-plus pull-right"></i></a>
+                                        <a href="/Dashboard/home">
+                                            Accueil
+                                            <i class='fa fa-th pull-right'></i>
+                                        </a>
+                                    </li>
+                                    <li class="active">
+                                        <a ng-click="addNewRessource()">Ressources<i class="fa fa-plus pull-right"></i></a>
                                         <ul class="nav side-menu">
+
                                             <li ng-repeat="res in ressources">
-                                                <a ng-click="openModal('service', res.ressource.id)">
-                                                    {{res.ressource.name}}
-                                                    <i class='fa fa-plus pull-right'></i>
+                                                <a>
+                                                    <span >
+                                                        {{res.ressource.name}}
+                                                    </span>
+                                                    <i class='fa fa-trash pull-right' ng-click="deleteRessource(res.ressource)"></i>
+                                                    <i class='fa fa-plus pull-right' ng-click="openModal('service', res.ressource.id)"></i>
+                                                    <i class='fa fa-pencil pull-right' ng-click="editRessource(res.ressource)"></i>
+                                                    
                                                 </a>
+
                                                 <ul class="nav child_menu" style="display: block;" id="{{res.ressource.id}}">
-                                                  
+
                                                 </ul>
                                             </li>
                                         </ul>
                                     </li>
-                                    <li class="active"><a>Opérations</a>
+                                    <li class="active"><a>Opérateurs de Statistiques</a>
                                         <ul class="nav side-menu">
-                                            <li><a ng-click="drawCondition('select')">Select</a></li>
-                                            <li><a ng-click="drawCondition('where')">Where</a></li>
-                                            <li><a ng-click="drawCondition('join')">Join</a></li>
+                                            <li><a ng-click="drawCondition('select')">Sélection</a></li>
+                                            <li><a ng-click="drawCondition('where')">Condition</a></li>
+                                            <li><a ng-click="drawCondition('join')">Jointure</a></li>
                                         </ul>
                                     </li>
-                                    <li class="active"><a>Statistiques</a>
-                                    <ul class="nav side-menu">
-                                            <li><a ng-click="drawStat('tab')">Tableau</a></li>
-                                            <li><a ng-click="drawStat('bar')">Bar</a></li>
+                                    <li class="active"><a>Modèles de Statistiques</a>
+                                        <ul class="nav side-menu">
+                                            <li><a>Modèles en Tableaux</a>
+                                            <ul class="nav child_menu" style="display: block;">
+                                                <li><a  ng-click="drawStat('tab')">Tableau
+                                                        <i class="fa fa-table pull-right"/>
+                                                    </a></li>
+                                            </ul></li>
+                                            <li><a>Modèles en bâttonets</a>
+                                            <ul class="nav child_menu" style="display: block;">
+                                                <li><a  ng-click="drawStat('bar')">Bâttonets
+                                                        <i class="fa fa-bar-chart pull-right"/>
+                                                    </a></li>
+                                            </ul></li>
                                         </ul>
                                     </li>
                                     <li class="active"><a ng-click="drawResult()">Résultat</a></li>
                                     <li class="active"><a ng-click="generateStat(true)">Tester</a></li>
                                     <li class="active"><a ng-click="saveState('#{user}')">Enregistrer</a></li>
                                 </ul>
-                                
-                             
+
+
                             </div>
                         </div>
                         <!-- /sidebar menu -->
@@ -106,7 +138,32 @@
                     <div class="nav_menu">
                         <nav>
                             <div class="nav toggle">
-                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                                <div class="dropdown">
+                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown">
+                                            <a href="#">Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau</a></li>
+                                                <li><a href="#">Modifier</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a href="#">Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau</a></li>
+                                                <li><a href="#">Modifier</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </div>
                             </div>
 
                             <ul class="nav navbar-nav navbar-right">
@@ -160,7 +217,49 @@
                     </div>
                 </div>
                 <!-- /top navigation -->
-
+                <!--<div class="col-md-4 left_col" style="margin-top: -10px;">
+                    <div class="col-md-6"></div>
+                    <div class="col-md-6">
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                            <div class="menu_section">
+                                <ul class="nav side-menu">
+                                    <li class="active">
+                                        <a ng-click="openModal('ressource', 'null')">Ressources<i class="fa fa-plus pull-right"></i></a>
+                                        <ul class="nav side-menu">
+                                            <li ng-repeat="res in ressources">
+                                                <a ng-click="openModal('service', res.ressource.id)">
+                                                    {{res.ressource.name}}
+                                                    <i class='fa fa-plus pull-right'></i>
+                                                </a>
+                                                <ul class="nav child_menu" style="display: block;" id="{{res.ressource.id}}">
+                                                  
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="active"><a>Opérateurs de Statistiques</a>
+                                        <ul class="nav side-menu">
+                                            <li><a ng-click="drawCondition('select')">Sélection</a></li>
+                                            <li><a ng-click="drawCondition('where')">Condition</a></li>
+                                            <li><a ng-click="drawCondition('join')">Jointure</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="active"><a>Modèles de Statistiques</a>
+                                    <ul class="nav side-menu">
+                                            <li><a ng-click="drawStat('tab')">Modèles en Tableaux</a></li>
+                                            <li><a ng-click="drawStat('bar')">Modèles en bâttonets</a></li>
+                                        </ul>
+                                    </li>
+                                    <li class="active"><a ng-click="drawResult()">Résultat</a></li>
+                                    <li class="active"><a ng-click="generateStat(true)">Tester</a></li>
+                                    <li class="active"><a ng-click="saveState('#{user}')">Enregistrer</a></li>
+                                </ul>
+                                
+                             
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
                 <!-- page content -->
                 <div class="right_col" role="main">
                     <div class="">
@@ -168,16 +267,21 @@
                         <div class="clearfix"></div>
                         <div class="row">
                             <div class="panel-body" style="overflow:hidden; height : 800px;" id='canvasbody'>
-                        <js-plumb-canvas on-connection="onConnection" x="pos_x" y="pos_y" zoom="zoomlevel">
-                            <ng-include src="'/Dashboard/resources/partials/'+state.template+'State.html'" ng-repeat="state in stateObjects"></ng-include>
-                        </js-plumb-canvas>
-                    </div>
+                                <js-plumb-canvas on-connection="onConnection" x="pos_x" y="pos_y" zoom="zoomlevel">
+                                    <ng-include src="'/Dashboard/resources/partials/'+state.template+'State.html'" ng-repeat="state in stateObjects"></ng-include>
+                                </js-plumb-canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <!-- /page content -->
 
                 <!-- footer content -->
+                <div class="log" style="height: 100px; width: 100%; margin-left: 240px;border: 5px">
+                    <textarea class="form-control" style="width: 82%;margin-bottom: 0;height: 90px" disabled="true">
+                        {{log}}
+                    </textarea>
+                </div>
             </div>
         </div>
 
@@ -204,6 +308,8 @@
         <script src="/Dashboard/resources/js/query.js"></script>
         <script src="/Dashboard/resources/js/angular-chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
+
+        <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
         
         <!-- out local ng stuff -->
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
@@ -218,9 +324,9 @@
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script src="/Dashboard/resources/js/waiting.js"></script>
         <script>
-                function formSubmit() {
-                    document.getElementById("logoutForm").submit();
-                }
+                                    function formSubmit() {
+                                        document.getElementById("logoutForm").submit();
+                                    }
         </script>
     </body>
 </html>

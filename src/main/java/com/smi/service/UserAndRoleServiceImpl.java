@@ -15,33 +15,23 @@
  */
 package com.smi.service;
 
-import com.smi.dao.UserDao;
-import com.smi.dao.UserDaoImpl;
-import com.smi.model.Users;
+import com.smi.dao.UserAndRoleImpl;
+import com.smi.model.Usersandroles;
 import java.util.List;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service("usersService")
-public class UserServiceImpl implements UserService{
-
-     UserDao userDao = new UserDaoImpl();
+/**
+ *
+ * @author Nejm
+ */
+@Service("userAndRoleService")
+public class UserAndRoleServiceImpl implements UserAndRoleService{
     
+    UserAndRoleImpl userAndRoleDao = new UserAndRoleImpl();
     
     @Override
-    public Users findByUsername(String username) {
-       return userDao.findByUsername(username);
+    public List<Usersandroles> findByUser(Long id) {
+        return userAndRoleDao.findByUser(id);
     }
-
-    @Override
-    public List<Users> findAll() {
-       return userDao.findAll();
-    }
-
-    @Override
-    public Users findById(long id) {
-       return userDao.findById(id);
-    }
-
     
 }

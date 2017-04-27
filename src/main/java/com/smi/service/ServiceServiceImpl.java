@@ -15,33 +15,41 @@
  */
 package com.smi.service;
 
-import com.smi.dao.UserDao;
-import com.smi.dao.UserDaoImpl;
-import com.smi.model.Users;
+import com.smi.dao.ServiceDao;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-@Service("usersService")
-public class UserServiceImpl implements UserService{
-
-     UserDao userDao = new UserDaoImpl();
+/**
+ *
+ * @author Nejm
+ */
+@Service("serviceService")
+public class ServiceServiceImpl implements ServiceService{
     
+    @Autowired
+    @Qualifier("serviceDao")
+    ServiceDao serviceDao;
     
     @Override
-    public Users findByUsername(String username) {
-       return userDao.findByUsername(username);
+    public List<com.smi.model.Service> findAll() {
+        return serviceDao.findAll();
     }
 
     @Override
-    public List<Users> findAll() {
-       return userDao.findAll();
+    public Long save(com.smi.model.Service service) {
+        return serviceDao.save(service);
     }
 
     @Override
-    public Users findById(long id) {
-       return userDao.findById(id);
+    public void edit(com.smi.model.Service service) {
+        serviceDao.edit(service); 
     }
 
+    @Override
+    public void delete(com.smi.model.Service service) {
+        serviceDao.delete(service);
+    }
     
 }

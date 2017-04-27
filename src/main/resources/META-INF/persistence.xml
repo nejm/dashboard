@@ -7,6 +7,8 @@
     <class>com.smi.model.DashboardStat</class>
     <class>com.smi.model.Dashboard</class>
     <class>com.smi.model.DashboardUser</class>
+    <class>com.smi.model.Ressources</class>
+    <class>com.smi.model.Service</class>
     <exclude-unlisted-classes>false</exclude-unlisted-classes>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:oracle:thin:@localhost:1521:XE"/>

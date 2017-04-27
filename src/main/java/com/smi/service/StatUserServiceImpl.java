@@ -3,6 +3,7 @@ package com.smi.service;
 
 import com.smi.dao.StatUserDao;
 import com.smi.model.Statuser;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class StatUserServiceImpl implements StatUserService{
     @Transactional
     public void edit(Statuser statuser) {
          statUserDao.edit(statuser);
+    }
+
+    @Override
+    public List<Statuser> findByUser(String username) {
+        return statUserDao.findByUser(username);
+    }
+
+    @Override
+    public List<Statuser> findByRole(String roleName) {
+        return statUserDao.findByRole(roleName);
     }
     
 }

@@ -50,20 +50,14 @@ public class DashboardserviceImpl implements DashboardService {
     @Override
     public List<Dashboard> getDashboards(String username) {
         List<Dashboard> dashboards = new ArrayList<Dashboard>();
-        List<String> roles = userDao.findRoles(userDao.findByUsername(username).getUserId());
+        //List<String> roles = userDao.findRoles(userDao.findByUsername(username).getUserId());
 
         List<DashboardUser> dashboarduserList = dashboardUserDao.getByUser(username);
         List<Dashboard> dashboardrole = new ArrayList<Dashboard>();
         for (DashboardUser dashboardUser : dashboarduserList) {
             dashboards.add(dashboardDao.getDashboard(dashboardUser.getIdDashboard()));
         }
-        for (String role : roles) {
-            List<DashboardUser> dashboardRoleList = dashboardUserDao.getByRole(role.substring(5));
-            System.out.println("ROLES"+role.substring(5));
-            for (DashboardUser dashboardUser : dashboardRoleList) {
-                dashboards.add(dashboardDao.getDashboard(dashboardUser.getIdDashboard()));
-            }
-        }
+        
         return dashboards;
     }
 

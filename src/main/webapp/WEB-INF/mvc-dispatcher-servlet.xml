@@ -31,7 +31,7 @@
     </bean>
     
     <bean id="sessionFactory"
-          class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
         <property name="dataSource" ref="dataSource" />
         <property name="hibernateProperties">
             <props>
@@ -54,13 +54,15 @@
                 <value>com.smi.model.Dashboard</value>
                 <value>com.smi.model.DashboardStat</value>
                 <value>com.smi.model.DashboardUser</value>
+                <value>com.smi.model.Ressources</value>
+                <value>com.smi.model.Service</value>
             </list>
         </property>
     </bean>
      
     <!--<bean id="CustomUserDetailsService" class="com.smi.service.CustomUserDetailsService"></bean>-->
     
-    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
     
@@ -81,7 +83,8 @@
     <bean id="dashboardstatdao" class="com.smi.dao.DashboardStatDaoImpl"></bean>
     <bean id="dashboardDao" class="com.smi.dao.DashboardDaoImpl"></bean>
     <bean id="dashboarduserdao" class="com.smi.dao.DashboardUserDaoImpl"></bean>
-    
+    <bean id="ressourceDao" class="com.smi.dao.RessourceDaoImpl"></bean>
+    <bean id="serviceDao" class="com.smi.dao.ServiceDaoImpl"></bean>
     
     <bean id="userService" class="com.smi.service.ImplUserService"></bean>
     <bean id="usersService" class="com.smi.service.UserServiceImpl"></bean>
@@ -91,6 +94,10 @@
     <bean id="dashboardService" class="com.smi.service.DashboardserviceImpl"></bean>
     <bean id="dashboardStatService" class="com.smi.service.DashboardStatServiceImpl"></bean>
     <bean id="dashboardUserService" class="com.smi.service.DashboardUserServiceImpl"></bean>
+    <bean id="ressourceService" class="com.smi.service.RessourceServiceImpl"></bean>
+    <bean id="serviceService" class="com.smi.service.ServiceServiceImpl"></bean>
+    <bean id="userAndRoleService" class="com.smi.service.UserAndRoleServiceImpl"></bean>
+    
     
     <bean
         class="org.springframework.web.servlet.view.InternalResourceViewResolver">

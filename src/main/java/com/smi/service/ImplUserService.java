@@ -39,22 +39,19 @@ public class ImplUserService implements UserDetailsService {
             if (user == null) {
                 throw new UsernameNotFoundException("Username not found");
             }
+            List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+            if(user.getProfile() == 'A'){
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            }else{
+                authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+            }
             return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                    true, true, true, true, grantedAuthorities(user.getUserId()));
+                    true, true, true, true, authorities);
         } else {
             return null;
         }
         
 
-    }
-
-    public List<GrantedAuthority> grantedAuthorities(long id) {
-        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-        for(String s : userDao.findRoles(id)){
-            authorities.add(new SimpleGrantedAuthority(s));
-        }
-        
-        return authorities;
     }
 
 }

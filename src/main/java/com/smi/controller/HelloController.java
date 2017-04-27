@@ -81,6 +81,22 @@ public class HelloController {
         model.setViewName("stat");
         return model;
     }
+    
+    @RequestMapping(value = "/dashboards/search", method = RequestMethod.GET)
+    public ModelAndView searchDashboard(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toString().toUpperCase());
+        model.setViewName("searchDashboard");
+        return model;
+    }
+    
+    @RequestMapping(value = "/statistiques/search", method = RequestMethod.GET)
+    public ModelAndView searchStat(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toString().toUpperCase());
+        model.setViewName("searchStat");
+        return model;
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,

@@ -14,7 +14,7 @@
         <title>Dashboard</title>
 
         <!-- Bootstrap -->
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/bootstrap/dist/css/bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
         <!-- Font Awesome -->
 
         <link href="/Dashboard/resources/css/custom.min.css" rel="stylesheet" type="text/css"/>
@@ -24,17 +24,187 @@
 
 
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jsPlumb/dist/css/jsplumb.css" />
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jquery-ui/themes/base/jquery-ui.css" />
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/style.css" />
 
         <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" />
 
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/datatable.bootstrap.css" />
+        <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" />
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/sweetalert.css" />
-        <link type="text/css" rel="stylesheet" href=" https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" />
 
+        <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
+        <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
 
         <style>
+
+            .table {
+                color : black;
+                width: 100%;
+                max-width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem;
+                vertical-align: top;
+                border-top: 1px solid #eceeef;
+            }
+
+            .table thead th {
+                vertical-align: bottom;
+                border-bottom: 2px solid #eceeef;
+            }
+
+            .table tbody + tbody {
+                border-top: 2px solid #eceeef;
+            }
+
+            .table .table {
+                background-color: #fff;
+            }
+
+            .table-sm th,
+            .table-sm td {
+                padding: 0.3rem;
+            }
+
+            .table-bordered {
+                border: 1px solid #eceeef;
+            }
+
+            .table-bordered th,
+            .table-bordered td {
+                border: 1px solid #eceeef;
+            }
+
+            .table-bordered thead th,
+            .table-bordered thead td {
+                border-bottom-width: 2px;
+            }
+
+            .table-striped tbody tr:nth-of-type(odd) {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+
+            .table-hover tbody tr:hover {
+                background-color: rgba(0, 0, 0, 0.075);
+            }
+
+            .table-active,
+            .table-active > th,
+            .table-active > td {
+                background-color: rgba(0, 0, 0, 0.075);
+            }
+
+            .table-hover .table-active:hover {
+                background-color: rgba(0, 0, 0, 0.075);
+            }
+
+            .table-hover .table-active:hover > td,
+            .table-hover .table-active:hover > th {
+                background-color: rgba(0, 0, 0, 0.075);
+            }
+
+            .table-success,
+            .table-success > th,
+            .table-success > td {
+                background-color: #dff0d8;
+            }
+
+            .table-hover .table-success:hover {
+                background-color: #d0e9c6;
+            }
+
+            .table-hover .table-success:hover > td,
+            .table-hover .table-success:hover > th {
+                background-color: #d0e9c6;
+            }
+
+            .table-info,
+            .table-info > th,
+            .table-info > td {
+                background-color: #d9edf7;
+            }
+
+            .table-hover .table-info:hover {
+                background-color: #c4e3f3;
+            }
+
+            .table-hover .table-info:hover > td,
+            .table-hover .table-info:hover > th {
+                background-color: #c4e3f3;
+            }
+
+            .table-warning,
+            .table-warning > th,
+            .table-warning > td {
+                background-color: #fcf8e3;
+            }
+
+            .table-hover .table-warning:hover {
+                background-color: #faf2cc;
+            }
+
+            .table-hover .table-warning:hover > td,
+            .table-hover .table-warning:hover > th {
+                background-color: #faf2cc;
+            }
+
+            .table-danger,
+            .table-danger > th,
+            .table-danger > td {
+                background-color: #f2dede;
+            }
+
+            .table-hover .table-danger:hover {
+                background-color: #ebcccc;
+            }
+
+            .table-hover .table-danger:hover > td,
+            .table-hover .table-danger:hover > th {
+                background-color: #ebcccc;
+            }
+
+            .thead-inverse th {
+                color: #fff;
+                background-color: #292b2c;
+            }
+
+            .thead-default th {
+                color: #464a4c;
+                background-color: #eceeef;
+            }
+
+            .table-inverse {
+                color: #fff;
+                background-color: #292b2c;
+            }
+
+            .table-inverse th,
+            .table-inverse td,
+            .table-inverse thead th {
+                border-color: #fff;
+            }
+
+            .table-inverse.table-bordered {
+                border: 0;
+            }
+
+            .table-responsive {
+                display: block;
+                width: 100%;
+                overflow-x: auto;
+                -ms-overflow-style: -ms-autohiding-scrollbar;
+            }
+
+            .table-responsive.table-bordered {
+                border: 0;
+            }
+
+
+
             #sortable { list-style-type: none; margin: 0; padding: 0; }
             #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 49%; height: 300px;text-align: center;}
             .my_container{
@@ -101,12 +271,12 @@
                                 </ul>
                                 <h3>Statistiques Roles</h3>
                                 <ul class="nav side-menu">
-                                    <li ng-repeat="s in statistiques.other track by $index" class="active">
+                                    <li ng-repeat="s in statistiques.others track by $index" class="active">
                                         <a>{{s.name}}</a>
                                         <ul class="nav child_menu" style="display : block">
                                             <li ng-repeat="a in s.data track by $index">
                                                 <a ng-click="addStatToDashboard(a)">
-                                                    {{a}}
+                                                    {{a.name}}
                                                     <span class="fa fa-plus pull-right"></span>
                                                 </a>
                                             </li>
@@ -140,8 +310,34 @@
                     <div class="nav_menu">
                         <nav>
                             <div class="nav toggle">
-                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                                <div class="dropdown">
+                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+
+                                    <ul class="dropdown-menu">
+                                        <li class="dropdown">
+                                            <a href="#">Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau</a></li>
+                                                <li><a href="#">Modifier</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a href="#">Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau</a></li>
+                                                <li><a href="#">Modifier</a></li>
+                                            </ul>
+                                        </li>
+
+                                    </ul>
+                                </div>
                             </div>
+
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
@@ -191,6 +387,7 @@
 
                 <!-- page content -->
                 <div class="right_col" role="main" style="height: 100%">
+
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
@@ -228,6 +425,8 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
@@ -237,15 +436,20 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <!-- bower installed -->
-        <script src="/Dashboard/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/dataTables.responsive.min.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script><script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/bower/jsPlumb/dist/js/jquery.jsPlumb-1.6.2.js"></script>
         <script src="/Dashboard/resources/bower/angular-ui-slider/src/slider.js"></script>
         <script src="/Dashboard/resources/js/query.js"></script>
         <script src="/Dashboard/resources/js/angular-chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
         <script src="/Dashboard/resources/js/dashboardinterract.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
+
+        <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
+
+
 
         <!-- out local ng stuff -->
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
@@ -257,15 +461,10 @@
 
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script src="/Dashboard/resources/js/waiting.js"></script>
-        <script>
+        <script type="text/javascript">
                                             function formSubmit() {
                                                 document.getElementById("logoutForm").submit();
                                             }
-                                            ;
-
-                                            $('.table').DataTable({
-                                                responsive: true
-                                            });
         </script>
     </body>
 </html>

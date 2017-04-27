@@ -1,9 +1,10 @@
 package com.smi.dao;
 
 import com.smi.model.Role;
+import com.smi.model.Usersandroles;
 import java.util.List;
 
 
 public interface UserAndRoleDao {
-    List<String> findByUser(long id);
+    List<Usersandroles> findByUser(long id);
 }
