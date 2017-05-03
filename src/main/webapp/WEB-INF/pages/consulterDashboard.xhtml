@@ -41,7 +41,7 @@
         </style>
     </head>
 
-    <body class="nav-md" ng-controller="searchController" ng-init="initStats('#{user}')" style="overflow-x : hidden">
+    <body class="nav-md" ng-controller="searchController" ng-init="init('#{user}')" style="overflow-x : hidden">
         <div class="container body">
             <div class="main_container">
                 <div class="col-md-3 left_col"  style="height: 135%">
@@ -190,22 +190,22 @@
                         <div class="clearfix"></div>
                         <div class="row">
                             <ul id="sortable">
-                                <li style="position: relative" class="ui-state-default" ng-repeat="stats in statistiques| filter:searched">
+                                <li style="position: relative" class="ui-state-default" ng-repeat="dashboard in dashboards| filter:searched">
                                     <div class="col-sm-12">
                                         <div class="col-md-5"><img src="/Dashboard/resources/images/dashboard.png" height="120px" width="120px"/></div>
                                         <div class="col-md-7" >
                                             <div style="text-align: right; font-size: 16px">
-                                                {{stats.name}}</div>
+                                                {{dashboard.name}}</div>
 
                                         </div>
                                     </div>
                                     <div style="padding: 20px">
-                                        {{stats.description}}
+                                        {{dashboard.description}}
                                     </div>
                                     <div style="position: absolute; bottom: 0; right: 0">
-                                        <button class="btn btn-default">
-                                            <i class="fa fa-edit" />
-                                        </button>
+                                        <a href="/Dashboard/dashboard/{{dashboard.id}}" target="_blank" class="btn btn-success">
+                                            <i class="fa fa-eye" />
+                                        </a>
                                     </div>
                                 </li>
                             </ul>

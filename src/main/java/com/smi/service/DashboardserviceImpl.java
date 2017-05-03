@@ -73,4 +73,14 @@ public class DashboardserviceImpl implements DashboardService {
         return dashboardDao.getDashboard(id);
     }
 
+    @Override
+    public List<Dashboard> getAllDashboards() {
+        return dashboardDao.getAllDashboard();
+    }
+
+    @Override
+    public Boolean doesExist(String name) {
+        return dashboardDao.doesExist(name);
+    }
+
 }

@@ -12,4 +12,6 @@ public interface DashboardDao {
     
     List<Dashboard> getAllDashboard();
     Dashboard getDashboard(Long id_dashboard);
+    
+    Boolean doesExist(String name);
 }

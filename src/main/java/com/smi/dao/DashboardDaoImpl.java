@@ -11,12 +11,12 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 @Repository("dashboardDao")
-public class DashboardDaoImpl implements DashboardDao{
+public class DashboardDaoImpl implements DashboardDao {
 
     @Autowired
     @Qualifier("sessionFactory")
     SessionFactory sessionFactory;
-    
+
     @Override
     @Transactional
     public Long save(Dashboard dashboard) {
@@ -47,5 +47,13 @@ public class DashboardDaoImpl implements DashboardDao{
         Query query = session.getNamedQuery("Dashboard.findById").setLong("id", id_dashboard);
         return (Dashboard) query.uniqueResult();
     }
-    
+
+    @Override
+    @Transactional
+    public Boolean doesExist(String name) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.getNamedQuery("Dashboard.findByName").setString("name", name);
+        return (query.list().size() > 0);
+    }
+
 }

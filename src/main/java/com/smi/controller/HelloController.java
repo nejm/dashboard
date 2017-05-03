@@ -60,7 +60,7 @@ public class HelloController {
         ModelAndView model = new ModelAndView();
         model.addObject("id",0);
         model.addObject("user",principal.getName().toUpperCase());
-        model.setViewName("dashboard");
+        model.setViewName("dashboard_1");
         return model;
     }
     
@@ -69,7 +69,7 @@ public class HelloController {
         ModelAndView model = new ModelAndView();
         model.addObject("user",principal.getName().toUpperCase());
         model.addObject("id",id);
-        model.setViewName("dashboard");
+        model.setViewName("dashboard_1");
         return model;
     }
     
@@ -97,6 +97,15 @@ public class HelloController {
         model.setViewName("searchStat");
         return model;
     }
+    
+    @RequestMapping(value = "/dashboards/consulte", method = RequestMethod.GET)
+    public ModelAndView consulterDashboard(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toString().toUpperCase());
+        model.setViewName("consulterDashboard");
+        return model;
+    }
+    
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login(@RequestParam(value = "error", required = false) String error,

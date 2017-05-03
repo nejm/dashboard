@@ -56,16 +56,34 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
                                 <ul class="nav side-menu">
-                                    <li class="active"><a><i class="fa fa-line-chart"></i>Statistique</a>
+                                    <li><a><i class="fa fa-line-chart"></i>Statistique</a>
                                         <ul class="nav child_menu">
                                             <li>
                                                 <a  href="/Dashboard/new">
                                                     Nouvelle Statistique
+                                                    <i class="fa fa-terminal pull-right"></i>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a ng-click="add()">
                                                     Modifier Statistique
+                                                    <i class="fa fa-edit pull-right"></i>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li><a><i class="fa fa-window-restore"></i>Dashboards</a>
+                                        <ul class="nav child_menu">
+                                            <li>
+                                                <a  href="/Dashboard/create/new">
+                                                    Nouveau dashboard
+                                                    <i class="fa fa-terminal pull-right"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="/Dashboard/dashboards/search">
+                                                    Modifier dashboard
+                                                    <i class="fa fa-edit pull-right"></i>
                                                 </a>
                                             </li>
                                         </ul>
@@ -75,11 +93,13 @@
                                             <li>
                                                 <a>
                                                     Nouvel Utilisateur
+                                                    <i class="fa fa-terminal pull-right"></i>
                                                 </a>
                                             </li>
                                             <li >
                                                 <a>
                                                     Modifier Utilisateur
+                                                    <i class="fa fa-edit pull-right"></i>
                                                 </a>
                                                 
                                             </li>
@@ -90,18 +110,17 @@
                                             <li>
                                                 <a>
                                                     Nouveau Role
-
+                                                    <i class="fa fa-terminal pull-right"></i>
                                                 </a>
                                             </li>
                                             <li>
                                                 <a ng-click="add()">
                                                     Modifier Role
+                                                    <i class="fa fa-edit pull-right"></i>
                                                 </a>
                                             </li>
                                         </ul>
                                     </li>
-
-
 
                                 </ul>
                             </div>
@@ -186,105 +205,7 @@
                         </div>
 
                         <div class="clearfix"></div>
-                        <div class="panel-group" id="accordion">
-                            <!-- accodeon 1 -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="headingOne">
-                                    <h4 class="panel-title">
-                                        <i style="cursor: pointer" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                            <i class="more-less glyphicon glyphicon-plus pull-right"></i>
-                                            My stats
-                                        </i>
-                                    </h4>
-                                </div>
-                                <div id="collapseOne" class="panel-collapse collapse">
-                                    <div class="panel-body">
-                                        <div  ng-repeat="stat in myStats| limitTo:3 track by $index">
-                                            <!-- a card -->
-                                            <div class="col-md-1" ng-if="$index != 0"/>
-                                            <div class="col-md-3 lib-item" data-category="view">
-                                                <div class="lib-panel">
-                                                    <div class="row box-shadow">
-                                                        <div class="col-md-5">
-                                                            <img class="lib-img-show" src="/Dashboard/resources/images/lines.png" />
-
-                                                        </div>
-                                                        <p style="position: absolute;bottom: 10px; left : 10px">
-                                                            {{stat.creationDate| date : 'dd/MM/yyyy'}}
-                                                        </p>
-                                                        <div class="col-md-7">
-                                                            <div class="lib-row lib-header">
-                                                                {{stat.name| limitTo:8}}
-                                                                <div class="lib-header-seperator"></div>
-                                                            </div>
-                                                            <div style=" height: 80px; margin-bottom: 20px; ">
-                                                                <div class="lib-row lib-desc" style="overflow-y: auto">
-                                                                    {{stat.description}}
-
-                                                                </div>
-                                                                <div style="bottom: 0;" class="pull-right">
-                                                                    <a type="button" class="btn btn-sm btn-success" href="/Dashboard/edit/{{stat.id}}">
-                                                                        <i class="fa fa-edit" />
-                                                                    </a>
-                                                                    <a type="button" class="btn btn-sm btn-primary" href="/Dashboard/home/{{stat.id}}" >
-                                                                        <i class="fa fa-search" />
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- a card -->
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- accordeon 1 -->
-                            <!-- accodeon 2 -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading" role="tab" id="headingTwo">
-                                    <h4 class="panel-title">
-                                        <i style="cursor: pointer" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
-                                            <i class="more-less glyphicon glyphicon-plus pull-right"></i>
-                                            Partagé avec moi
-                                        </i>
-                                    </h4>
-                                </div>
-                                <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                    <div class="panel-body">
-                                        <div  ng-repeat="stat in myStats| limitTo:3 track by $index">
-                                            <!-- a card -->
-                                            <div class="col-md-1" ng-if="$index != 0"/>
-                                            <div class="col-md-3 lib-item" data-category="view">
-                                                <div class="lib-panel">
-                                                    <div class="row box-shadow">
-                                                        <div class="col-md-5">
-                                                            <img class="lib-img-show" src="/Dashboard/resources/images/lines.png" />
-                                                        </div>
-                                                        <div class="col-md-7">
-                                                            <div class="lib-row lib-header">
-                                                                {{stat.name}}
-                                                                <div class="lib-header-seperator"></div>
-                                                            </div>
-                                                            <div class="lib-row lib-desc" style="margin-bottom: 20px; height: 80px; overflow-y: auto">
-                                                                {{stat.description}}
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- a card -->
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- accordeon 2 -->
-                        </div>
+                        
                     </div>
                 </div>
                 <!-- /page content -->

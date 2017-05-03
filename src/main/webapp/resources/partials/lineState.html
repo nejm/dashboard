@@ -1,0 +1,32 @@
+    <js-plumb-object state-object="state" ng-style="{ 'left': state.x, 'top': state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+      <button class="btn btn-default pull-left" ng-click="removeState(state)">
+          <span class="glyphicon glyphicon-trash"></span>
+      </button>
+    <h3 ng-click="setActiveState(state)">Lines</h3>
+    <hr>
+        <div style="position:absolute; top: -10px; left:50%;">
+          <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="TopCenter" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle"></js-plumb-endpoint>
+        </div>
+        <form class="form-inline">
+          <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+            <div class="input-group-addon">X</div>
+            <select class="form-control" id="inlineFormInputGroupx" style="width : 200px"  ng-model="state.lineLabels">
+              <option ng-repeat="att in state.lineAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!=null">{{att.attribute}}</option>
+            </select>
+          </div>
+          <div class="input-group mb-2 mr-sm-2 mb-sm-0">
+            <div class="input-group-addon">Y</div>
+            <select class="form-control" id="inlineFormInputGroupy" style="width : 200px" ng-model="state.lineData">
+              <option ng-repeat="att in state.lineAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!=null">
+                  {{att.attribute}}
+              </option>
+            </select>
+          </div>
+        </form>
+        <div style="position:absolute; bottom: -10px; left:50%;">
+            <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="BottomCenter" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
+                <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
+                </js-plumb-connection>
+            </js-plumb-endpoint>
+        </div>
+    </js-plumb-object>

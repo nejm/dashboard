@@ -28,8 +28,8 @@ var my2App = angular.module('my2App', ['ngResource'])
                 console.log("see : "+id);
             }
             
-            $scope.saveDashboard = function(){
-                console.log($('.grid-snap'));
+            $scope.newDashboard = function(){
+                
             }
         });
 

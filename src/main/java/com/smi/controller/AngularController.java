@@ -102,29 +102,49 @@ public class AngularController {
         name = name.toLowerCase();
         Users user = userService.findByUsername(name);
         HashMap<String, List<Statistique>> availableStats = new LinkedHashMap<>();
-        List<Statuser> stats = statUserService.findByUser(name);
-        // available by user
         List<Statistique> statistiques = new ArrayList<>();
-        for (Statuser s : stats) {
-            statistiques.add(statistiqueService.findById(s.getIdStat()));
+        List<Statuser> stats;
+        if (user.getProfile() == 'A') {
+            statistiques.addAll(statistiqueService.findAll());
+        } else {
+
+            stats = statUserService.findByUser(name);
+            // available by user
+
+            for (Statuser s : stats) {
+                statistiques.add(statistiqueService.findById(s.getIdStat()));
+            }
         }
         availableStats.put(name, statistiques);
 
         // available by role
-        List<Usersandroles> usersAndRoles = userAndRoleService.findByUser(userService.findByUsername(name).getUserId());
-        String role;
-        stats = new ArrayList<>();
-        List<Statistique> availableStatsByRole;
-
-        for (Usersandroles uar : usersAndRoles) {
-            availableStatsByRole = new ArrayList<>();
-            if (uar.getUserId() == user.getUserId()) {
-                role = roleService.findById(uar.getRoleId()).getRoleName();
-                stats.addAll(statUserService.findByRole(role));
+        if (user.getProfile() == 'A') {
+            stats = new ArrayList<>();
+            List<Statistique> availableStatsByRole;
+            for (Role r : roleService.findAll()) {
+                availableStatsByRole = new ArrayList<>();
+                stats.addAll(statUserService.findByRole(r.getRoleName()));
                 for (Statuser stat : stats) {
                     availableStatsByRole.add(statistiqueService.findById(stat.getIdStat()));
                 }
-                availableStats.put(role, availableStatsByRole);
+                availableStats.put(r.getRoleName(), availableStatsByRole);
+            }
+        } else {
+            List<Usersandroles> usersAndRoles = userAndRoleService.findByUser(userService.findByUsername(name).getUserId());
+            String role;
+            stats = new ArrayList<>();
+            List<Statistique> availableStatsByRole;
+
+            for (Usersandroles uar : usersAndRoles) {
+                availableStatsByRole = new ArrayList<>();
+                if (uar.getUserId() == user.getUserId()) {
+                    role = roleService.findById(uar.getRoleId()).getRoleName();
+                    stats.addAll(statUserService.findByRole(role));
+                    for (Statuser stat : stats) {
+                        availableStatsByRole.add(statistiqueService.findById(stat.getIdStat()));
+                    }
+                    availableStats.put(role, availableStatsByRole);
+                }
             }
         }
 
@@ -208,6 +228,9 @@ public class AngularController {
     @RequestMapping(value = "/rest/dashboards/available/{username}", method = RequestMethod.GET)
     public List<Dashboard> getAvailableDashboards(@PathVariable String username) {
         Users user = userService.findByUsername(username);
+        if(user.getProfile() == 'A'){
+            return dashboardService.getAllDashboards();
+        }
         List<DashboardUser> dashboardUsers = dashboardUserService.getByUser(username);
         List<Usersandroles> usersandroleses = userAndRoleService.findByUser(user.getUserId());
 
@@ -229,7 +252,11 @@ public class AngularController {
     public Long getDashboards(@RequestBody Dashboard dashboard) {
         System.out.println("com.smi.controller.AngularController.getDashboards()" + dashboard);
         return dashboardService.save(dashboard);
-
+    }
+    
+    @RequestMapping(value = "/rest/dashboard/exist/{name}", method = RequestMethod.GET)
+    public Boolean existDashboard(@PathVariable String name) {
+        return dashboardService.doesExist(name);
     }
 
     @RequestMapping(value = "/rest/dashboard/partage", method = RequestMethod.POST)

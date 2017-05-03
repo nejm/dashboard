@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 public interface DashboardService {
 
     List<Dashboard> getDashboards(String username);
+    List<Dashboard> getAllDashboards();
     Dashboard getDashboard(Long id);
     Long save(Dashboard dashboard);
+    Boolean doesExist(String name);
 }
