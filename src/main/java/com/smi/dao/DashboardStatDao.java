@@ -26,5 +26,7 @@ public interface DashboardStatDao {
     
     Long save(DashboardStat dashboard);
     void edit(DashboardStat dashboard);
+    void delete(DashboardStat dashboardStat);
+    List<DashboardStat> findByStatId(Long id);
     List<DashboardStat> getByDashboardId(Long id);
 }

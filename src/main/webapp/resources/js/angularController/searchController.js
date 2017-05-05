@@ -1,33 +1,62 @@
 var myApp = angular.module('myApp', []);
 myApp.controller('searchController', function ($scope, $http) {
     $scope.dashboards = [];
-     $scope.statistiques = [];
+    $scope.statistiques = [];
     $scope.username = "";
-    
+
     $scope.init = function (username) {
         $scope.username = username.toLowerCase();
         //console.log($scope.username);
-        $http.get("/Dashboard/rest/dashboards/available/"+$scope.username).then(function(response) {
-           $scope.dashboards = response.data;
-           console.log(response.data)
+        $http.get("/Dashboard/rest/dashboards/available/" + $scope.username).then(function (response) {
+            $scope.dashboards = response.data;
         });
     }
-    
-     $scope.initStats = function (username) {
+
+
+
+    $scope.initStats = function (username) {
         $scope.username = username.toLowerCase();
-        //console.log($scope.username);
-        $http.get("/Dashboard/rest/statistique/available/"+$scope.username).then(function(response) {
-            for(var elem in response.data){
-                for(var i=0;i<response.data[elem].length;i++){
-                    if($scope.statistiques.indexOf(response.data[elem][i])!=-1){
+        console.log($scope.username);
+        $http.get("/Dashboard/rest/statistique/available/" + $scope.username).then(function (response) {
+            console.log(response.data)
+            for (var elem in response.data) {
+                for (var i = 0; i < response.data[elem].length; i++) {
+                    if (!$scope.foundStat(response.data[elem][i])) {
                         $scope.statistiques.push(response.data[elem][i])
                     }
                 }
-                
+
             }
-           //$scope.statistiques = response.data;
-           console.log($scope.statistiques)
+            //$scope.statistiques = response.data;
+            //console.log($scope.statistiques)
         });
+    }
+
+    $scope.foundStat = function (stat) {
+        for (var i = 0; i < $scope.statistiques.length; i++) {
+            if ($scope.statistiques[i].id == stat.id)
+                return true;
+        }
+        return false;
+    }
+    $scope.deleteStat = function (stat) {
+        swal({
+            title: "Êtes-vous sûr?",
+            text: "La statistique sera supprimer!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui, supprimer !",
+            closeOnConfirm: true
+        },
+                function () {
+
+                    $http.post("/Dashboard/rest/statistiques/delete", stat).then(function (response) {
+                        $scope.statistiques = [];
+                        $scope.initStats($scope.username);
+                    })
+                });
+
     }
 
 

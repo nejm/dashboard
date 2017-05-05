@@ -5,7 +5,7 @@ myApp.factory('Stat', function ($resource) {
         }
     });
 })
-        .controller('FirstExampleController', function ($rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile, Stat) {
+        .controller('FirstExampleController', function ($timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile, Stat) {
 
 
 
@@ -128,16 +128,17 @@ myApp.factory('Stat', function ($resource) {
             }
 
             $scope.addRessource = function (ressource) {
-                //console.log(ressource);
+                console.log(ressource);
                 var found = false;
                 for (var i in $scope.ressources) {
-                    if ($scope.ressources[i].ressource.id == ressource.id) {
+                    if ($scope.ressources[i].ressource.name == ressource.name) {
                         $scope.ressources[i].ressource = ressource;
                         found = true;
                         break;
                     }
                 }
                 if (!found) {
+
                     let savedRessource = {
                         name: ressource.name,
                         url: ressource.url,
@@ -155,6 +156,22 @@ myApp.factory('Stat', function ($resource) {
 
                                 $scope.log = "\n Ressource added with id = " + response.data + $scope.log;
                             })
+
+
+                } else {
+                    if (typeof ressource.id !== 'undefined') {
+                        $http.post("/Dashboard/rest/ressources/update", ressource)
+                                .then(function () {
+                                    swal("Modification", "Modification avec succées", "success");
+                                    $scope.ressource = {};
+                                    $scope.closeModal();
+
+                                    $scope.log = "\n Ressource modifier avec succées" + $scope.log;
+                                })
+
+                    } else {
+                        swal("Duplication !!", "Un ressource avec le même nom déja existe !!", "error");
+                    }
                 }
 
             };
@@ -165,15 +182,16 @@ myApp.factory('Stat', function ($resource) {
             }
 
             $scope.editRessource = function (ressource) {
-                $scope.ressource = ressource;
-                $scope.openModal('ressource', null);
+                $scope.ressourceTemp = ressource;
+                $scope.openModal('ressourceEdit', null);
             }
 
+            $scope.$watchCollection('ressources', function (obj) {
+                console.log(obj)
+            })
 
             $scope.editService = function (service) {
-                //console.log($scope.services[service].service);
                 $scope.service = $scope.services[service].service;
-
                 $scope.openModal('service', $scope.service.idRessource);
             }
 
@@ -268,6 +286,7 @@ myApp.factory('Stat', function ($resource) {
                     })
                 } else {
                     $scope.services[service.id].service = service;
+                    console.log($scope.services[service.id].service = service)
                     let updatedService = {
                         id: service.id,
                         name: service.name,
@@ -691,7 +710,6 @@ myApp.factory('Stat', function ($resource) {
                 if (!a) {
                     $scope.statAttributes = $scope.attributes;
                 }
-                //console.log($scope.query);
                 if ($scope.query.stat == 'Tableau') {
                     $scope.generateTable(res, showmodal);
                 } else if ($scope.query.stat == 'Bar') {
@@ -723,7 +741,7 @@ myApp.factory('Stat', function ($resource) {
                     }
                 }
                 $scope.dataLine = [$scope.dataLineInner];
-                $scope.lineHTML = "<canvas id='line' class='chart chart-line' chart-data='dataLine' chart-labels='labelsLine' chart-options='optionsLine'></canvas>";
+                $scope.lineHTML = "<canvas height='40%' id='line' class='chart chart-line' chart-data='dataLine' chart-labels='labelsLine' chart-options='optionsLine'></canvas>";
             }
             $scope.generatePie = function (res, labels, data, showmodal) {
                 $scope.typeState = "pie";
@@ -741,19 +759,40 @@ myApp.factory('Stat', function ($resource) {
                         }
                     }
                 }
+                $scope.legend;
                 $scope.options = {
                     legend: {
                         labels: {
-                            generateLabels: function(chart) {
-                                console.log(chart.config);
-                                //TODO
+                            generateLabels: function (chart) {
+                                $scope.legend = "<ul class='0-legend'>" +
+                                        ($(chart.generateLegend()).children()[0]).toString() +
+                                        ($(chart.generateLegend()).children()[1]).toString() +
+                                        ($(chart.generateLegend()).children()[2]).toString() +
+                                        ($(chart.generateLegend()).children()[3]).toString()
+                                        + "</ul>";
+                                console.log($scope.legend)
                             }
+
                         }
-                }}
+                    }}
+                console.log($scope.legend)
                 //$scope.pieHTML = "<div style='position : absolute; height : 100%; width : 100%;'><canvas class='chart chart-pie' chart-data='dataPie' chart-labels='labelsPie'></canvas></div>";
                 $scope.pieHTML = "<canvas style='display : block' height='40%' class='chart chart-pie' chart-data='dataPie' chart-labels='labelsPie' chart-options='options'></canvas>";
                 console.log($scope.pieHTML)
             }
+
+            $scope.generatePieCustomLegend = function (chart) {
+                console.log($(chart))
+                var legends = $("<ul class='0-legend'></ul>");
+                legends.append($(chart).children()[0]);
+                legends.append($(chart).children()[1]);
+                legends.append($(chart).children()[2]);
+                legends.append($(chart).children()[3]);
+
+            }
+
+
+
             $scope.generateTable = function (res, showmodal) {
                 ////console.log("generate table")
                 if (showmodal) {
@@ -998,6 +1037,7 @@ myApp.factory('Stat', function ($resource) {
 
                 let source = $scope.getState($rootScope.connections.source);
                 let target = $scope.getState($rootScope.connections.target);
+
                 $('#b' + target.idd).removeClass('disabled');
                 //console.log(source, target)
                 if (target.type == 'o') {
@@ -1030,7 +1070,11 @@ myApp.factory('Stat', function ($resource) {
                     }
                 }
                 if (target.type == 's') {
-                    target.attributes = $scope.copyAttribute(source.attributes);
+                    if (source.name == "where") {
+                        console.log(source)
+                        target.attributes = source.vattributes;
+                    } else
+                        target.attributes = $scope.copyAttribute(source.attributes);
                 }
                 let t = target;
                 let f = false;
@@ -1064,23 +1108,46 @@ myApp.factory('Stat', function ($resource) {
                         }
                     }
                     if (!f) {
-                        target.source = t;
-                        target.barAttributes = [];
-                        target.pieAttributes = [];
-                        target.lineAttributes = [];
-                        for (var i = 0; i < target.source.attributes.length; i++) {
-                            if (target.source.attributes[i] !== null)
-                                target.barAttributes[i] = {
-                                    attribute: target.source.attributes[i]
-                                }
-                            if (target.source.attributes[i] !== null)
-                                target.pieAttributes[i] = {
-                                    attribute: target.source.attributes[i]
-                                }
-                            if (target.source.attributes[i] !== null)
-                                target.lineAttributes[i] = {
-                                    attribute: target.source.attributes[i]
-                                }
+                        if (source.name = 'where') {
+                            target.source = source;
+                            target.barAttributes = [];
+                            target.pieAttributes = [];
+                            target.lineAttributes = [];
+
+                            for (var i = 0; i < target.source.vattributes.length; i++) {
+                                if (target.source.vattributes[i] !== null)
+                                    target.barAttributes[i] = {
+                                        attribute: target.source.vattributes[i]
+                                    }
+                                if (target.source.vattributes[i] !== null)
+                                    target.pieAttributes[i] = {
+                                        attribute: target.source.vattributes[i]
+                                    }
+                                if (target.source.attributes[i] !== null)
+                                    target.lineAttributes[i] = {
+                                        attribute: target.source.vattributes[i]
+                                    }
+                            }
+                        } else {
+                            target.source = t;
+                            target.barAttributes = [];
+                            target.pieAttributes = [];
+                            target.lineAttributes = [];
+
+                            for (var i = 0; i < target.source.attributes.length; i++) {
+                                if (target.source.attributes[i] !== null)
+                                    target.barAttributes[i] = {
+                                        attribute: target.source.attributes[i]
+                                    }
+                                if (target.source.attributes[i] !== null)
+                                    target.pieAttributes[i] = {
+                                        attribute: target.source.attributes[i]
+                                    }
+                                if (target.source.attributes[i] !== null)
+                                    target.lineAttributes[i] = {
+                                        attribute: target.source.attributes[i]
+                                    }
+                            }
                         }
                     } else if (!g) {
                         target.barAttributes = $scope.copyAttribute(target.source.Sattributes);
@@ -1171,23 +1238,19 @@ myApp.factory('Stat', function ($resource) {
             }
 
             $scope.init = function (id) {
-
+                $scope.id = id;
                 $http.get("/Dashboard/rest/ressources").then(function (response) {
+                    $scope.ressources = [];
                     for (var i in response.data) {
                         $scope.ressources.push({
                             ressource: response.data[i]
                         });
                     }
                     $http.get("/Dashboard/rest/services").then(function (response) {
-
+                        $scope.services = [];
                         for (var i in response.data) {
                             $scope.addServiceFromDB(response.data[i]);
                         }
-                        //console.log($scope.services);
-                        setTimeout(function () {
-                            $("#scrolling").addClass('menu_fixed')
-                        }, 100)
-
                     });
                 });
 
@@ -1485,8 +1548,11 @@ myApp.factory('Stat', function ($resource) {
                 swal("Détail", detail);
             }
             var myLoop = function () {
-                console.log("MyLoop");
-                setTimeout(function () {
+
+                $timeout(function () {
+                    $scope.stateObjects = [];
+                    $scope.links = [];
+                    $scope.services = [];
                     let sdata = angular.fromJson($scope.stats[$scope.idexLoop].data);
                     $scope.stateObjects = sdata.stateObjects;
                     $scope.links = sdata.links;
@@ -1496,78 +1562,130 @@ myApp.factory('Stat', function ($resource) {
                         $scope.services[s[j].id] = s[j].data;
                     }
                     $scope.generateStat(false);
+                    let type = $scope.stateObjects[$scope.stateObjects.length - 2].name;
+                    if (type == 'join')
+                        type = $scope.stateObjects[$scope.stateObjects.length - 3].name
                     $scope.liD = 'li' + $scope.idexLoop;
                     let li = $("<li id='li" + $scope.idexLoop + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
                             "<div class='panel-heading'>" + $scope.stats[$scope.idexLoop].name + "</div></li>");
                     $('#sortable').append(li);
-                    setTimeout(function () {
-                        if ($scope.stateObjects[$scope.stateObjects.length - 2].name == "Tableau") {
+                    $timeout(function () {
+                        if (type == "Tableau") {
 
-                            $('#' + $scope.liD).append($scope.tableHTML);
+                            $('#' + $scope.liD).append($compile($scope.tableHTML)($scope));
 
-                        } else if ($scope.stateObjects[$scope.stateObjects.length - 2].name == "Bar") {
-                            console.log($scope.barHTML)
+                        } else if (type == "Bar") {
+                            //console.log($scope.barHTML)
+
                             $('#' + $scope.liD).append($compile($scope.barHTML)($scope));
 
-                        } else if ($scope.stateObjects[$scope.stateObjects.length - 2].name == "Pie") {
+                        } else if (type == "Pie") {
 
-                            console.log($scope.pieHTML)
+                            //console.log($scope.pieHTML)
                             $('#' + $scope.liD).append($compile($scope.pieHTML)($scope));
 
-                        } else if ($scope.stateObjects[$scope.stateObjects.length - 2].name == "Line") {
-                            console.log($scope.lineHTML)
+                        } else if (type == "Line") {
+                            //console.log($scope.lineHTML)
                             $('#' + $scope.liD).append($compile($scope.lineHTML)($scope));
 
                         }
-                    }, 1000);
+                    }, 650);
                     $scope.idexLoop++;
                     if ($scope.idexLoop < $scope.stats.length) {
                         myLoop();
                     }
-                }, 1000)
+                }, 800)
             }
 
-            $scope.consulterDashboard = function(id) {
-                $http.get("/Dashboard/rest/dashboards/" + id).then(function (response) {
-                    $scope.stats = response.data.stats;
+            $scope.editDashboard = function (user, id) {
+                $scope.username = user;
+                $scope.initDashboard($scope.username)
+                console.log($scope.username)
+                $http.get('/Dashboard/rest/dashboards/' + id).then(function (response) {
                     $scope.dashboardData = response.data.dashboard;
-                    $scope.idexLoop = 0;
-                    myLoop();
+                    for (var i = 0; i < response.data.stats.length; i++) {
+                        $scope.addStatToDashboard(response.data.stats[i])
+                    }
+                })
+            }
+
+            $scope.consulterDashboard = function (id) {
+                $http.get("/Dashboard/rest/dashboards/" + id).then(function (response) {
+                    if (response.data.stats.length > 0) {
+                        console.log(response.data)
+                        $scope.stats = response.data.stats;
+                        $scope.dashboard = response.data.dashboard;
+                        $scope.idexLoop = 0;
+                        myLoop();
+                    } else {
+                        swal("Vide !!", "Le dashboard ne contient aucune statistique !!", "warning");
+                    }
                 });
             }
 
             $scope.preview = function (stat) {
+                console.log(stat)
                 $scope.getStat(stat, true);
             }
 
-            $scope.deleteStatFromDashboard = function(id) {
-                $('#d' + id).remove();
+            $scope.deleteStatFromDashboard = function (id) {
+                $scope.dashboard.splice(id, 1);
+                //$('#d' + id).remove();
             }
 
             $scope.addStatToDashboard = function (stat) {
 
                 $scope.dashboard.push(stat);
-                var container = $("<li class='ui-state-default' id='d" + $scope.dashboard.length + "'></li>")
-                var text = $("<div style='position : relative;width: 100%;height: 100%' id='s" + stat.id + "'></div>");
-                let img = "<div style='width: 100%;height: 80%;position: absolute;left :0;top:0;z-index:1;'><img src='/Dashboard/resources/images/lines.png' style='opacity : 0.2' /></div>";
-                text.append(img);
-                let divString = "<div style='height : 100%; z-index : 100'>" +
-                        "<h2 style='position: absolute;bottom : 80%;left: 40%;'>" + stat.name + "</h2>" +
-                        "<span style='position: absolute;bottom : 50%;left: 40%;'>" + stat.description + "</span>" +
-                        "<span>" + stat.createdBy + " <cite>" + $filter('date')(stat.creationDate, "dd/MM/yyyy") + "</cite></span>" +
-                        "<div style='position: absolute;bottom : 0;left: 40%;'><button ng-click='preview(" + stat.id + ")' class='btn btn-primary'><i class='fa fa-eye'></i> </button><button ng-click='deleteStatFromDashboard(" + $scope.dashboard.length + ")' class='btn btn-danger'><i class='fa fa-trash'></i>  </button></div>" +
-                        "</div>"
-                text.append(divString);
-                container.append(text);
-                $('#sortable').append($compile(container)($scope));
             }
 
             $scope.saveDashboard = function () {
-
+                console.log($scope.dashboard)
                 $scope.modalInstance = $uibModal.open({
                     templateUrl: '/Dashboard/resources/partials/saveDashboard.html',
                     scope: $scope
                 });
+            }
+            $scope.editDashboardModal = function () {
+                console.log($scope.dashboardData)
+                $scope.modalInstance = $uibModal.open({
+                    templateUrl: '/Dashboard/resources/partials/editDashboard.html',
+                    scope: $scope
+                });
+            }
+
+            $scope.editerDashboard = function () {
+
+                let dashboardObj = {
+                    id: $scope.dashboardData.id,
+                    name: $scope.dashboardData.name,
+                    description: $scope.dashboardData.description,
+                    dateCreation: Date.now(),
+                    createdBy: $scope.username
+                };
+                console.log(dashboardObj)
+                $http.post("/Dashboard/rest/dashboard/edit", dashboardObj).then(function (response) {
+                    $scope.log = "\n Dashboard modifier avec succées" + $scope.log;
+                    let share = {
+                        id_dashboard: $scope.dashboardData.id,
+                        profiles: $scope.profiles,
+                        users: $scope.users,
+                    };
+                    $http.post("/Dashboard/rest/dashboard/partage", share);
+                    for (var i = 0; i < $scope.dashboard.length; i++) {
+                        $scope.dashboardStatistiques.push($scope.dashboard[i].id + "")
+                    }
+                    let dashboardStats = {
+                        id_dashboard: $scope.dashboardData.id,
+                        statistiques: $scope.dashboardStatistiques
+                    };
+                    $http.post("/Dashboard/rest/dashboard/saveStat", dashboardStats).then(function () {
+                        $scope.log = "\n Dashboard partager avec succées" + $scope.log;
+                    });
+
+                });
+                $scope.closeModal();
+
+
             }
 
             $scope.exporteDashboard = function () {
@@ -1579,6 +1697,7 @@ myApp.factory('Stat', function ($resource) {
                     createdBy: $scope.username
                 };
                 $http.get("/Dashboard/rest/dashboard/exist/" + $scope.dashboard.name).then(function (response) {
+
                     if (!response.data) {
                         $http.post("/Dashboard/rest/dashboard/save", dashboardObj).then(function (response) {
                             $scope.log = "\n Dashboard enregistrer avec succées" + $scope.log;
@@ -1588,10 +1707,9 @@ myApp.factory('Stat', function ($resource) {
                                 users: $scope.users,
                             };
                             $http.post("/Dashboard/rest/dashboard/partage", share);
-                            $('#sortable li').each(function () {
-                                let id = $('#' + this.id + " div").attr('id');
-                                $scope.dashboardStatistiques.push(id.substring(1));
-                            });
+                            for (var i = 0; i < $scope.dashboard.length; i++) {
+                                $scope.dashboardStatistiques.push($scope.dashboard[i].id + "")
+                            }
                             let dashboardStats = {
                                 id_dashboard: response.data,
                                 statistiques: $scope.dashboardStatistiques

@@ -17,4 +17,5 @@ public interface StatistiqueService {
     boolean exist(String name);
     List<Statistique> findMyStat(String name);
     List<Statistique> findAvailableStat(String name);
+    void delete(Statistique s);
 }

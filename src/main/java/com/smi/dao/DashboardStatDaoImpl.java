@@ -55,5 +55,20 @@ public class DashboardStatDaoImpl implements DashboardStatDao{
         Session session = sessionFactory.getCurrentSession();
         session.merge(dashboard);
     }
+
+    @Override
+    @Transactional
+    public void delete(DashboardStat dashboardStat) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(dashboardStat);
+    }
+
+    @Override
+    @Transactional
+    public List<DashboardStat> findByStatId(Long id) {
+       Session session = sessionFactory.getCurrentSession();
+        Query query = session.getNamedQuery("DashboardStat.findByIdStat").setLong("idStat", id);
+        return query.list();
+    }
     
 }

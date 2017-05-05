@@ -34,11 +34,11 @@ select = function (json, fields) {
 
         if (typeof array[i].op == 'undefined') {
             var field = array[i].attribute;
-            console.log(field);
+            //console.log(field);
         }
         if (array[i].op == 'SUM') {
             result = sum(result, array[i].attribute, field).result;
-            console.log(result);
+            //console.log(result);
         }
         if (array[i].op == 'AVG') {
             result = avg(result, array[i].attribute, field);
@@ -121,7 +121,7 @@ where = function (json, attr, operator, value) {
     var res = [];
     if (attr === null)
         return json;
-    console.log(attr, operator, value);
+    //console.log(attr, operator, value);
     switch (operator) {
         case '>':
             for (var i = 0; i < json.length; i++) {
@@ -217,7 +217,7 @@ join = function (json1, json2, fields1, fields2, operations) {
             }
         }
     }
-    console.log(result)
+    //console.log(result)
     return result;
 }
 /*

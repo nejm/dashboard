@@ -43,5 +43,15 @@ public class DashboardStatServiceImpl implements DashboardStatService{
     public List<DashboardStat> getByDashboardId(Long id) {
         return dashboardStatDao.getByDashboardId(id);
     }
+
+    @Override
+    public void delete(DashboardStat dashboardStat) {
+        dashboardStatDao.delete(dashboardStat);
+    }
+
+    @Override
+    public List<DashboardStat> findByStatId(Long id) {
+       return dashboardStatDao.findByStatId(id);
+    }
     
 }

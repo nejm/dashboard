@@ -44,7 +44,7 @@
     <body class="nav-md" ng-controller="searchController" ng-init="init('#{user}')" style="overflow-x : hidden">
         <div class="container body">
             <div class="main_container">
-                <div class="col-md-3 left_col"  style="height: 135%">
+                <div class="col-md-3 left_col menu_fixed">
                     <div class="left_col scroll-view" >
                         <div class="navbar nav_title" style="border: 0;">
                             <a href="/home" class="site_title"><span>Dashboard</span></a>
@@ -90,24 +90,68 @@
                                     </a>
 
                                     <ul class="dropdown-menu">
-                                        <li class="dropdown">
-                                            <a href="#">Statistiques
-                                                <i class="fa fa-angle-right pull-right"></i>
+                                        <li>
+                                            <a href="/Dashboard/home">
+                                                Acceuil
+                                                <i class="fa fa-home pull-right"></i>
                                             </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Nouveau</a></li>
-                                                <li><a href="#">Modifier</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown"><a href="#">Dashboards
-                                                <i class="fa fa-angle-right pull-right"></i>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Nouveau</a></li>
-                                                <li><a href="#">Modifier</a></li>
-                                            </ul>
-                                        </li>
 
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="dropdown">
+                                            <a>Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/new">Nouveau
+                                                        <span class="fa fa-line-chart pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/statistiques/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a>Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/create/new">Nouveau
+                                                        <span class="fa fa-window-maximize pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/consulte">Consulter
+                                                        <span class="fa fa-dashboard pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/search">Modifier
+                                                        <span class="fa fa-pencil pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Utilisateurs
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau
+                                                        <span class="fa fa-user-plus pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="#">Modifier
+                                                        <span class="fa fa-user-o pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Rôles
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau
+                                                        <span class="fa fa-users pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="#">Modifier
+                                                        <span class="fa fa-vcard pull-right" ></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -190,24 +234,25 @@
                         <div class="clearfix"></div>
                         <div class="row">
                             <ul id="sortable">
-                                <li style="position: relative" class="ui-state-default" ng-repeat="dashboard in dashboards| filter:searched">
-                                    <div class="col-sm-12">
-                                        <div class="col-md-5"><img src="/Dashboard/resources/images/dashboard.png" height="120px" width="120px"/></div>
-                                        <div class="col-md-7" >
-                                            <div style="text-align: right; font-size: 16px">
-                                                {{dashboard.name}}</div>
+                                <li ng-repeat="dashboard in dashboards| filter:searched">
+                                    <div class="panel panel-default" style="height: 95%">
+                                        <div class='panel-heading'>
+                                            <b>{{dashboard.name}}</b>
+                                        </div>
+                                        <div class='panel-body' style="height: 60%">
+                                            {{dashboard.description}}
+                                        </div>
+                                        <div class='panel-footer' style="height: 23%">
+                                            <span class="col-sm-9"><i>{{dashboard.dateCreation| date}}</i></span>
 
+
+                                            <a href="/Dashboard/dashboard/{{dashboard.id}}" target="_blank" class="btn btn-default">
+                                                <i class="fa fa-eye" />
+                                            </a>
                                         </div>
                                     </div>
-                                    <div style="padding: 20px">
-                                        {{dashboard.description}}
-                                    </div>
-                                    <div style="position: absolute; bottom: 0; right: 0">
-                                        <a href="/Dashboard/dashboard/{{dashboard.id}}" target="_blank" class="btn btn-success">
-                                            <i class="fa fa-eye" />
-                                        </a>
-                                    </div>
                                 </li>
+                                
                             </ul>
 
                         </div>

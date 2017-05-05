@@ -67,4 +67,10 @@ public class StatistiqueServiceImpl implements StatistiqueService {
     //return statistiqueDao.findAvailableStat(name);
     }
 
+    @Override
+    @Transactional
+    public void delete(Statistique s) {
+        statistiqueDao.delete(s);
+    }
+
 }

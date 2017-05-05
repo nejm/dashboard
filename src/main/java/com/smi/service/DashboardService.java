@@ -32,5 +32,6 @@ public interface DashboardService {
     List<Dashboard> getAllDashboards();
     Dashboard getDashboard(Long id);
     Long save(Dashboard dashboard);
+    void edit(Dashboard dashboard);
     Boolean doesExist(String name);
 }

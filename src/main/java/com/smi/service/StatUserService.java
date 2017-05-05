@@ -16,4 +16,8 @@ public interface StatUserService {
     List<Statuser> findByUser(String username);
 
     List<Statuser> findByRole(String roleName);
+    
+    void delete(Statuser s);
+    
+    List<Statuser> findByStats(Long id);
 }

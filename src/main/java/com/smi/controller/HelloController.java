@@ -69,7 +69,16 @@ public class HelloController {
         ModelAndView model = new ModelAndView();
         model.addObject("user",principal.getName().toUpperCase());
         model.addObject("id",id);
-        model.setViewName("dashboard_1");
+        model.setViewName("dashboard");
+        return model;
+    }
+    
+    @RequestMapping(value = "/dashboard/edit/{id}", method = RequestMethod.GET)
+    public ModelAndView editerDashboard(@PathVariable("id") long id, Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toUpperCase());
+        model.addObject("id",id);
+        model.setViewName("editDashboard");
         return model;
     }
     

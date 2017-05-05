@@ -249,57 +249,13 @@
                         </nav>
                     </div>
                 </div>
-                <!-- /top navigation -->
-                <!--<div class="col-md-4 left_col" style="margin-top: -10px;">
-                    <div class="col-md-6"></div>
-                    <div class="col-md-6">
-                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                            <div class="menu_section">
-                                <ul class="nav side-menu">
-                                    <li class="active">
-                                        <a ng-click="openModal('ressource', 'null')">Ressources<i class="fa fa-plus pull-right"></i></a>
-                                        <ul class="nav side-menu">
-                                            <li ng-repeat="res in ressources">
-                                                <a ng-click="openModal('service', res.ressource.id)">
-                                                    {{res.ressource.name}}
-                                                    <i class='fa fa-plus pull-right'></i>
-                                                </a>
-                                                <ul class="nav child_menu" style="display: block;" id="{{res.ressource.id}}">
-                                                  
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="active"><a>Opérateurs de Statistiques</a>
-                                        <ul class="nav side-menu">
-                                            <li><a ng-click="drawCondition('select')">Sélection</a></li>
-                                            <li><a ng-click="drawCondition('where')">Condition</a></li>
-                                            <li><a ng-click="drawCondition('join')">Jointure</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="active"><a>Modèles de Statistiques</a>
-                                    <ul class="nav side-menu">
-                                            <li><a ng-click="drawStat('tab')">Modèles en Tableaux</a></li>
-                                            <li><a ng-click="drawStat('bar')">Modèles en bâttonets</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="active"><a ng-click="drawResult()">Résultat</a></li>
-                                    <li class="active"><a ng-click="generateStat(true)">Tester</a></li>
-                                    <li class="active"><a ng-click="saveState('#{user}')">Enregistrer</a></li>
-                                </ul>
-                                
-                             
-                            </div>
-                        </div>
-                    </div>
-                </div>-->
                 <!-- page content -->
                 <div class="right_col" role="main" >
                     <div class="">
 
                         <div class="clearfix"></div>
                         <div class="row">
-                            <div class="panel-body" style="overflow:hidden; height : 800px;" id='canvasbody'>
+                            <div class="panel-body" style="overflow:hidden; height : 3000px;" id='canvasbody'>
                                 <js-plumb-canvas on-connection="onConnection" x="pos_x" y="pos_y" zoom="zoomlevel">
                                     <ng-include src="'/Dashboard/resources/partials/'+state.template+'State.html'" ng-repeat="state in stateObjects"></ng-include>
                                 </js-plumb-canvas>

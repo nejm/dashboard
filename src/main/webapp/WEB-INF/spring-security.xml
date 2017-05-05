@@ -19,6 +19,7 @@
         <intercept-url pattern="/home*" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
         <intercept-url pattern="/new**" access="hasRole('ROLE_ADMIN')"/>
         <intercept-url pattern="/edit/**" access="hasRole('ROLE_ADMIN')"/>
+        <intercept-url pattern="/dashboard/**" access="hasAnyRole('ROLE_ADMIN','ROLE_USER')"/>
         <!--<intercept-url pattern="/create/**" access="hasRole('ROLE_USER')"/>	-->
         <http-basic />
         <form-login 

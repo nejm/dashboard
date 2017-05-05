@@ -36,6 +36,10 @@
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
 
+        <link rel="stylesheet" type="text/css" href="/Dashboard/resources/css/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="/Dashboard/resources/css/effect2.css" />
+        <script src="/Dashboard/resources/js/modernizr.custom.js"></script>
+
         <style>
 
             .table {
@@ -235,12 +239,31 @@
     </head>
 
     <body class="nav-md" ng-controller="FirstExampleController" ng-init="initOrConsult('#{user}', '#{id}')" style="overflow-x : hidden">
-   
-                        <ul id="sortable">
-                            
-                        </ul>
 
-                    
+        <div id="ip-container" class="ip-container">
+
+            <!-- initial header -->
+            <header class="ip-header">
+
+
+                <div class="ip-loader" >
+                    <svg class="ip-inner" width="60px" height="60px" viewBox="0 0 80 80">
+                        <path class="ip-loader-circlebg" d="M40,10C57.351,10,71,23.649,71,40.5S57.351,71,40.5,71 S10,57.351,10,40.5S23.649,10,40.5,10z"/>
+                        <path id="ip-loader-circle" class="ip-loader-circle" d="M40,10C57.351,10,71,23.649,71,40.5S57.351,71,40.5,71 S10,57.351,10,40.5S23.649,10,40.5,10z"/>
+                    </svg>
+                </div>
+
+            </header>
+
+            <!-- main content -->
+            <div>
+
+                <ul id="sortable">
+
+                </ul>
+            </div>
+        </div><!-- /container -->
+
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
@@ -265,9 +288,13 @@
         <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
         <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
 
+
+        <script src="/Dashboard/resources/js/classie.js"></script>
+        <script src="/Dashboard/resources/js/pathLoader.js"></script>
+        <script src="/Dashboard/resources/js/main.js"></script>
+
         <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
-
-
+        <script src="/Dashboard/resources/js/html2canvas.js" type="text/javascript"></script>
         <!-- out local ng stuff -->
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
         <script src="/Dashboard/resources/js/directives.js"></script>
@@ -279,18 +306,34 @@
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script src="/Dashboard/resources/js/waiting.js"></script>
         <script type="text/javascript">
-                                            function formSubmit() {
-                                                document.getElementById("logoutForm").submit();
-                                            }
-                                            $("#myStats").on("click", function () {
-                                                console.log("llel")
-                                                $("#myStatsChild").slideToggle();
-                                            });
-                                            
-                                            var slide = function(tag){
-                                                var idTag = $(tag).attr("id");
-                                                $('#'+idTag+"Child").slideToggle();
-                                            }
+                function formSubmit() {
+                    document.getElementById("logoutForm").submit();
+                }
+                $("#myStats").on("click", function () {
+                    console.log("llel")
+                    $("#myStatsChild").slideToggle();
+                });
+
+                var slide = function (tag) {
+                    var idTag = $(tag).attr("id");
+                    $('#' + idTag + "Child").slideToggle();
+                }
+
+
+                $(window).on('keypress', function (e) {
+                    if (e.keyCode == 112) {
+                        html2canvas(document.body, {
+                            onrendered: function (canvas) {
+                                window.location = canvas.toDataURL();
+
+                                swal("Done", "Image générer", "success");
+                                //$('#canvas').append(canvas);
+                            }
+                        });
+                    }
+                    //alert(e.keyCode);
+
+                });
 
         </script>
     </body>

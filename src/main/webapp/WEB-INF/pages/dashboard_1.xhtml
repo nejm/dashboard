@@ -38,198 +38,12 @@
 
         <style>
 
-            .table {
-                color : black;
-                width: 100%;
-                max-width: 100%;
-                margin-bottom: 1rem;
-            }
-
-            .table th,
-            .table td {
-                padding: 0.75rem;
-                vertical-align: top;
-                border-top: 1px solid #eceeef;
-            }
-
-            .table thead th {
-                vertical-align: bottom;
-                border-bottom: 2px solid #eceeef;
-            }
-
-            .table tbody + tbody {
-                border-top: 2px solid #eceeef;
-            }
-
-            .table .table {
-                background-color: #fff;
-            }
-
-            .table-sm th,
-            .table-sm td {
-                padding: 0.3rem;
-            }
-
-            .table-bordered {
-                border: 1px solid #eceeef;
-            }
-
-            .table-bordered th,
-            .table-bordered td {
-                border: 1px solid #eceeef;
-            }
-
-            .table-bordered thead th,
-            .table-bordered thead td {
-                border-bottom-width: 2px;
-            }
-
-            .table-striped tbody tr:nth-of-type(odd) {
-                background-color: rgba(0, 0, 0, 0.05);
-            }
-
-            .table-hover tbody tr:hover {
-                background-color: rgba(0, 0, 0, 0.075);
-            }
-
-            .table-active,
-            .table-active > th,
-            .table-active > td {
-                background-color: rgba(0, 0, 0, 0.075);
-            }
-
-            .table-hover .table-active:hover {
-                background-color: rgba(0, 0, 0, 0.075);
-            }
-
-            .table-hover .table-active:hover > td,
-            .table-hover .table-active:hover > th {
-                background-color: rgba(0, 0, 0, 0.075);
-            }
-
-            .table-success,
-            .table-success > th,
-            .table-success > td {
-                background-color: #dff0d8;
-            }
-
-            .table-hover .table-success:hover {
-                background-color: #d0e9c6;
-            }
-
-            .table-hover .table-success:hover > td,
-            .table-hover .table-success:hover > th {
-                background-color: #d0e9c6;
-            }
-
-            .table-info,
-            .table-info > th,
-            .table-info > td {
-                background-color: #d9edf7;
-            }
-
-            .table-hover .table-info:hover {
-                background-color: #c4e3f3;
-            }
-
-            .table-hover .table-info:hover > td,
-            .table-hover .table-info:hover > th {
-                background-color: #c4e3f3;
-            }
-
-            .table-warning,
-            .table-warning > th,
-            .table-warning > td {
-                background-color: #fcf8e3;
-            }
-
-            .table-hover .table-warning:hover {
-                background-color: #faf2cc;
-            }
-
-            .table-hover .table-warning:hover > td,
-            .table-hover .table-warning:hover > th {
-                background-color: #faf2cc;
-            }
-
-            .table-danger,
-            .table-danger > th,
-            .table-danger > td {
-                background-color: #f2dede;
-            }
-
-            .table-hover .table-danger:hover {
-                background-color: #ebcccc;
-            }
-
-            .table-hover .table-danger:hover > td,
-            .table-hover .table-danger:hover > th {
-                background-color: #ebcccc;
-            }
-
-            .thead-inverse th {
-                color: #fff;
-                background-color: #292b2c;
-            }
-
-            .thead-default th {
-                color: #464a4c;
-                background-color: #eceeef;
-            }
-
-            .table-inverse {
-                color: #fff;
-                background-color: #292b2c;
-            }
-
-            .table-inverse th,
-            .table-inverse td,
-            .table-inverse thead th {
-                border-color: #fff;
-            }
-
-            .table-inverse.table-bordered {
-                border: 0;
-            }
-
-            .table-responsive {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -ms-overflow-style: -ms-autohiding-scrollbar;
-            }
-
-            .table-responsive.table-bordered {
-                border: 0;
-            }
-
-
-
             #sortable { list-style-type: none; margin: 0; padding: 0; }
-            #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 49%; height: 300px;text-align: center;}
+            #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 49%; height: 360px;text-align: center;}
             .my_container{
                 position: relative;
                 width: 100%;
                 height: 100%;
-            }
-            .my_container:after{
-                content: ' ';
-                display: block;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 0;
-                opacity: 0.6;
-                background-image: url('/Dashboard/resources/images/lines.png');
-                background-repeat: no-repeat;
-                background-position: 50% 0;
-                -ms-background-size: 100%;
-                -o-background-size: 100%;
-                -moz-background-size: 100%;
-                -webkit-background-size: 100%;
-                background-size: 100%;
             }
         </style>
     </head>
@@ -290,11 +104,6 @@
 
                                 </ul>
                             </div>
-                            <div class="menu_section" ng-if=" id != 0">
-
-                                <h3>{{dashboardData.name}}</h3>
-                                <p>{{dashboardData.description}}</p>
-                            </div>
                         </div>
 
                         <!-- /sidebar menu -->
@@ -318,7 +127,7 @@
                                                 Acceuil
                                                 <i class="fa fa-home pull-right"></i>
                                             </a>
-                                            
+
                                         </li>
                                         <li class="divider"></li>
                                         <li class="dropdown">
@@ -330,7 +139,7 @@
                                                         <span class="fa fa-line-chart pull-right"></span>
                                                     </a></li>
                                                 <li><a href="/Dashboard/statistiques/search">Modifier
-                                                    <span class="fa fa-edit pull-right"></span>
+                                                        <span class="fa fa-edit pull-right"></span>
                                                     </a></li>
                                             </ul>
                                         </li>
@@ -394,11 +203,11 @@
 
                                 <li style="cursor: pointer">
                                     <a class="user-profile" ng-click="saveDashboard()">
-                                       
+
                                         <span class=" fa fa-save"></span>
                                         Enregistrer
                                     </a>
-                                    
+
                                 </li>   
                             </ul>
                         </nav>
@@ -412,7 +221,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>Home</h3>
+                                <h3>Dashboard</h3>
                             </div>
                             <!--<div class="title_right">
                                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
@@ -428,7 +237,25 @@
 
                         <div class="clearfix"></div>
                         <ul id="sortable">
-                            
+                            <li style="cursor: move;position: relative" ng-repeat="stat in dashboard track by $index" id="d{{$index}}">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">{{stat.name}}</div>
+                                    <div class="panel-body" style="height: 250px">
+                                        <div><img height="200px" src='/Dashboard/resources/images/chart_line.png'  /></div>
+                                        <div>{{stat.description}}</div>
+
+
+                                    </div>
+                                    <div class="panel-footer" style="height: 60px;">
+                                        <div>
+                                            {{stat.creationDate| date}}
+                                            <button ng-click='preview(stat.id)' class='btn btn-primary pull-right'><i class='fa fa-eye'></i> </button>
+                                            <button ng-click='deleteStatFromDashboard($index)' class='btn btn-danger pull-right'><i class='fa fa-remove'></i> </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
                         </ul>
 
                     </div>
@@ -482,18 +309,18 @@
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script src="/Dashboard/resources/js/waiting.js"></script>
         <script type="text/javascript">
-                                            function formSubmit() {
-                                                document.getElementById("logoutForm").submit();
-                                            }
-                                            $("#myStats").on("click", function () {
-                                                console.log("llel")
-                                                $("#myStatsChild").slideToggle();
-                                            });
-                                            
-                                            var slide = function(tag){
-                                                var idTag = $(tag).attr("id");
-                                                $('#'+idTag+"Child").slideToggle();
-                                            }
+                                                    function formSubmit() {
+                                                        document.getElementById("logoutForm").submit();
+                                                    }
+                                                    $("#myStats").on("click", function () {
+                                                        console.log("llel")
+                                                        $("#myStatsChild").slideToggle();
+                                                    });
+
+                                                    var slide = function (tag) {
+                                                        var idTag = $(tag).attr("id");
+                                                        $('#' + idTag + "Child").slideToggle();
+                                                    }
 
         </script>
     </body>

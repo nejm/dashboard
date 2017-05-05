@@ -162,6 +162,17 @@ public class AngularController {
         statistiqueService.edit(stat);
     }
 
+    @RequestMapping(value = "/rest/statistiques/delete",method = RequestMethod.POST)
+    public void deleteStat(@RequestBody Statistique stat){
+        for(Statuser statuser : statUserService.findByStats(stat.getId())){
+            statUserService.delete(statuser);
+        }
+        for(DashboardStat dash : dashboardStatService.findByStatId(stat.getId())){
+            dashboardStatService.delete(dash);
+        }
+        statistiqueService.delete(stat);
+    }
+    
     @RequestMapping(value = "/rest/statistique/partage", method = RequestMethod.POST)
     public void partage(@RequestBody JSONObject o) {
         List<HashMap<String, String>> roles = (List<HashMap<String, String>>) o.get("profiles");
@@ -249,9 +260,19 @@ public class AngularController {
     }
 
     @RequestMapping(value = "/rest/dashboard/save", method = RequestMethod.POST)
-    public Long getDashboards(@RequestBody Dashboard dashboard) {
+    public Long saveDashboard(@RequestBody Dashboard dashboard) {
         System.out.println("com.smi.controller.AngularController.getDashboards()" + dashboard);
         return dashboardService.save(dashboard);
+    }
+    
+    @RequestMapping(value = "/rest/dashboard/edit", method = RequestMethod.POST)
+    public void editDashboard(@RequestBody Dashboard dashboard) {
+        System.out.println("com.smi.controller.AngularController.editDashboard()"+dashboard);
+//        List<DashboardStat> dashboardStats = dashboardStatService.getByDashboardId(dashboard.getId());
+//        for(DashboardStat d : dashboardStats){
+//            dashboardStatService.delete(d);
+//        }
+        dashboardService.edit(dashboard);
     }
     
     @RequestMapping(value = "/rest/dashboard/exist/{name}", method = RequestMethod.GET)

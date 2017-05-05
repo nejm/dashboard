@@ -37,5 +37,15 @@ public class StatUserServiceImpl implements StatUserService{
     public List<Statuser> findByRole(String roleName) {
         return statUserDao.findByRole(roleName);
     }
+
+    @Override
+    public void delete(Statuser s) {
+        statUserDao.delete(s);
+    }
+
+    @Override
+    public List<Statuser> findByStats(Long id) {
+        return statUserDao.findByStats(id);
+    }
     
 }

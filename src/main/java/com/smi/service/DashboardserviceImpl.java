@@ -83,4 +83,9 @@ public class DashboardserviceImpl implements DashboardService {
         return dashboardDao.doesExist(name);
     }
 
+    @Override
+    public void edit(Dashboard dashboard) {
+        dashboardDao.edit(dashboard);
+    }
+
 }

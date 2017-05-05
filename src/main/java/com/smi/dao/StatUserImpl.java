@@ -46,5 +46,20 @@ public class StatUserImpl implements StatUserDao{
         Query query = session.getNamedQuery("Statuser.findByRolename").setString("rolename", roleName);
         return query.list();
     }
+
+    @Override
+    @Transactional
+    public void delete(Statuser statuser) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(statuser);
+    }
+
+    @Override
+    @Transactional
+    public List<Statuser> findByStats(Long id) {
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.getNamedQuery("Statuser.findByIdStat").setLong("idStat", id);
+        return query.list();
+    }
     
 }
