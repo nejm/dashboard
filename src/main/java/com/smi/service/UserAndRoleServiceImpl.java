@@ -33,5 +33,15 @@ public class UserAndRoleServiceImpl implements UserAndRoleService{
     public List<Usersandroles> findByUser(Long id) {
         return userAndRoleDao.findByUser(id);
     }
+
+    @Override
+    public Long add(Usersandroles uar) {
+        return userAndRoleDao.add(uar);
+    }
+
+    @Override
+    public void delete(Usersandroles uar) {
+        userAndRoleDao.delete(uar);
+    }
     
 }

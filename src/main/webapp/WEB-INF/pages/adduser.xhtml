@@ -2,9 +2,7 @@
 
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+      ng-app="myApp">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -19,19 +17,17 @@
         <!-- Custom Theme Style -->
 
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jsPlumb/dist/css/jsplumb.css" />
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jquery-ui/themes/base/jquery-ui.css" />
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/style.css" />
+        
 
         <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" />
 
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/datatable.bootstrap.css" />
-        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/sweetalert.css" />
-        <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
+
+
+    
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
     </head>
 
-    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden"
-          ng-init="getStat('#{id}', false)">
+    <body class="nav-md" style="overflow-x: hidden" ng-controller="userController" ng-init="addOrEdit('#{id}')">
 
         <div class="container body">
             <div class="main_container">
@@ -158,17 +154,119 @@
                     <div>
 
                         <div class="clearfix"></div>
-                        <div style="overflow: scroll;height: 580px">
-                            <table id="table" class="table table-striped table-bordered">
-                                <thead>
-                                    <tr><th ng-repeat="att in statAttributes track by $index"  data-priority="{{$index}}">{{att}}</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr ng-repeat="a in statData track by $index">
-                                        <td ng-repeat="att in statAttributes track by $index">{{a[att]}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        <form id="userForm" name="userForm" class="form-horizontal form-label-left">
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Nom<span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.lastName.$invalid &amp;&amp; !userForm.lastName.$pristine }">
+                                    <input type="text" id="nom" name="lastName" ng-model="newUser.lastname" required="required" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Prénom <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.firstName.$invalid &amp;&amp; !userForm.firstName.$pristine }">
+                                    <input type="text" id="prenom" name="firstName"  ng-model="newUser.firstname" required="required" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="username">Username <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.username.$invalid &amp;&amp; !userForm.username.$pristine }">
+                                    <input type="text" ng-maxlength="10" ng-minlength="4" id="username" name="username"  ng-model="newUser.username" required="required" class="form-control col-md-7 col-xs-12" />
+                                    <p ng-show="userForm.username.$error.maxlength" class="help-block">username trop long !</p>
+                                    <p ng-show="userForm.username.$error.minlength" class="help-block">username trop court !</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password"> Mot de passe <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.password.$invalid &amp;&amp; !userForm.password.$pristine }">
+                                    <input type="password" ng-maxlength="20" ng-minlength="6" id="password" name="password"  ng-model="newUser.password" required="required" class="form-control col-md-7 col-xs-12" />
+                                    <p ng-show="userForm.password.$error.minlength" class="help-block">Mot de passe trop court !</p>
+                                    <p ng-show="userForm.password.$error.maxlength" class="help-block">Mot de passe trop long !</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.email.$invalid &amp;&amp; !userForm.email.$pristine }">
+                                    <input type="email" id="email" name="email"  ng-model="newUser.email" required="required" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse1">Adresse 1 <span class="required">*</span>
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.adress1.$invalid &amp;&amp; !userForm.adress1.$pristine }">
+                                    <input type="text" id="adresse1"  ng-model="newUser.address1" required="required" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse2">Adresse 2
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="adresse2"  ng-model="newUser.address2" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse3">Adresse 3
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="adresse3"  ng-model="newUser.address3" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telephone">Telephone
+                                </label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="telephone" name="telephone" ng-model="newUser.telephone"  required="required" class="form-control col-md-7 col-xs-12" />
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="profils">Profils
+                                </label>
+                                <div class="col-md-5 col-sm-5 col-xs-10">
+                                    <select class="form-control" ng-model="profil">
+                                        <option ng-repeat="profil in allProfiles track by $index" value="{{$index}}">
+                                            {{profil.roleName}}
+                                        </option>
+                                    </select>
+                                    <table class="table table-active table-striped">
+                                        <tr ng-repeat="profil in profiles">
+                                            <td>
+                                                {{profil.roleName}}
+                                                <a class="fa fa-close pull-right" ng-click="removeProfil(profil)"></a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                               
+                                <div>
+                                    <a class="btn btn-default" ng-click="addProfil(profil)">
+                                        <i class="fa fa-plus"></i>
+                                    </a>
+                                </div>
+                            </div>
+
+
+
+                        </form>
+                        <div class="ln_solid"></div>
+                        <div class="form-group">
+                            <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                <button class="btn btn-primary" type="reset">Reset</button>
+                                <button class="btn btn-success" ng-disabled="userForm.$invalid" ng-click="addUser(newUser)" ng-if="editerUser == false">Ajouter</button>
+                                <button class="btn btn-success" ng-disabled="userForm.$invalid" ng-click="editUser(newUser)" ng-if="editerUser == true">Modifier</button>
+                            </div>
                         </div>
 
                     </div>
@@ -186,43 +284,29 @@
         <!-- quick CDN stuff for angular/touchpunch/jquery/jqueryui -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-        <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
 
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+
         <!-- bower installed -->
-        <script src="/Dashboard/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/dataTables.responsive.min.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/bower/jsPlumb/dist/js/jquery.jsPlumb-1.6.2.js"></script>
         <script src="/Dashboard/resources/bower/angular-ui-slider/src/slider.js"></script>
-        <script src="/Dashboard/resources/js/query.js"></script>
-        <script src="/Dashboard/resources/js/angular-chart.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
 
         <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
         <!-- out local ng stuff -->
-        <script src="/Dashboard/resources/js/ngstorage.js"></script>
-        <script src="/Dashboard/resources/js/directives.js"></script>
+        <script src="/Dashboard/resources/js/notify.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angularController/userController.js" type="text/javascript"></script>
 
-        <script src="/Dashboard/resources/js/app.js"></script>
-        <script src="/Dashboard/resources/js/jsplumb.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/firstController.js"></script>
 
         <script src="/Dashboard/resources/js/bootstrap-select.js"></script>
-        <script src="/Dashboard/resources/js/waiting.js"></script>
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
-        <script src="/Dashboard/resources/js/waiting.js"></script>
+
         <script>
-                                                function formSubmit() {
-                                                    document.getElementById("logoutForm").submit();
-                                                }
-                                                ;
-                                                //$('#table').DataTable();
+                                    function formSubmit() {
+                                    document.getElementById("logoutForm").submit();
+                                    }
+                                    ;
         </script>
     </body>
 </html>

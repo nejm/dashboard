@@ -26,7 +26,6 @@ public class UserDaoImpl implements UserDao {
 
     private Session session;
 
-    private UserAndRoleImpl userAndRoleDao;
 
     public SessionFactory getSessionFactory() {
         return sessionFactory;
@@ -58,9 +57,6 @@ public class UserDaoImpl implements UserDao {
         session = sessionFactory.openSession();
         session.beginTransaction();
         List<Users> users = session.getNamedQuery("Users.findAll").list();
-        for (Users u : users) {
-            u.setPassword("");
-        }
         //session.close();
         return users;
 
@@ -76,6 +72,34 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
         return (Users) q.uniqueResult();
+    }
+
+    @Override
+    public Long addUser(Users user) {
+        createSessionFactory();
+        session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        session.save(user);
+        tx.commit();
+        return user.getUserId();
+    }
+
+    @Override
+    public void editUser(Users user) {
+        createSessionFactory();
+        session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        session.merge(user);
+        tx.commit();
+    }
+
+    @Override
+    public void deleteUser(Users user) {
+        createSessionFactory();
+        session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        session.delete(user);
+        tx.commit();
     }
 
 }

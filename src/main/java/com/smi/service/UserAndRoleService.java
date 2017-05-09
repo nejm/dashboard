@@ -25,4 +25,8 @@ import java.util.List;
 public interface UserAndRoleService {
     
     List<Usersandroles> findByUser(Long id);
+    
+    Long add(Usersandroles uar);
+    
+    void delete(Usersandroles uar);
 }

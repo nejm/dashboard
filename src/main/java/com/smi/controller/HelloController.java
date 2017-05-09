@@ -138,5 +138,30 @@ public class HelloController {
         return model;
 
     }
+    
+    @RequestMapping(value = "/users/ajout", method = RequestMethod.GET)
+    public ModelAndView addUser(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toUpperCase());
+        model.setViewName("adduser");
+        return model;
+    }
+    
+    @RequestMapping(value = "/users", method = RequestMethod.GET)
+    public ModelAndView searchUser(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toUpperCase());
+        model.setViewName("searchUser");
+        return model;
+    }
+    
+    @RequestMapping(value = "/users/editer/{id}", method = RequestMethod.GET)
+    public ModelAndView editUser(@PathVariable Long id, Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toUpperCase());
+         model.addObject("id",id);
+        model.setViewName("adduser");
+        return model;
+    }
 
 }
