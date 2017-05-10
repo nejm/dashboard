@@ -23,7 +23,6 @@ import com.smi.service.UserAndRoleService;
 import com.smi.service.UserService;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import com.smi.model.RolesOfUser;
 
 @RestController
 public class UserController {
@@ -78,35 +78,40 @@ public class UserController {
     public Users editUser(@PathVariable Long id) {
         return userService.findById(id);
     }
-    
+
     @RequestMapping(value = "/rest/profiles/{id}", method = RequestMethod.GET)
     public List<Usersandroles> userProfiles(@PathVariable Long id) {
         List<Usersandroles> u = new ArrayList<>();
-        for(Usersandroles  us : userAndRoleService.findByUser(id)){
-            if(us.getUserId() == id){
+        Long userId;
+        for (Usersandroles us : userAndRoleService.findByUser(1l)) {
+            userId = us.getUserId();
+            if (id.equals(userId)) {
                 u.add(us);
             }
         }
-        
+
         return u;
     }
 
     @RequestMapping(value = "/rest/users/profiles", method = RequestMethod.POST)
-    public void addProfilestoUser(@RequestBody JSONObject object) {
-        List<Role> roles = (List<Role>) object.get("roles");
-        System.out.println("com.smi.controller.UserController.addProfilestoUser()"+roles);
-        Integer i = (Integer) object.get("id");
-        Long id = i.longValue();
-        for(Usersandroles uar : userAndRoleService.findByUser(id)){
-            userAndRoleService.delete(uar);
+    public void addProfilestoUser(@RequestBody RolesOfUser object) {
+        System.out.println("com.smi.controller.UserController.addProfilestoUser()" + object.getId());
+        System.out.println("com.smi.controller.UserController.addProfilestoUser()" + object.getRoles());
+        Long id = object.getId();
+        for (Usersandroles uar : userAndRoleService.findByUser(id)) {
+            if (uar.getUserId() == id) {
+                userAndRoleService.delete(uar);
+            }
         }
-//        Usersandroles us = null;
-//        for(Role r : roles){
-//            us = new Usersandroles();
-//            us.setRoleId(r.getRoleId());
-//            us.setUserId(id);
-//            userAndRoleService.add(us);
-//        }
+        Usersandroles us = null;
+        if (object.getRoles() != null) {
+            for (Role r : object.getRoles()) {
+                us = new Usersandroles();
+                us.setRoleId(r.getRoleId());
+                us.setUserId(id);
+                userAndRoleService.add(us);
+            }
+        }
 
     }
 

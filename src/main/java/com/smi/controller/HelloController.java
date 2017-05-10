@@ -163,5 +163,13 @@ public class HelloController {
         model.setViewName("adduser");
         return model;
     }
+    
+    @RequestMapping(value = "/roles", method = RequestMethod.GET)
+    public ModelAndView listRoles(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toUpperCase());
+        model.setViewName("roles");
+        return model;
+    }
 
 }

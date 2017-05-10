@@ -1,5 +1,5 @@
-var myApp = angular.module('myApp', []);
-myApp.controller('userController', function ($scope, $http, $window) {
+var myApp = angular.module('myApp', ['ui.bootstrap']);
+myApp.controller('userController', function ($scope, $http, $window, $uibModal) {
 
     console.log("#UserController");
     $scope.newUser = {
@@ -20,6 +20,21 @@ myApp.controller('userController', function ($scope, $http, $window) {
         $http.get("/Dashboard/rest/users").then(function (response) {
             $scope.users = response.data;
         });
+    };
+
+    $scope.openModal = function (name) {
+
+        $scope.modalInstance = $uibModal.open({
+            templateUrl: '/Dashboard/resources/partials/' + name + '.html',
+            scope: $scope
+        });
+    };
+
+    $scope.closeModal = function () {
+        if (typeof $scope.modalInstance !== 'undefined' && $scope.modalInstance !== null) {
+            $scope.modalInstance.close();
+            $scope.modalInstance = null;
+        }
     };
 
     $scope.addUser = function () {
@@ -46,13 +61,12 @@ myApp.controller('userController', function ($scope, $http, $window) {
 
     $scope.allProfiles = [];
     $scope.profiles = [];
+    $http.get("/Dashboard/rest/roles").then(function (response) {
+        $scope.allProfiles = response.data;
+        console.log(response.data)
+    });
 
     $scope.addOrEdit = function (id) {
-        $http.get("/Dashboard/rest/roles").then(function (response) {
-            $scope.allProfiles = response.data;
-            console.log(response.data)
-        });
-
         if (id == 0) {
             $scope.editerUser = false;
         } else {
@@ -62,13 +76,13 @@ myApp.controller('userController', function ($scope, $http, $window) {
                 if (response.data.length > 0) {
                     $http.get("/Dashboard/rest/roles").then(function (response) {
                         for (var elm in response.data) {
-                            for(var i=0;i <$scope.tempProfiles.length; i++){
-                                if(response.data[elm].roleId == $scope.tempProfiles[i].roleId){
+                            for (var i = 0; i < $scope.tempProfiles.length; i++) {
+                                if (response.data[elm].roleId == $scope.tempProfiles[i].roleId) {
                                     $scope.profiles.push(response.data[elm]);
-                                    $scope.allProfiles.splice($scope.allProfiles.indexOf(response.data[elm]),1);
+                                    $scope.allProfiles.splice($scope.allProfiles.indexOf(response.data[elm]), 1);
                                 }
                             }
-                            
+
                         }
                         $http.get("/Dashboard/rest/users/edit/" + id).then(function (response) {
                             $scope.newUser = response.data;
@@ -85,19 +99,71 @@ myApp.controller('userController', function ($scope, $http, $window) {
 
     };
 
+    $scope.containesProfile = function (table, value) {
+        var index = -1;
+
+        for (var i = 0; i < table.length; i++) {
+            if (table[i].roleId == value.roleId)
+                return i;
+        }
+        return index;
+    }
+
+    $http.get("/Dashboard/rest/roles").then(function (response) {
+        $scope.roles = response.data;
+    });
+
+    $scope.getRole = function (id) {
+        for (var i = 0; i < $scope.roles.length; i++) {
+            if ($scope.roles[i].roleId == id) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    $scope.addProfiles = function (profiles) {
+        for (var i in profiles) {
+            if ((k = $scope.containesProfile($scope.allProfiles, profiles[i])) > -1) {
+                console.log(k)
+                $scope.allProfiles.splice(k, 1);
+                console.log($scope.getRole(profiles[i].roleId))
+                $scope.profiles.push($scope.roles[$scope.getRole(profiles[i].roleId)]);
+            }
+        }
+    }
+
     $scope.editUser = function (user) {
-        $http.post("/Dashboard/rest/users/edit", user).then(function (response) {
+        console.log(user);
+        $scope.currentUser = user;
+        $scope.profiles = [];
+        $http.get("/Dashboard/rest/roles").then(function (response) {
+            $scope.allProfiles = response.data;
+            $http.get("/Dashboard/rest/profiles/" + user.userId).then(function (response) {
+                $scope.addProfiles(response.data);
+                $scope.openModal('editUser');
+            })
+        });
+    };
+    
+    $scope.ajoutUsersToRole = function(role){
+        $scope.openModal('role');
+    }
+    
+    $scope.saveEditUser = function () {
+        $http.post("/Dashboard/rest/users/edit", $scope.currentUser).then(function (response) {
             let profiles = {
-                id: user.userId,
+                id: $scope.currentUser.userId,
                 roles: $scope.profiles
             };
             $http.post("/Dashboard/rest/users/profiles", profiles).then(function () {
                 $window.location.href = '/Dashboard/users';
+                $scope.currentUser = {};
             });
         });
-    };
+    }
 
-    $scope.addProfil = function(index) {
+    $scope.addProfil = function (index) {
         if (typeof $scope.allProfiles[index] != 'undefined') {
             $scope.profiles.push($scope.allProfiles[index]);
             $scope.allProfiles.splice(index, 1);
@@ -109,6 +175,15 @@ myApp.controller('userController', function ($scope, $http, $window) {
         $scope.profiles.splice($scope.profiles.indexOf(profil), 1);
         $scope.allProfiles.push(profil);
     }
-
+    
+    $scope.usersAssignes = [];
+    $scope.addToRole = function(index){
+        $scope.usersAssignes.push($scope.users[index]);
+        $scope.users.splice(index,1);
+    }
+    $scope.removeFromRole = function(index){
+        $scope.users.push($scope.usersAssignes[index]);
+        $scope.usersAssignes.splice(index,1);
+    }
 
 });

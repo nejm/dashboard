@@ -35,10 +35,6 @@
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/normalize.css" rel="stylesheet" type="text/css"/>
-         <style>
-            #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
-            #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 24%; height: 250px;}
-        </style>
     </head>
 
     <body class="nav-md" ng-controller="userController" ng-init="init()" style="overflow-x : hidden">
@@ -84,77 +80,77 @@
                     <div class="nav_menu menu_fixed">
                         <nav>
                             <div class="nav toggle">
-    <div class="dropdown">
-        <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-            <i class="fa fa-bars"></i>
-        </a>
+                                <div class="dropdown">
+                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
 
-        <ul class="dropdown-menu">
-            <li>
-                <a href="/Dashboard/home">
-                    Acceuil
-                    <i class="fa fa-home pull-right"></i>
-                </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/Dashboard/home">
+                                                Acceuil
+                                                <i class="fa fa-home pull-right"></i>
+                                            </a>
 
-            </li>
-            <li class="divider"></li>
-            <li class="dropdown">
-                <a>Statistiques
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/new">Nouveau
-                            <span class="fa fa-line-chart pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/statistiques/search">Modifier
-                            <span class="fa fa-edit pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown"><a>Dashboards
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/create/new">Nouveau
-                            <span class="fa fa-window-maximize pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/consulte">Consulter
-                            <span class="fa fa-dashboard pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/search">Modifier
-                            <span class="fa fa-pencil pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Utilisateurs
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="\Dashboard\users\ajout">Nouveau
-                            <span class="fa fa-user-plus pull-right"></span>
-                        </a></li>
-                    <li><a href="\Dashboard\users">Modifier
-                            <span class="fa fa-user-o pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Rôles
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Nouveau
-                            <span class="fa fa-users pull-right"></span>
-                        </a></li>
-                    <li><a href="#">Modifier
-                            <span class="fa fa-vcard pull-right" ></span>
-                        </a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="dropdown">
+                                            <a>Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/new">Nouveau
+                                                        <span class="fa fa-line-chart pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/statistiques/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a>Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/create/new">Nouveau
+                                                        <span class="fa fa-window-maximize pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/consulte">Consulter
+                                                        <span class="fa fa-dashboard pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/search">Modifier
+                                                        <span class="fa fa-pencil pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Utilisateurs
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="\Dashboard\users\ajout">Nouveau
+                                                        <span class="fa fa-user-plus pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="\Dashboard\users">Modifier
+                                                        <span class="fa fa-user-o pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Rôles
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau
+                                                        <span class="fa fa-users pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="#">Modifier
+                                                        <span class="fa fa-vcard pull-right" ></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
 
 
                             <ul class="nav navbar-nav navbar-right">
@@ -233,46 +229,46 @@
 
                         <div class="clearfix"></div>
                         <div class="row">
-                            <table class="table table-striped table-bordered">
-                                <thead>
+                            <div class="col-md-4">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" value="Ajouter un rôle" disabled="true" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-secondary" type="button" ng-click="addRole()">
+                                            <i class="fa fa-plus" />
+                                        </button>
+                                    </span>
+                                </div>
+                            </div>
+                            </div>
+                            <div >
+                                <table class="table table-striped table-bordered">
+                                    <thead>
                                         <tr>
-                                            <th>Username</th>
-                                            <th>Prénom</th>
-                                            <th>Nom</th>
-                                            <th>Email</th>
+                                            <th>Nom du Role</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
-                                <tbody>
-                                <tr ng-repeat="user in users| filter:searched">
-                                    
-                                    <td>
-                                            {{user.username}}
-                                    </td>
-                                    <td>
-                                            {{user.firstname}}
-                                    </td>
-                                   
-                                    <td>
-                                            {{user.lastname}}
-                                    </td>
-                                    <td>
-                                            {{user.email}}
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-default" ng-click="editUser(user)">
-                                            <i class="fa fa-edit" />
-                                        </button> 
-                                        <button class="btn btn-default">
-                                            <i class="fa fa-plus" />
-                                        </button> 
-                                    </td>
-                                </tr>
+                                    <tbody>
+                                        <tr ng-repeat="role in roles| filter:searched">
+
+                                            <td>
+                                                {{role.roleName}}
+                                            </td>
+                                            <td>
+                                                <button class="btn btn-default" ng-click="editRole(role)">
+                                                    <i class="fa fa-edit"  />
+                                                </button> 
+                                                <button class="btn btn-default" ng-click="ajoutUsersToRole(role)">
+                                                    <i class="fa fa-plus" />
+                                                </button> 
+                                            </td>
+                                        </tr>
                                     </tbody>
-                            </table>
+                                </table>
+                            </div>
+
 
                         </div>
-                    </div>
                 </div>
 
 
@@ -306,3 +302,4 @@
         </script>
     </body>
 </html>
+

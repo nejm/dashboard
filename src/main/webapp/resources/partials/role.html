@@ -1,0 +1,87 @@
+<style>
+    .list{
+        background: #d1703c;
+        color: #fff;
+        height: 0;
+        line-height: 2em;
+        margin: 0;
+        padding: 0 0.5em;
+        overflow: hidden;
+        width: 10em;
+    }
+
+    .show {
+        height: 2em;
+        margin: 2px 0;
+    } 
+</style>
+<div class="modal-content">
+    <div class="modal-header"><h4 class="modal-title">Ajouter des utoilisteurs</h4></div>
+    <div class="modal-body" style="height: 500px">
+        <form>
+            <div class="form-group">
+                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Username
+                </label>
+                <div class="col-md-5 col-sm-5 col-xs-10">
+                    <input type="text" id="prenom" name="username" required="required" class="form-control col-md-7 col-xs-12" />
+                </div>
+                <div class="col-md-1 col-sm-1 col-xs-1">
+                    <button class="btn btn-default"><i class="fa fa-search" /></button>
+                </div>
+
+            </div>
+        </form>
+        <div class="separator" ></div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Utilisateurs assignées</h2>
+
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content" style="max-height: 300px;overflow-x: auto">
+
+                    <div ng-repeat="user in usersAssignes track by $index">
+                        <div class="col-md-8 col-sm-8">{{user.username}}
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <button class="btn btn-default" ng-click="removeFromRole($index)">
+                                <i class="fa fa-minus"/>   
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-6 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Utilisateurs à ajouter</h2>
+
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content" style="max-height: 300px;overflow-x: auto">
+
+                    <div ng-repeat="user in users track by $index">
+                        <div class="col-md-8 col-sm-8">{{user.username}}
+                        </div>
+                        <div class="col-md-4 col-sm-4">
+                            <button class="btn btn-default" ng-click="addToRole($index)">
+                                <i class="fa fa-plus"/>   
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-disabled="userForm.$invalid" ng-click="saveEditUser()">Editer</button>
+        <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
+    </div>
+</div>
+

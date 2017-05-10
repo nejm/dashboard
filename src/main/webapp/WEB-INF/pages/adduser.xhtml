@@ -25,6 +25,8 @@
 
     
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
+        <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
+        <link href="/Dashboard/resources/css/normalize.css" rel="stylesheet" type="text/css"/>
     </head>
 
     <body class="nav-md" style="overflow-x: hidden" ng-controller="userController" ng-init="addOrEdit('#{id}')">
@@ -55,15 +57,7 @@
                         <br />
 
                         <!-- sidebar menu -->
-                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                            <div class="menu_section">
-                                <ul class="nav side-menu">
-                                    <li><a href="/home">Retour</a></li>
-                                </ul>
-
-
-                            </div>
-                        </div>
+                        
                         <!-- /sidebar menu -->
 
                     </div>
@@ -73,35 +67,79 @@
                 <div class="top_nav">
                     <div class="nav_menu">
                         <nav>
-                            <div class="nav toggle">
-                                <div class="dropdown">
-                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-                                        <i class="fa fa-bars"></i>
-                                    </a>
+                           <div class="nav toggle">
+    <div class="dropdown">
+        <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+            <i class="fa fa-bars"></i>
+        </a>
 
-                                    <ul class="dropdown-menu">
-                                        <li class="dropdown">
-                                            <a href="#">Statistiques
-                                                <i class="fa fa-angle-right pull-right"></i>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Nouveau</a></li>
-                                                <li><a href="#">Modifier</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown"><a href="#">Dashboards
-                                                <i class="fa fa-angle-right pull-right"></i>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Nouveau</a></li>
-                                                <li><a href="#">Modifier</a></li>
-                                            </ul>
-                                        </li>
+        <ul class="dropdown-menu">
+            <li>
+                <a href="/Dashboard/home">
+                    Acceuil
+                    <i class="fa fa-home pull-right"></i>
+                </a>
 
-                                    </ul>
-                                </div>
-                            </div>
-
+            </li>
+            <li class="divider"></li>
+            <li class="dropdown">
+                <a>Statistiques
+                    <i class="fa fa-angle-right pull-right"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Dashboard/new">Nouveau
+                            <span class="fa fa-line-chart pull-right"></span>
+                        </a></li>
+                    <li><a href="/Dashboard/statistiques/search">Modifier
+                            <span class="fa fa-edit pull-right"></span>
+                        </a></li>
+                </ul>
+            </li>
+            <li class="dropdown"><a>Dashboards
+                    <i class="fa fa-angle-right pull-right"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="/Dashboard/create/new">Nouveau
+                            <span class="fa fa-window-maximize pull-right"></span>
+                        </a></li>
+                    <li><a href="/Dashboard/dashboards/consulte">Consulter
+                            <span class="fa fa-dashboard pull-right"></span>
+                        </a></li>
+                    <li><a href="/Dashboard/dashboards/search">Modifier
+                            <span class="fa fa-pencil pull-right"></span>
+                        </a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Utilisateurs
+                    <i class="fa fa-angle-right pull-right"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="\Dashboard\users\ajout">Nouveau
+                            <span class="fa fa-user-plus pull-right"></span>
+                        </a></li>
+                    <li><a href="\Dashboard\users">Modifier
+                            <span class="fa fa-user-o pull-right"></span>
+                        </a></li>
+                </ul>
+            </li>
+            <li class="dropdown">
+                <a href="#">Rôles
+                    <i class="fa fa-angle-right pull-right"></i>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Nouveau
+                            <span class="fa fa-users pull-right"></span>
+                        </a></li>
+                    <li><a href="#">Modifier
+                            <span class="fa fa-vcard pull-right" ></span>
+                        </a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+                            
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
                                     <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -116,7 +154,7 @@
                                     </ul>
                                 </li>
 
-                                <li role="presentation" class="dropdown">
+<!--                                <li role="presentation" class="dropdown">
                                     <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
                                         <i class="fa fa-envelope-o"></i>
                                     </a>
@@ -125,7 +163,7 @@
                                             <a>
                                                 <span class="image"><img src="/Dashboard/resources/images/img.png" alt="Profile Image" /></span>
                                                 <span>
-                                                    <span>John Smith</span>
+                                                    <span>#{user}</span>
                                                     <span class="time">3 mins ago</span>
                                                 </span>
                                                 <span class="message">
@@ -142,7 +180,7 @@
                                             </div>
                                         </li>
                                     </ul>
-                                </li>
+                                </li>-->
                             </ul>
                         </nav>
                     </div>

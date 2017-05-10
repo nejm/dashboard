@@ -1,11 +1,11 @@
-myApp.controller('FirstExampleController', function ($timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile, Stat) {
+myApp.controller('FirstExampleController', function ($timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile) {
 
     $scope.log = "";
     $scope.allUsers = [];
     $scope.myStats = [];
     $scope.allProfiles = [];
     $scope.edit = false;
-    $scope.statistique = new Stat();
+    $scope.statistique = {};
     $scope.idProject = false;
     $scope.username = "";
     $scope.statId = "";
@@ -555,7 +555,9 @@ myApp.controller('FirstExampleController', function ($timeout, $rootScope, $filt
         $scope.query.operation = [];
         $scope.query.ressources = [];
         $scope.generateStatistique(t);
+        console.log($scope.query)
         let url1 = "", url2 = "";
+        console.log( $scope.query.ressources[0])
         for (var elem in $scope.services) {
             if ($scope.services[elem].service.id == $scope.query.ressources[0].ressourceId) {
                 url1 = $scope.services[elem].service.url + $scope.services[elem].service.suburl;
@@ -563,6 +565,7 @@ myApp.controller('FirstExampleController', function ($timeout, $rootScope, $filt
                 break;
             }
         }
+        console.log(url1)
         if (typeof $scope.query.ressources[1] != 'undefined') {
             for (var elem in $scope.services) {
                 if ($scope.services[elem].service.id == $scope.query.ressources[1].ressourceId) {
@@ -823,7 +826,7 @@ myApp.controller('FirstExampleController', function ($timeout, $rootScope, $filt
         $scope.barHTML = "<div style='height : 80%; width : 80%'><canvas class='chart chart-bar' chart-data='dataBar' chart-labels='labelsBar'> </canvas></div>";
     }
 
-    $scope.openModal = function (name, id) {
+    $scope.openModal = function(name, id) {
         if (id != 'null') {
             $scope.currentRessource = $scope.getRessource(id);
         }
@@ -1119,7 +1122,8 @@ myApp.controller('FirstExampleController', function ($timeout, $rootScope, $filt
                             }
                     }
                 } else {
-                    target.source = t;
+                    //if(target.source.type != 'r')
+                    //target.source = t;
                     target.barAttributes = [];
                     target.pieAttributes = [];
                     target.lineAttributes = [];

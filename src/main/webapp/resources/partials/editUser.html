@@ -1,26 +1,116 @@
-<!DOCTYPE html>
-<!--
-Copyright 2017 Nejm.
+<div class="modal-content">
+<div class="modal-header"><h4 class="modal-title">Editer</h4></div>
+<div class="modal-body"><!--{{labelsBar.length*20}}-->
+    <form id="userForm" name="userForm" class="form-horizontal form-label-left">
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Nom<span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.lastName.$invalid &amp;&amp; !userForm.lastName.$pristine }">
+                <input type="text" id="nom" name="lastName" ng-model="currentUser.lastname" required="required" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
 
-     http://www.apache.org/licenses/LICENSE-2.0
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Prénom <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.firstName.$invalid &amp;&amp; !userForm.firstName.$pristine }">
+                <input type="text" id="prenom" name="firstName"  ng-model="currentUser.firstname" required="required" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="username">Username <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.username.$invalid &amp;&amp; !userForm.username.$pristine }">
+                <input type="text" ng-maxlength="10" ng-minlength="4" id="username" name="username"  ng-model="currentUser.username" required="required" class="form-control col-md-7 col-xs-12" />
+                <p ng-show="userForm.username.$error.maxlength" class="help-block">username trop long !</p>
+                <p ng-show="userForm.username.$error.minlength" class="help-block">username trop court !</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="password"> Mot de passe <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.password.$invalid &amp;&amp; !userForm.password.$pristine }">
+                <input type="password" ng-maxlength="20" ng-minlength="6" id="password" name="password"  ng-model="currentUser.password" required="required" class="form-control col-md-7 col-xs-12" />
+                <p ng-show="userForm.password.$error.minlength" class="help-block">Mot de passe trop court !</p>
+                <p ng-show="userForm.password.$error.maxlength" class="help-block">Mot de passe trop long !</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.email.$invalid &amp;&amp; !userForm.email.$pristine }">
+                <input type="email" id="email" name="email"  ng-model="currentUser.email" required="required" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse1">Adresse 1 <span class="required">*</span>
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.adress1.$invalid &amp;&amp; !userForm.adress1.$pristine }">
+                <input type="text" id="adresse1"  ng-model="currentUser.address1" required="required" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse2">Adresse 2
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="text" id="adresse2"  ng-model="currentUser.address2" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse3">Adresse 3
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="text" id="adresse3"  ng-model="currentUser.address3" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telephone">Telephone
+            </label>
+            <div class="col-md-6 col-sm-6 col-xs-12">
+                <input type="text" id="telephone" name="telephone" ng-model="currentUser.telephone"  required="required" class="form-control col-md-7 col-xs-12" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-3 col-sm-3 col-xs-12" for="profils">Profils
+            </label>
+            <div class="col-md-5 col-sm-5 col-xs-10">
+                <select class="form-control" ng-model="profil">
+                    <option ng-repeat="profil in allProfiles track by $index" value="{{$index}}">
+                        {{profil.roleName}}
+                    </option>
+                </select>
+                <table class="table table-active table-striped">
+                    <tr ng-repeat="profil in profiles track by $index">
+                        <td>
+                            {{profil.roleName}}
+                            <a class="fa fa-close pull-right" ng-click="removeProfil(profil)"></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div>
+                <a class="btn btn-default" ng-click="addProfil(profil)">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </div>
+        </div>
+
+
+
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-default" ng-disabled="userForm.$invalid" ng-click="saveEditUser()">Editer</button>
+    <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
+</div>
+</div>
+
