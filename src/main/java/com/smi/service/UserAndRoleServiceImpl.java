@@ -25,10 +25,10 @@ import org.springframework.stereotype.Service;
  * @author Nejm
  */
 @Service("userAndRoleService")
-public class UserAndRoleServiceImpl implements UserAndRoleService{
-    
+public class UserAndRoleServiceImpl implements UserAndRoleService {
+
     UserAndRoleImpl userAndRoleDao = new UserAndRoleImpl();
-    
+
     @Override
     public List<Usersandroles> findByUser(Long id) {
         return userAndRoleDao.findByUser(id);
@@ -43,5 +43,10 @@ public class UserAndRoleServiceImpl implements UserAndRoleService{
     public void delete(Usersandroles uar) {
         userAndRoleDao.delete(uar);
     }
-    
+
+    @Override
+    public List<Usersandroles> findByRole(Long id) {
+        return userAndRoleDao.findByRole(id);
+    }
+
 }

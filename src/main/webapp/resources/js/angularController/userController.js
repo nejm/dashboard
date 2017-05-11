@@ -99,6 +99,14 @@ myApp.controller('userController', function ($scope, $http, $window, $uibModal) 
 
     };
 
+    $scope.getUserIndex = function (user) {
+        for (let i = 0; i < $scope.users.length; i++) {
+            if ($scope.users[i].userId == user.userId)
+                return i;
+        }
+        return -1;
+    }
+
     $scope.containesProfile = function (table, value) {
         var index = -1;
 
@@ -145,11 +153,21 @@ myApp.controller('userController', function ($scope, $http, $window, $uibModal) 
             })
         });
     };
-    
-    $scope.ajoutUsersToRole = function(role){
-        $scope.openModal('role');
-    }
-    
+
+    $scope.ajoutUsersToRole = function (role) {
+        $http.get("/Dashboard/rest/users").then(function (response) {
+            $scope.users = response.data;
+            $http.get("/Dashboard/rest/roles/users/" + role.roleId).then(function (response) {
+                $scope.usersAssignes = [];
+                for (let i = 0; i < response.data.length; i++) {
+                    if ($scope.getUserIndex(response.data[i]) !== -1)
+                        $scope.addToRole($scope.getUserIndex(response.data[i]));
+                }
+                $scope.openModal('role');
+            });
+        });
+    };
+
     $scope.saveEditUser = function () {
         $http.post("/Dashboard/rest/users/edit", $scope.currentUser).then(function (response) {
             let profiles = {
@@ -175,15 +193,25 @@ myApp.controller('userController', function ($scope, $http, $window, $uibModal) 
         $scope.profiles.splice($scope.profiles.indexOf(profil), 1);
         $scope.allProfiles.push(profil);
     }
-    
+
     $scope.usersAssignes = [];
-    $scope.addToRole = function(index){
+
+    $scope.addToRole = function (index) {
         $scope.usersAssignes.push($scope.users[index]);
-        $scope.users.splice(index,1);
-    }
-    $scope.removeFromRole = function(index){
+        $scope.users.splice(index, 1);
+    };
+
+    $scope.removeFromRole = function (index) {
         $scope.users.push($scope.usersAssignes[index]);
-        $scope.usersAssignes.splice(index,1);
+        $scope.usersAssignes.splice(index, 1);
+    };
+    
+    $scope.addRole = function(){
+        $scope.openModal('addRole');
+    }
+    
+    $scope.saveRole = function(role){
+        console.log(role)
     }
 
 });

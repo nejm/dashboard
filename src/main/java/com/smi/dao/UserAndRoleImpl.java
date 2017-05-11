@@ -58,4 +58,14 @@ public class UserAndRoleImpl implements UserAndRoleDao {
         tx.commit();
     }
 
+    @Override
+    public List<Usersandroles> findByRole(long id) {
+        Session session = this.getSessionFactory().openSession();
+        session.beginTransaction();
+        Query query = session.getNamedQuery("Usersandroles.findByRoleId").setLong("roleId", id);
+        List<Usersandroles> l = query.list();
+        session.close();
+        return l;
+    }
+
 }

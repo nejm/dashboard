@@ -26,7 +26,11 @@ public interface UserAndRoleService {
     
     List<Usersandroles> findByUser(Long id);
     
+    List<Usersandroles> findByRole(Long id);
+    
     Long add(Usersandroles uar);
     
     void delete(Usersandroles uar);
+    
+    
 }

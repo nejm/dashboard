@@ -31,6 +31,13 @@
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/jquery.mCustomScrollbar.min.css" rel="stylesheet" type="text/css"/>
+        
+        <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css"/>
+        
+       
+        
+        
         <style>
             .log{
                 bottom:0;clear:both;display:block;padding:5px 0 0;
@@ -38,178 +45,178 @@
             }
         </style>
     </head>
-  
+
     <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('${id}')">
-        
+
         <div class="container body">
             <div class="main_container">
-                
-                    <div class="col-md-3 left_col menu_fixed" id="">
-                        <div class="left_col scroll-view">
-                            <div class="navbar nav_title" style="border: 0;">
-                                <a href="Dashboard/home" class="site_title"><span>Dashboard</span></a>
-                            </div>
 
-                            <div class="clearfix"></div>
-
-                            <!-- menu profile quick info -->
-                            <div class="profile clearfix">
-                                <div class="profile_pic">
-                                    <img src="/Dashboard/resources/images/img.png" alt="..." class="img-circle profile_img" />
-                                </div>
-                                <div class="profile_info">
-                                    <span>Welcome,</span>
-                                    <h2>${user}</h2>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <!-- /menu profile quick info -->
-
-                            <br />
-
-                            <!-- sidebar menu -->
-                            <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-                                <div class="menu_section">
-                                    <ul class="nav side-menu">
-                                        <li class="active">
-                                            <a id="slideRessource">Ressources<i class="fa fa-plus pull-right" ng-click="addNewRessource()"></i></a>
-                                            <ul id="slideRessourceChild" class="nav side-menu" style="display: none">
-
-                                                <li ng-repeat="res in ressources">
-                                                    <a>
-                                                        <span>
-                                                            {{res.ressource.name}}
-                                                        </span>
-                                                        <i class='fa fa-trash pull-right' ng-click="deleteRessource(res.ressource)"></i>
-                                                        <i class='fa fa-plus pull-right' ng-click="addNewService(res.ressource.id)"></i>
-                                                        <i class='fa fa-pencil pull-right' ng-click="editRessource(res.ressource)"></i>
-
-                                                    </a>
-
-                                                    <ul class="nav child_menu" style="display: block;" id="{{res.ressource.id}}">
-
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="active" id="slideStat"><a>Opérateurs de Statistiques</a>
-                                            <ul id="slideStatChild" class="nav side-menu" style="display : none">
-                                                <li><a ng-click="drawCondition('select')">Sélection</a></li>
-                                                <li><a ng-click="drawCondition('where')">Condition</a></li>
-                                                <li><a ng-click="drawCondition('join')">Jointure</a></li>
-                                            </ul>
-                                        </li>
-                                        <li  id="slideGraph" class="active"><a>Modèles de statistiques</a>
-                                            <ul id="slideGraphChild" class="nav side-menu" style="display: none">
-                                                <li><a>Modèles en Tableaux</a>
-                                                    <ul class="nav child_menu" style="display: block;">
-                                                        <li><a  ng-click="drawStat('tab')">Tableau
-                                                                <i class="fa fa-table pull-right"/>
-                                                            </a></li>
-                                                    </ul></li>
-                                                <li><a>Modèles graphiques</a>
-                                                    <ul class="nav child_menu" style="display: block;">
-                                                        <li><a  ng-click="drawStat('bar')">Modèles en batônnets
-                                                                <i class="fa fa-bar-chart pull-right"/>
-                                                            </a>
-                                                        </li>
-                                                        <li><a  ng-click="drawStat('pie')">Modèles en camembert
-                                                                <i class="fa fa-pie-chart pull-right"/>
-                                                            </a>
-                                                        </li>
-                                                        <li><a  ng-click="drawStat('line')">Modèles en lignes
-                                                                <i class="fa fa-area-chart pull-right"/>
-                                                            </a>
-                                                        </li>
-                                                    </ul></li>
-                                            </ul>
-                                        </li>
-                                        <li class="active"><a ng-click="drawResult()">Résultat</a></li>
-                                     </ul>
-
-
-                                </div>
-                            </div>
-                            <!-- /sidebar menu -->
-
+                <div class="col-md-3 left_col menu_fixed" id="">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title" style="border: 0;">
+                            <a href="Dashboard/home" class="site_title"><span>Dashboard</span></a>
                         </div>
+
+                        <div class="clearfix"></div>
+
+                        <!-- menu profile quick info -->
+                        <div class="profile clearfix">
+                            <div class="profile_pic">
+                                <img src="/Dashboard/resources/images/img.png" alt="..." class="img-circle profile_img" />
+                            </div>
+                            <div class="profile_info">
+                                <span>Welcome,</span>
+                                <h2>${user}</h2>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- /menu profile quick info -->
+
+                        <br />
+
+                        <!-- sidebar menu -->
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                            <div class="menu_section">
+                                <ul class="nav side-menu">
+                                    <li class="active">
+                                        <a id="slideRessource">Ressources<i class="fa fa-plus pull-right" ng-click="addNewRessource()"></i></a>
+                                        <ul id="slideRessourceChild" class="nav side-menu" style="display: none">
+
+                                            <li ng-repeat="res in ressources">
+                                                <a>
+                                                    <span>
+                                                        {{res.ressource.name}}
+                                                    </span>
+                                                    <i class='fa fa-trash pull-right' ng-click="deleteRessource(res.ressource)"></i>
+                                                    <i class='fa fa-plus pull-right' ng-click="addNewService(res.ressource.id)"></i>
+                                                    <i class='fa fa-pencil pull-right' ng-click="editRessource(res.ressource)"></i>
+
+                                                </a>
+
+                                                <ul class="nav child_menu" style="display: block;" id="{{res.ressource.id}}">
+
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="active" id="slideStat"><a>Opérateurs de Statistiques</a>
+                                        <ul id="slideStatChild" class="nav side-menu" style="display : none">
+                                            <li><a ng-click="drawCondition('select')">Sélection</a></li>
+                                            <li><a ng-click="drawCondition('where')">Condition</a></li>
+                                            <li><a ng-click="drawCondition('join')">Jointure</a></li>
+                                        </ul>
+                                    </li>
+                                    <li  id="slideGraph" class="active"><a>Modèles de statistiques</a>
+                                        <ul id="slideGraphChild" class="nav side-menu" style="display: none">
+                                            <li><a>Modèles en Tableaux</a>
+                                                <ul class="nav child_menu" style="display: block;">
+                                                    <li><a  ng-click="drawStat('tab')">Tableau
+                                                            <i class="fa fa-table pull-right"/>
+                                                        </a></li>
+                                                </ul></li>
+                                            <li><a>Modèles graphiques</a>
+                                                <ul class="nav child_menu" style="display: block;">
+                                                    <li><a  ng-click="drawStat('bar')">Modèles en batônnets
+                                                            <i class="fa fa-bar-chart pull-right"/>
+                                                        </a>
+                                                    </li>
+                                                    <li><a  ng-click="drawStat('pie')">Modèles en camembert
+                                                            <i class="fa fa-pie-chart pull-right"/>
+                                                        </a>
+                                                    </li>
+                                                    <li><a  ng-click="drawStat('line')">Modèles en lignes
+                                                            <i class="fa fa-area-chart pull-right"/>
+                                                        </a>
+                                                    </li>
+                                                </ul></li>
+                                        </ul>
+                                    </li>
+                                    <li class="active"><a ng-click="drawResult()">Résultat</a></li>
+                                </ul>
+
+
+                            </div>
+                        </div>
+                        <!-- /sidebar menu -->
+
                     </div>
+                </div>
                 <!-- top navigation -->
                 <div class="top_nav  navbar-fixed-top" >
                     <div class="nav_menu">
                         <nav>
-                             <div class="nav toggle">
-    <div class="dropdown">
-        <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-            <i class="fa fa-bars"></i>
-        </a>
+                            <div class="nav toggle">
+                                <div class="dropdown">
+                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
 
-        <ul class="dropdown-menu">
-            <li>
-                <a href="/Dashboard/home">
-                    Acceuil
-                    <i class="fa fa-home pull-right"></i>
-                </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/Dashboard/home">
+                                                Acceuil
+                                                <i class="fa fa-home pull-right"></i>
+                                            </a>
 
-            </li>
-            <li class="divider"></li>
-            <li class="dropdown">
-                <a>Statistiques
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/new">Nouveau
-                            <span class="fa fa-line-chart pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/statistiques/search">Modifier
-                            <span class="fa fa-edit pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown"><a>Dashboards
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/create/new">Nouveau
-                            <span class="fa fa-window-maximize pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/consulte">Consulter
-                            <span class="fa fa-dashboard pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/search">Modifier
-                            <span class="fa fa-pencil pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Utilisateurs
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="\Dashboard\users\ajout">Nouveau
-                            <span class="fa fa-user-plus pull-right"></span>
-                        </a></li>
-                    <li><a href="\Dashboard\users">Modifier
-                            <span class="fa fa-user-o pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Rôles
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Nouveau
-                            <span class="fa fa-users pull-right"></span>
-                        </a></li>
-                    <li><a href="#">Modifier
-                            <span class="fa fa-vcard pull-right" ></span>
-                        </a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li class="dropdown">
+                                            <a>Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/new">Nouveau
+                                                        <span class="fa fa-line-chart pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/statistiques/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a>Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/create/new">Nouveau
+                                                        <span class="fa fa-window-maximize pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/consulte">Consulter
+                                                        <span class="fa fa-dashboard pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/search">Modifier
+                                                        <span class="fa fa-pencil pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Utilisateurs
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="\Dashboard\users\ajout">Nouveau
+                                                        <span class="fa fa-user-plus pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="\Dashboard\users">Modifier
+                                                        <span class="fa fa-user-o pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#">Rôles
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="#">Nouveau
+                                                        <span class="fa fa-users pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="#">Modifier
+                                                        <span class="fa fa-vcard pull-right" ></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
 
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
@@ -231,19 +238,19 @@
 
                                 <li style="cursor: pointer">
                                     <a class="user-profile"  aria-expanded="false" ng-click="generateStat(true)">
-                                        
+
                                         <span class=" fa fa-play-circle-o"></span>
                                         Exécuter
                                     </a>
-                                    
+
                                 </li>
                                 <li style="cursor: pointer">
                                     <a class="user-profile" ng-click="saveState('#{user}')"  aria-expanded="false">
-                                        
+
                                         <span class="fa fa-save"></span>
                                         Enregistrer
                                     </a>
-                                    
+
                                 </li>
                             </ul>
                         </nav>
@@ -299,8 +306,9 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
 
         <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
-        
-        
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js" type="text/javascript"></script>
+
         <!-- out local ng stuff -->
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
         <script src="/Dashboard/resources/js/directives.js"></script>
@@ -317,29 +325,29 @@
                                     function formSubmit() {
                                         document.getElementById("logoutForm").submit();
                                     }
-                                    $("#slideRessource").on('click',function(){
-                                        
+                                    $("#slideRessource").on('click', function () {
+
                                         $("#slideRessourceChild").slideToggle();
-                                        if($("#slideRessourceChild").height() === 0){
-                                             $("#slideStatChild").slideUp();
-                                             $("#slideGraphChild").slideUp();
+                                        if ($("#slideRessourceChild").height() === 0) {
+                                            $("#slideStatChild").slideUp();
+                                            $("#slideGraphChild").slideUp();
                                         }
                                     });
-                                    $("#slideStat").on('click',function(){
-                                        
+                                    $("#slideStat").on('click', function () {
+
                                         $("#slideStatChild").slideToggle();
-                                        if($("#slideStatChild").height() === 0){
-                                             $("#slideRessourceChild").slideUp();
-                                             $("#slideGraphChild").slideUp();
+                                        if ($("#slideStatChild").height() === 0) {
+                                            $("#slideRessourceChild").slideUp();
+                                            $("#slideGraphChild").slideUp();
                                         }
                                     });
-                                    $("#slideGraph").on('click',function(){
-                                        
+                                    $("#slideGraph").on('click', function () {
+
                                         $("#slideGraphChild").slideToggle();
-                                       
-                                        if($("#slideGraphChild").height() === 0){
-                                             $("#slideStatChild").slideUp();
-                                             $("#slideRessourceChild").slideUp();
+
+                                        if ($("#slideGraphChild").height() === 0) {
+                                            $("#slideStatChild").slideUp();
+                                            $("#slideRessourceChild").slideUp();
                                         }
                                     })
         </script>

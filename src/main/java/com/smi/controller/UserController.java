@@ -78,6 +78,15 @@ public class UserController {
     public Users editUser(@PathVariable Long id) {
         return userService.findById(id);
     }
+    
+    @RequestMapping(value = "/rest/roles/users/{id}", method = RequestMethod.GET)
+    public List<Users> usersOfRole(@PathVariable Long id) {
+        List<Users> users = new ArrayList<>();
+        for(Usersandroles u : userAndRoleService.findByRole(id)){
+            users.add(userService.findById(u.getUserId()));
+        }
+        return users;
+    }
 
     @RequestMapping(value = "/rest/profiles/{id}", method = RequestMethod.GET)
     public List<Usersandroles> userProfiles(@PathVariable Long id) {
