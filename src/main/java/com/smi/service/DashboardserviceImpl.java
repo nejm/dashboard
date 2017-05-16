@@ -88,4 +88,9 @@ public class DashboardserviceImpl implements DashboardService {
         dashboardDao.edit(dashboard);
     }
 
+    @Override
+    public void delete(Dashboard d) {
+        dashboardDao.delete(d);
+    }
+
 }

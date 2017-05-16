@@ -48,5 +48,10 @@ public class DashboardUserServiceImpl implements DashboardUserService{
     public void edit(DashboardUser dashboard) {
         dashboardUserDao.edit(dashboard);
     }
+
+    @Override
+    public void delete(DashboardUser dashboardUser) {
+        dashboardUserDao.delete(dashboardUser);
+    }
     
 }

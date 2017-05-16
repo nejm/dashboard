@@ -13,5 +13,6 @@ public interface DashboardDao {
     List<Dashboard> getAllDashboard();
     Dashboard getDashboard(Long id_dashboard);
     
+    void delete(Dashboard d);
     Boolean doesExist(String name);
 }

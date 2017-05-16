@@ -56,4 +56,11 @@ public class DashboardDaoImpl implements DashboardDao {
         return (query.list().size() > 0);
     }
 
+    @Override
+    @Transactional
+    public void delete(Dashboard d) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(d);
+    }
+
 }

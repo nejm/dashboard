@@ -173,7 +173,7 @@ where = function (json, attr, operator, value) {
 joining = function (obj1, obj2, fields1, fields2, operation) {
     for (var i = 0; i < fields1.length; i++) {
         if (operation[i] === '=') {
-            if (!(obj1[fields1[i]] === obj2[fields2[i]]))
+            if (!(obj1[fields1[i]] == obj2[fields2[i]]))
             {
                 return false;
             }
@@ -191,7 +191,7 @@ joining = function (obj1, obj2, fields1, fields2, operation) {
             }
         }
         if (operation[i] === '!=') {
-            if (!(obj1[fields1[i]] !== obj2[fields2[i]]))
+            if (!(obj1[fields1[i]] != obj2[fields2[i]]))
             {
                 return false;
             }

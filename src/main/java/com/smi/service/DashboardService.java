@@ -34,4 +34,5 @@ public interface DashboardService {
     Long save(Dashboard dashboard);
     void edit(Dashboard dashboard);
     Boolean doesExist(String name);
+    void delete(Dashboard d);
 }

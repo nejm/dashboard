@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Ressources.findByName", query = "SELECT r FROM Ressources r WHERE r.name = :name")
     , @NamedQuery(name = "Ressources.findByUrl", query = "SELECT r FROM Ressources r WHERE r.url = :url")
     , @NamedQuery(name = "Ressources.findByLogin", query = "SELECT r FROM Ressources r WHERE r.login = :login")
-    , @NamedQuery(name = "Ressources.findByPassword", query = "SELECT r FROM Ressources r WHERE r.password = :password")})
+    , @NamedQuery(name = "Ressources.findByPassword", query = "SELECT r FROM Ressources r WHERE r.password = :password")
+    , @NamedQuery(name = "Ressources.findByType", query = "SELECT r FROM Ressources r WHERE r.type = :type")})
 public class Ressources implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,6 +60,8 @@ public class Ressources implements Serializable {
     private String login;
     @Column(name = "PASSWORD")
     private String password;
+    @Column(name = "TYPE")
+    private String type;
 
     public Ressources() {
     }
@@ -105,6 +108,14 @@ public class Ressources implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override

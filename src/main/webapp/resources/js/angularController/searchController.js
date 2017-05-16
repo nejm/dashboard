@@ -16,9 +16,7 @@ myApp.controller('searchController', function ($scope, $http) {
 
     $scope.initStats = function (username) {
         $scope.username = username.toLowerCase();
-        console.log($scope.username);
         $http.get("/Dashboard/rest/statistique/available/" + $scope.username).then(function (response) {
-            console.log(response.data)
             for (var elem in response.data) {
                 for (var i = 0; i < response.data[elem].length; i++) {
                     if (!$scope.foundStat(response.data[elem][i])) {
@@ -27,8 +25,6 @@ myApp.controller('searchController', function ($scope, $http) {
                 }
 
             }
-            //$scope.statistiques = response.data;
-            //console.log($scope.statistiques)
         });
     }
 
@@ -59,5 +55,23 @@ myApp.controller('searchController', function ($scope, $http) {
 
     }
 
+    $scope.deleteDashboard = function (dashboard) {
+        console.log("bfzeb")
+        swal({
+            title: "Êtes-vous sûr?",
+            text: "Le Dashboard sera supprimer!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Oui",
+            closeOnConfirm: true
+        },
+                function () {
+                    $http.post("/Dashboard/rest/dashboard/delete", dashboard).then(function () {
+                        $.notify("Dashboard supprimer", "success");
+                        $scope.init($scope.username);
+                    });
+                });
+    }
 
 });

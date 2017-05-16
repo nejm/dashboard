@@ -69,4 +69,11 @@ public class DashboardUserDaoImpl implements DashboardUserDao {
         session.merge(dashboard);
     }
 
+    @Override
+    @Transactional
+    public void delete(DashboardUser dashboardUser) {
+        Session session = sessionFactory.getCurrentSession();
+        session.delete(dashboardUser);
+    }
+
 }

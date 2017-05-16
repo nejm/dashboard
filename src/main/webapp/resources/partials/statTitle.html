@@ -1,0 +1,15 @@
+<div class="modal-content">
+    <div class="modal-header"><h4 class="modal-title">Titre</h4></div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+                <input type="text" class="form-control" ng-model="currentStat.title"/>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="editTitle(currentStat.id)">Modifier</button>
+        <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
+    </div>
+</div>
+

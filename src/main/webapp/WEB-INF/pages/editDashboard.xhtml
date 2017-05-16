@@ -46,7 +46,7 @@
     <body class="nav-md" ng-controller="FirstExampleController" ng-init="editDashboard('#{user}', '#{id}')" style="overflow-x : hidden">
         <div class="container body">
             <div class="main_container">
-                <div class="col-md-3 left_col">
+                <div class="col-md-3 left_col menu_fixed">
                     <div class="left_col scroll-view" >
                         <div class="navbar nav_title" style="border: 0;">
                             <a href="/home" class="site_title"><span>Dashboard</span></a>
@@ -73,29 +73,32 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section" >
 
-                                <ul class="nav side-menu">
+                                <ul class="nav side-menu ">
                                     <li class="active" id="myStats"><a>Statistiques utilisateur</a>
                                         <ul class="nav child_menu" id="myStatsChild">
                                             <li ng-repeat="s in statistiques.my" class="active">
                                                 <a ng-click="addStatToDashboard(s)">{{s.name}}</a></li>
                                         </ul>
                                     </li>
-
-
-                                </ul>
-                                <h3>Statistiques Roles</h3>
-                                <ul class="nav side-menu">
-                                    <li ng-repeat="s in statistiques.others track by $index" class="active" id="role{{$index}}" onclick='slide(this)'>
-                                        <a>{{s.name}}</a>
-                                        <ul class="nav child_menu" id="role{{$index}}Child">
-                                            <li ng-repeat="a in s.data track by $index" >
-                                                <a ng-click="addStatToDashboard(a)">
-                                                    {{a.name}}
-                                                </a>
+                                    <li class="active" ><a id="roleStats">Statistiques role</a>
+                                        <ul class="nav child_menu" id="roleStatsChild">
+                                            <li ng-repeat="s in statistiques.others track by $index" id="role{{$index}}" onclick='slide(this)'>
+                                                <a>{{s.name}}</a>
+                                                <ul class="nav child_menu" id="role{{$index}}Child">
+                                                    <li ng-repeat="a in s.data track by $index" >
+                                                        <a ng-click="addStatToDashboard(a)">
+                                                            {{a.name}}
+                                                        </a>
+                                                    </li>
+                                                </ul>
                                             </li>
                                         </ul>
                                     </li>
-
+                                    <li class="active" id="desc">
+                                        <a ng-click="showMsg()">Description
+                                            <i class="fa fa-plus pull-right"/>
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -231,18 +234,23 @@
 
                         <div class="clearfix"></div>
                         <ul id="sortable">
-                            <li ng-repeat="stat in dashboard track by $index" id="d{{$index}}">
+                            <li style="cursor: move;position: relative" ng-repeat="stat in dashboard track by $index" id="{{stat.id}}">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">{{stat.name}}</div>
-                                    <div class="panel-body">
-                                        <div><img height="200px" src='/Dashboard/resources/images/chart_line.png'  /></div>
+                                    <div class="panel-body" style="height: 250px">
+                                        <div ng-if="stat.type != 'text'"><img height="200px" src='/Dashboard/resources/images/chart_line.png'  /></div>
                                         <div>{{stat.description}}</div>
-
-
+                
                                     </div>
-                                    <div class="panel-footer">{{stat.creationDate| date}}
-                                        <button ng-click='preview(stat.id)' class='btn btn-primary'><i class='fa fa-eye'></i> </button>
-                                        <button ng-click='deleteStatFromDashboard($index)' class='btn btn-danger'><i class='fa fa-remove'></i> </button>
+                                    <div class="panel-footer" style="height: 60px;">
+                                        <div>
+                                            <span ng-if="stat.type != 'text'">
+                                                {{stat.creationDate| date}}
+                                            </span>
+
+                                            <button ng-click='preview(stat.id)' class='btn btn-primary pull-right'  ng-if="stat.type != 'text'"><i class='fa fa-eye'></i> </button>
+                                            <button ng-click='deleteStatFromDashboard($index)' class='btn btn-danger pull-right'><i class='fa fa-remove'></i> </button>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -300,17 +308,21 @@
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script src="/Dashboard/resources/js/waiting.js"></script>
         <script type="text/javascript">
-                                                function formSubmit() {
-                                                    document.getElementById("logoutForm").submit();
-                                                }
-                                                $("#myStats").on("click", function () {
-                                                    $("#myStatsChild").slideToggle();
-                                                });
+                                                        function formSubmit() {
+                                                            document.getElementById("logoutForm").submit();
+                                                        }
+                                                        $("#myStats").on("click", function () {
+                                                            $("#myStatsChild").slideToggle();
+                                                        });
 
-                                                var slide = function (tag) {
-                                                    var idTag = $(tag).attr("id");
-                                                    $('#' + idTag + "Child").slideToggle();
-                                                }
+                                                        $("#roleStats").on("click", function (e) {
+                                                            $("#roleStatsChild").slideToggle();
+                                                        });
+
+                                                        var slide = function (tag) {
+                                                            var idTag = $(tag).attr("id");
+                                                            $('#' + idTag + "Child").slideToggle();
+                                                        }
 
         </script>
     </body>

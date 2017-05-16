@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DashboardController {
-    
+
     final static Logger logger = Logger.getLogger(DashboardController.class);
 
     @Autowired
@@ -69,15 +69,23 @@ public class DashboardController {
     @Autowired
     @Qualifier("userAndRoleService")
     UserAndRoleService userAndRoleService;
-    
+
     @RequestMapping(value = "/rest/dashboards/{id}", method = RequestMethod.GET)
     public JSONObject getDashboards(@PathVariable Long id) {
         JSONObject object = new JSONObject();
         Dashboard dashboard = dashboardService.getDashboard(id);
         List<DashboardStat> stats = dashboardStatService.getByDashboardId(id);
+        object.put("statsDashboard", stats);
         List<Statistique> statistiques = new LinkedList<Statistique>();
+        int i = 0;
         for (DashboardStat stat : stats) {
-            statistiques.add(statistiqueService.findById(stat.getIdStat()));
+            if (stat.getIdStat() != 0) {
+                statistiques.add(statistiqueService.findById(stat.getIdStat()));
+            } else {
+                object.put("text", stat);
+                object.put("index", i);
+            }
+            i++;
         }
         object.put("dashboard", dashboard);
         object.put("stats", statistiques);
@@ -87,7 +95,7 @@ public class DashboardController {
     @RequestMapping(value = "/rest/dashboards/available/{username}", method = RequestMethod.GET)
     public List<Dashboard> getAvailableDashboards(@PathVariable String username) {
         Users user = userService.findByUsername(username);
-        if(user.getProfile() == 'A'){
+        if (user.getProfile() == 'A') {
             return dashboardService.getAllDashboards();
         }
         List<DashboardUser> dashboardUsers = dashboardUserService.getByUser(username);
@@ -109,20 +117,18 @@ public class DashboardController {
 
     @RequestMapping(value = "/rest/dashboard/save", method = RequestMethod.POST)
     public Long saveDashboard(@RequestBody Dashboard dashboard) {
-        System.out.println("com.smi.controller.AngularController.getDashboards()" + dashboard);
         return dashboardService.save(dashboard);
     }
-    
+
     @RequestMapping(value = "/rest/dashboard/edit", method = RequestMethod.POST)
     public void editDashboard(@RequestBody Dashboard dashboard) {
-        System.out.println("com.smi.controller.AngularController.editDashboard()"+dashboard);
-//        List<DashboardStat> dashboardStats = dashboardStatService.getByDashboardId(dashboard.getId());
-//        for(DashboardStat d : dashboardStats){
-//            dashboardStatService.delete(d);
-//        }
+        List<DashboardStat> dashboardStats = dashboardStatService.getByDashboardId(dashboard.getId());
+        for (DashboardStat d : dashboardStats) {
+            dashboardStatService.delete(d);
+        }
         dashboardService.edit(dashboard);
     }
-    
+
     @RequestMapping(value = "/rest/dashboard/exist/{name}", method = RequestMethod.GET)
     public Boolean existDashboard(@PathVariable String name) {
         return dashboardService.doesExist(name);
@@ -158,5 +164,20 @@ public class DashboardController {
             dashboardStatService.save(ds);
         }
     }
-   
+
+    @RequestMapping(value = "/rest/dashboard/description", method = RequestMethod.POST)
+    public void descDashboard(@RequestBody JSONObject o) {
+        DashboardStat ds = new DashboardStat();
+        ds.setIdDashboard(Long.parseLong(o.get("id_dashboard").toString()));
+        String text = "{\"title\" : \"" + o.get("title") + "\", \"description\" : \"" + o.get("text") + "\"}";
+        ds.setText(text);
+        ds.setIdStat(0l);
+        dashboardStatService.save(ds);
+    }
+    
+    @RequestMapping(value = "/rest/dashboard/delete", method = RequestMethod.POST)
+    public void deleteDash(@RequestBody Dashboard dashboard){
+       dashboardService.delete(dashboard);
+    }
+
 }

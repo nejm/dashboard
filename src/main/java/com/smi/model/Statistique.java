@@ -45,8 +45,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "Statistique.findByName", query = "SELECT s FROM Statistique s WHERE s.name = :name")
     , @NamedQuery(name = "Statistique.findByDescription", query = "SELECT s FROM Statistique s WHERE s.description = :description")
     , @NamedQuery(name = "Statistique.findByCreatedBy", query = "SELECT s FROM Statistique s WHERE s.createdBy = :createdBy")
-    , @NamedQuery(name = "Statistique.findByCreationDate", query = "SELECT s FROM Statistique s WHERE s.creationDate = :creationDate")
-    , @NamedQuery(name = "Statistique.findByQuery", query = "SELECT s FROM Statistique s WHERE s.query = :query")})
+    , @NamedQuery(name = "Statistique.findByCreationDate", query = "SELECT s FROM Statistique s WHERE s.creationDate = :creationDate")})
 public class Statistique implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -67,8 +66,6 @@ public class Statistique implements Serializable {
     @Column(name = "CREATION_DATE")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
-    @Column(name = "QUERY")
-    private String query;
 
     public Statistique() {
     }
@@ -123,14 +120,6 @@ public class Statistique implements Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public String getQuery() {
-        return query;
-    }
-
-    public void setQuery(String query) {
-        this.query = query;
     }
 
     @Override

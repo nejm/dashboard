@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <!-- Meta, title, CSS, favicons, etc. -->
@@ -35,23 +33,18 @@
 
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
-
+        <link href="/Dashboard/resources/css/normalize.css" rel="stylesheet" type="text/css"/>
+        <link href="/Dashboard/resources/css/sweetalert.css" rel="stylesheet" type="text/css"/>
         <style>
-
-            #sortable { list-style-type: none; margin: 0; padding: 0; }
-            #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 49%; height: 360px;text-align: center;}
-            .my_container{
-                position: relative;
-                width: 100%;
-                height: 100%;
-            }
+            #sortable { list-style-type: none; margin: 0; padding: 0; width: 100%; }
+            #sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 24%; height: 250px;}
         </style>
     </head>
 
-    <body class="nav-md" ng-controller="FirstExampleController" ng-init="initOrConsult('#{user}', '#{id}')" style="overflow-x : hidden">
+    <body class="nav-md" ng-controller="FirstExampleController" ng-init="initStats('#{user}')" style="overflow-x : hidden">
         <div class="container body">
             <div class="main_container">
-                <div class="col-md-3 left_col menu_fixed">
+                <div class="col-md-3 left_col menu_fixed" >
                     <div class="left_col scroll-view" >
                         <div class="navbar nav_title" style="border: 0;">
                             <a href="/home" class="site_title"><span>Dashboard</span></a>
@@ -75,42 +68,8 @@
                         <br />
 
                         <!-- sidebar menu -->
-                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu" style="overflow: auto">
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section" >
-
-                                <ul class="nav side-menu">
-                                    <li class="active" id="myStats"><a>Statistiques utilisateur</a>
-                                        <ul class="nav child_menu" id="myStatsChild">
-                                            <li ng-repeat="s in statistiques.my" class="active">
-                                                <a ng-click="addStatToDashboard(s)">{{s.name}}</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="active" ><a id="roleStats">Statistiques role</a>
-                                        <ul class="nav child_menu" id="roleStatsChild">
-                                            <li ng-repeat="s in statistiques.others track by $index" id="role{{$index}}" onclick='slide(this)'>
-                                                <a>{{s.name}}</a>
-                                                <ul class="nav child_menu" id="role{{$index}}Child">
-                                                    <li ng-repeat="a in s.data track by $index" >
-                                                        <a ng-click="addStatToDashboard(a)">
-                                                            {{a.name}}
-                                                        </a>
-                                                    </li>
-                                                </ul>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                    <li class="active" id="desc">
-                                        <a ng-click="showMsg()">Description
-                                            <i class="fa fa-plus pull-right"/>
-                                        </a>
-                                    </li>
-                                </ul>
-
-
-
-
-
-
 
                             </div>
                         </div>
@@ -199,7 +158,7 @@
 
 
                             <ul class="nav navbar-nav navbar-right">
-                                <li style="cursor: pointer" >
+                                <li class="">
                                     <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                         <img src="/Dashboard/resources/images/img.png" alt=""  />${user}
                                         <span class=" fa fa-angle-down"></span>
@@ -210,14 +169,34 @@
                                     </ul>
                                 </li>
 
-                                <li style="cursor: pointer">
-                                    <a class="user-profile" ng-click="saveDashboard()">
-
-                                        <span class=" fa fa-save"></span>
-                                        Enregistrer
+                                <!--<li role="presentation" class="dropdown">
+                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-envelope-o"></i>
+                                        <span class="badge bg-green"></span>
                                     </a>
-
-                                </li>   
+                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                        <li>
+                                            <a>
+                                                <span class="image"><img src="/Dashboard/resources/images/img.png" alt="Profile Image" /></span>
+                                                <span>
+                                                    <span>John Smith</span>
+                                                    <span class="time">3 mins ago</span>
+                                                </span>
+                                                <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="text-center">
+                                                <a>
+                                                    <strong>See All Alerts</strong>
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>-->
                             </ul>
                         </nav>
                     </div>
@@ -225,61 +204,48 @@
                 <!-- /top navigation -->
 
                 <!-- page content -->
-                <div class="right_col" role="main" style="height: 100%">
-
+                <!-- /page content -->
+                <div class="right_col" role="main">
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>Dashboard</h3>
+                                <h3>Home</h3>
                             </div>
-                            <!--<div class="title_right">
+                            <div class="title_right">
                                 <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search for..." />
+                                        <input type="text" class="form-control" ng-model="searched.name" placeholder="Search for..." />
                                         <span class="input-group-btn">
                                             <button class="btn btn-default" type="button">Go!</button>
                                         </span>
                                     </div>
                                 </div>
-                            </div>-->
+                            </div>
                         </div>
-
                         <div class="clearfix"></div>
-                        <ul id="sortable">
-                            <li style="cursor: move;position: relative" ng-repeat="stat in dashboard track by $index" id="{{stat.id}}">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" style="height: 50px;">
-                                        {{stat.title}}
-                                        <div class="pull-right">
-                                            <button class="btn btn-sm btn-default"  ng-click="addTitle($index)">
-                                                <i class="fa fa-edit"/>
+                        <div class="row">
+                            <ul id="sortable">
+                                <li ng-repeat="stats in statistiques| filter:searched">
+                                    <div class="panel panel-default" style="height: 95%">
+                                        <div class='panel-heading'>
+                                            {{stats.name}}
+                                        </div>
+                                        <div class='panel-body' style="height: 60%">
+                                            {{stats.description}}
+                                        </div>
+                                        <div class='panel-footer'>
+                                            <button class="btn btn-success" ng-click="visualizeStat(stats)">
+                                                <i class="fa fa-eye" />
                                             </button>
+
                                         </div>
                                     </div>
-                                    <div class="panel-body" style="height: 250px">
-                                        <div ng-if="stat.type != 'text'"><img height="200px" src='/Dashboard/resources/images/chart_line.png'  /></div>
-                                        <div ng-if="stat.type != 'text'">{{stat.description}}</div>
-                                        <div ng-if="stat.type == 'text'">
-                                            <h5>{{stat.description}}</h5></div>
-                                    </div>
-                                    <div class="panel-footer" style="height: 60px;">
-                                        <div>
-                                            <small ng-if="stat.type != 'text'">
-                                                {{stat.creationDate| date}}
-                                            </small>
+                                </li>
+                            </ul>
 
-                                            <button ng-click='preview(stat.id)' class='btn btn-primary pull-right'  ng-if="stat.type != 'text'"><i class='fa fa-eye'></i> </button>
-                                            <button ng-click='deleteStatFromDashboard($index)' class='btn btn-danger pull-right'><i class='fa fa-remove'></i> </button>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </li>
-                        </ul>
-
+                        </div>
                     </div>
                 </div>
-                <!-- /page content -->
 
 
                 <!-- footer content -->
@@ -290,10 +256,7 @@
 
             </div>
         </div>
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
@@ -303,19 +266,18 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
         <!-- bower installed -->
-        <script src="/Dashboard/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script><script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/bower/jsPlumb/dist/js/jquery.jsPlumb-1.6.2.js"></script>
         <script src="/Dashboard/resources/bower/angular-ui-slider/src/slider.js"></script>
         <script src="/Dashboard/resources/js/query.js"></script>
         <script src="/Dashboard/resources/js/angular-chart.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
-        <script src="/Dashboard/resources/js/dashboardinterract.js" type="text/javascript"></script>
-        <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
-        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
 
         <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/notify.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js" type="text/javascript"></script>
 
         <!-- out local ng stuff -->
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
@@ -325,22 +287,11 @@
         <script src="/Dashboard/resources/js/jsplumb.js"></script>
         <script src="/Dashboard/resources/js/firstController.js"></script>
 
+        <script src="/Dashboard/resources/js/bootstrap-select.js"></script>
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script type="text/javascript">
                                                         function formSubmit() {
                                                             document.getElementById("logoutForm").submit();
-                                                        }
-                                                        $("#myStats").on("click", function () {
-                                                            $("#myStatsChild").slideToggle();
-                                                        });
-
-                                                        $("#roleStats").on("click", function (e) {
-                                                            $("#roleStatsChild").slideToggle();
-                                                        });
-
-                                                        var slide = function (tag) {
-                                                            var idTag = $(tag).attr("id");
-                                                            $('#' + idTag + "Child").slideToggle();
                                                         }
 
         </script>

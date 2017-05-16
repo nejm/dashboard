@@ -14,14 +14,16 @@
                 <input type="text" ng-model="ressource.id" class="form-control" id="id" placeholder="id">
             </div>
             <div class="form-group">
-                <label for="nom">Nom</label> <input type="text"
-                                                    ng-model="ressource.name" name="name" class="form-control" id="nom"
-                                                    placeholder="Nom" required>
+                <label for="nom">Nom</label> 
+                <input type="text"
+                       ng-model="ressource.name" name="name" class="form-control" id="nom"
+                       placeholder="Nom" required>
             </div>
             <div class="form-group">
-                <label for="url">Url</label> <input type="text"
-                                                    ng-model="ressource.url" name="url" class="form-control" id="url"
-                                                    placeholder="http://exemple.com" required>
+                <label for="url">Url</label> 
+                <input type="text"
+                       ng-model="ressource.url" name="url" class="form-control" id="url"
+                       placeholder="http://exemple.com" required>
             </div>
             <div class="form-group">
                 <a id="credentialOptions" href="#">Autres options</a>
@@ -29,21 +31,23 @@
 
             <div id="credential" class="hidden">
                 <div class="form-group">
-                    <label for="login">Login</label> <input type="text"
-                                                            ng-model="ressource.credential.login" class="form-control"
-                                                            id="login" placeholder="Login">
+                    <label for="login">Login</label> 
+                    <input type="text"
+                           ng-model="ressource.login" class="form-control"
+                           id="login" placeholder="Login">
                 </div>
                 <div class="form-group">
-                    <label for="password">Password</label> <input type="password"
-                                                                  ng-model="ressource.credential.password"
-                                                                  class="form-control" id="password" placeholder="password">
+                    <label for="password">Password</label> 
+                    <input type="password"
+                           ng-model="ressource.password"
+                           class="form-control" id="password" placeholder="password">
                 </div>
             </div>
         </form>
     </div>
     <div class="modal-footer">
         <button ng-disabled='!(ressourceForm.url.$valid && ressourceForm.name.$valid)' type="button" class="btn btn-primary"
-                ng-click="addRessource(ressource,typeOfRessource.type)">Ajouter</button>
+                ng-click="addRessource(ressource, typeOfRessource.type)">Ajouter</button>
         <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
     </div>
 </div>

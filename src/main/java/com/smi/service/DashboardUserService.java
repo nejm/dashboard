@@ -31,4 +31,6 @@ public interface DashboardUserService {
     Long save(DashboardUser dashboard);
 
     void edit(DashboardUser dashboard);
+    
+    void delete(DashboardUser dashboardUser);
 }

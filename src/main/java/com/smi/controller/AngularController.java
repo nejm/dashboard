@@ -3,11 +3,15 @@ package com.smi.controller;
 import com.smi.dao.UserAndRoleDao;
 import com.smi.model.*;
 import com.smi.service.*;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,17 +166,17 @@ public class AngularController {
         statistiqueService.edit(stat);
     }
 
-    @RequestMapping(value = "/rest/statistiques/delete",method = RequestMethod.POST)
-    public void deleteStat(@RequestBody Statistique stat){
-        for(Statuser statuser : statUserService.findByStats(stat.getId())){
+    @RequestMapping(value = "/rest/statistiques/delete", method = RequestMethod.POST)
+    public void deleteStat(@RequestBody Statistique stat) {
+        for (Statuser statuser : statUserService.findByStats(stat.getId())) {
             statUserService.delete(statuser);
         }
-        for(DashboardStat dash : dashboardStatService.findByStatId(stat.getId())){
+        for (DashboardStat dash : dashboardStatService.findByStatId(stat.getId())) {
             dashboardStatService.delete(dash);
         }
         statistiqueService.delete(stat);
     }
-    
+
     @RequestMapping(value = "/rest/statistique/partage", method = RequestMethod.POST)
     public void partage(@RequestBody JSONObject o) {
         List<HashMap<String, String>> roles = (List<HashMap<String, String>>) o.get("profiles");
@@ -222,8 +226,6 @@ public class AngularController {
         return new ResponseEntity<Boolean>(statistiqueService.exist(name), HttpStatus.OK);
     }
 
-    
-
     //ressources
     @RequestMapping(value = "/rest/ressources", method = RequestMethod.GET)
     public ResponseEntity<List<Ressources>> getAllRessources() {
@@ -233,6 +235,7 @@ public class AngularController {
 
     @RequestMapping(value = "/rest/ressources/update", method = RequestMethod.POST)
     public void updateService(@RequestBody Ressources ressource) {
+        System.out.println("com.smi.controller.AngularController.updateService()"+ressource.getLogin());
         ressourceService.edit(ressource);
     }
 
@@ -266,5 +269,46 @@ public class AngularController {
     @RequestMapping(value = "/rest/services/delete", method = RequestMethod.POST)
     public void deleteService(@RequestBody Service service) {
         serviceService.delete(service);
+    }
+
+    @RequestMapping(value = "/rest/services/tables", method = RequestMethod.POST)
+    public List<String> tableStructure(@RequestBody JSONObject o){
+        List<String> list = new ArrayList<>();
+        String server = (String) o.get("server");
+        String username = (String)o.get("username");
+        String password = (String)o.get("password");
+        String databaseName = (String)o.get("databaseName");
+        String driverType = (String)o.get("driverType");
+        String tableName =(String)o.get("tableName");
+        String port = (String)o.get("port");
+        
+        
+        try {
+            TableHelper th = new TableHelper(server,username,password,databaseName,driverType,Integer.parseInt(port),tableName);
+            return th.getAllResultNames();
+        } catch (SQLException ex) {
+            list.add("error");
+            return list;
+        }
+    }
+    
+    @RequestMapping(value = "/rest/services/tablesdata", method = RequestMethod.POST)
+    public HashMap<Integer,List<String>> tableContent(@RequestBody JSONObject o){
+        List<String> list = new ArrayList<>();
+        String server = (String) o.get("server");
+        String username = (String)o.get("username");
+        String password = (String)o.get("password");
+        String databaseName = (String)o.get("databaseName");
+        String driverType = (String)o.get("driverType");
+        String tableName =(String)o.get("tableName");
+        String port = (String)o.get("port");
+        
+        try {
+            TableHelper th = new TableHelper(server,username,password,databaseName,driverType,Integer.parseInt(port),tableName);
+            return th.getAllResult();
+        } catch (SQLException ex) {
+            list.add("error");
+            return null;
+        }
     }
 }

@@ -107,6 +107,14 @@ public class HelloController {
         return model;
     }
     
+    @RequestMapping(value = "/statistiques/visualize", method = RequestMethod.GET)
+    public ModelAndView visualizeStat(Principal principal) {
+        ModelAndView model = new ModelAndView();
+        model.addObject("user",principal.getName().toString().toUpperCase());
+        model.setViewName("visualizeStat");
+        return model;
+    }
+    
     @RequestMapping(value = "/dashboards/consulte", method = RequestMethod.GET)
     public ModelAndView consulterDashboard(Principal principal) {
         ModelAndView model = new ModelAndView();
