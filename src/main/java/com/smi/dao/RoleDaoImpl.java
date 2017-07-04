@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -63,5 +64,24 @@ public class RoleDaoImpl implements RoleDao {
         Role role = (Role) session.getNamedQuery("Role.findByRoleName").setString("roleName", name).uniqueResult();
         //session.close();
         return role;
+    }
+
+    @Override
+    public Long save(Role role) {
+        createSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        session.save(role);
+        tx.commit();
+        return role.getRoleId();
+    }
+
+    @Override
+    public void delete(Role role) {
+        createSessionFactory();
+        Session session = sessionFactory.openSession();
+        Transaction tx = session.beginTransaction();
+        session.delete(role);
+        tx.commit();
     }
 }

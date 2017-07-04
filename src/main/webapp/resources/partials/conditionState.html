@@ -22,18 +22,19 @@
     <div  class="row selectcondition" id="{{state.idd}}" ng-repeat="i in state.count track by $index">
         <div id="selectdiv{{state.idd}}p{{$index}}">
             <div class="col-sm-5" style="margin-right : -25px">
-                <select name="op"  ng-change="selectAttributes()" id="op0" class="form-control" style="padding : -15px" ng-model="state.Sattributes[$index].op">
+                <select name="op"  ng-change="selectAttributes(state.id)" id="op0" class="form-control" style="padding : -15px" ng-model="state.Sattributes[$index].op">
                     <option value=""></option>
                     <option value="sum">SUM</option>
                     <option value="avg">AVG</option>
                     <option value="min">MIN</option>
                     <option value="max">MAX</option>
+                    <option value="distinct">DISTINCT</option>
                 </select>
             </div>
             <div class="col-sm-6" style="margin-left: 6px">
-                <select name="op" ng-change="selectAttributes()" id="att0" class="form-control" ng-model="state.Sattributes[$index].attribute">
+                <select name="op" ng-change="selectAttributes(state.id)" id="att0" class="form-control" ng-model="state.Sattributes[$index].attribute">
                     <option></option>
-                    <option ng-repeat="att in state.vattributes track by $index">{{att}}</option>
+                    <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null'">{{att}}</option>
                 </select>
             </div>
             <div class="col-sm-1 pull-right" style="margin-right: 6px">

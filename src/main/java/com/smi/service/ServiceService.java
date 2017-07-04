@@ -23,8 +23,8 @@ import java.util.List;
  * @author Nejm
  */
 public interface ServiceService {
-    List<Service> findAll();
-    Long save(Service service);
-    void edit(Service service);
-    void delete(Service service);
+    List<com.smi.model.Service> findAll();
+    Long save(com.smi.model.Service service);
+    void edit(com.smi.model.Service service);
+    void delete(com.smi.model.Service service);
 }

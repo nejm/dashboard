@@ -41,7 +41,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     , @NamedQuery(name = "DashboardStat.findById", query = "SELECT d FROM DashboardStat d WHERE d.id = :id")
     , @NamedQuery(name = "DashboardStat.findByIdDashboard", query = "SELECT d FROM DashboardStat d WHERE d.idDashboard = :idDashboard")
     , @NamedQuery(name = "DashboardStat.findByIdStat", query = "SELECT d FROM DashboardStat d WHERE d.idStat = :idStat")
-    , @NamedQuery(name = "DashboardStat.findByText", query = "SELECT d FROM DashboardStat d WHERE d.text = :text")})
+    , @NamedQuery(name = "DashboardStat.findByText", query = "SELECT d FROM DashboardStat d WHERE d.text = :text")
+    , @NamedQuery(name = "DashboardStat.findByTitle", query = "SELECT d FROM DashboardStat d WHERE d.title = :title")})
 public class DashboardStat implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -59,14 +60,6 @@ public class DashboardStat implements Serializable {
     private String text;
     @Column(name = "TITLE")
     private String title;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public DashboardStat() {
     }
@@ -105,6 +98,14 @@ public class DashboardStat implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override

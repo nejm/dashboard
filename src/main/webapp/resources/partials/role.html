@@ -16,14 +16,14 @@
     } 
 </style>
 <div class="modal-content">
-    <div class="modal-header"><h4 class="modal-title">Ajouter des utoilisteurs</h4></div>
+    <div class="modal-header"><h4 class="modal-title">Ajouter des utilisteurs</h4></div>
     <div class="modal-body" style="height: 500px">
         <form>
             <div class="form-group">
                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Username
                 </label>
                 <div class="col-md-5 col-sm-5 col-xs-10">
-                    <input type="text" id="prenom" name="username" required="required" class="form-control col-md-7 col-xs-12" />
+                    <input type="text" id="prenom" ng-model="userForRole.username" name="username" required="required" class="form-control col-md-7 col-xs-12" />
                 </div>
                 <div class="col-md-1 col-sm-1 col-xs-1">
                     <button class="btn btn-default"><i class="fa fa-search" /></button>
@@ -41,7 +41,7 @@
                 </div>
                 <div class="x_content" style="max-height: 300px;overflow-x: auto">
 
-                    <div ng-repeat="user in usersAssignes track by $index">
+                    <div ng-repeat="user in usersAssignes | filter:userForRole track by $index">
                         <div class="col-md-8 col-sm-8">{{user.username}}
                         </div>
                         <div class="col-md-4 col-sm-4">
@@ -64,7 +64,7 @@
                 </div>
                 <div class="x_content" style="max-height: 300px;overflow-x: auto">
 
-                    <div ng-repeat="user in users track by $index">
+                    <div ng-repeat="user in users | filter:userForRole track by $index">
                         <div class="col-md-8 col-sm-8">{{user.username}}
                         </div>
                         <div class="col-md-4 col-sm-4">
@@ -80,7 +80,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-default" ng-disabled="userForm.$invalid" ng-click="saveEditUser()">Editer</button>
+        <button type="button" class="btn btn-default" ng-disabled="userForm.$invalid" ng-click="saveEditRole()">Editer</button>
         <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
     </div>
 </div>

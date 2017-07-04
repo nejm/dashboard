@@ -76,18 +76,6 @@ public class AngularController {
         return new ResponseEntity<List<Statistique>>(stats, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/rest/users", method = RequestMethod.GET)
-    public ResponseEntity<List<Users>> getAllUsers() {
-        List<Users> stats = userService.findAll();
-        return new ResponseEntity<List<Users>>(stats, HttpStatus.OK);
-    }
-
-    @RequestMapping(value = "/rest/roles", method = RequestMethod.GET)
-    public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roles = roleService.findAll();
-        return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/rest/statistique/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Statistique> getById(@PathVariable Long id) {
         Statistique stat = statistiqueService.findById(id);
@@ -122,34 +110,27 @@ public class AngularController {
         availableStats.put(name, statistiques);
 
         // available by role
+        List<Role> listRoles = null;
         if (user.getProfile() == 'A') {
-            stats = new ArrayList<>();
-            List<Statistique> availableStatsByRole;
-            for (Role r : roleService.findAll()) {
-                availableStatsByRole = new ArrayList<>();
-                stats.addAll(statUserService.findByRole(r.getRoleName()));
-                for (Statuser stat : stats) {
-                    availableStatsByRole.add(statistiqueService.findById(stat.getIdStat()));
-                }
-                availableStats.put(r.getRoleName(), availableStatsByRole);
-            }
+            listRoles = roleService.findAll();
         } else {
+            listRoles = new ArrayList<>();
             List<Usersandroles> usersAndRoles = userAndRoleService.findByUser(userService.findByUsername(name).getUserId());
-            String role;
-            stats = new ArrayList<>();
-            List<Statistique> availableStatsByRole;
-
             for (Usersandroles uar : usersAndRoles) {
-                availableStatsByRole = new ArrayList<>();
                 if (uar.getUserId() == user.getUserId()) {
-                    role = roleService.findById(uar.getRoleId()).getRoleName();
-                    stats.addAll(statUserService.findByRole(role));
-                    for (Statuser stat : stats) {
-                        availableStatsByRole.add(statistiqueService.findById(stat.getIdStat()));
-                    }
-                    availableStats.put(role, availableStatsByRole);
+                    listRoles.add(roleService.findById(uar.getRoleId()));
                 }
             }
+        }
+        
+        for(Role r : listRoles){
+            List<Statistique> statistique = new ArrayList<>();
+            stats = new ArrayList<>();
+            stats = statUserService.findByRole(r.getRoleName());
+            for(Statuser s : stats){
+                statistique.add(statistiqueService.findById(s.getIdStat()));
+            }
+            availableStats.put(r.getRoleName(),statistique);
         }
 
         return new ResponseEntity<HashMap<String, List<Statistique>>>(availableStats, HttpStatus.OK);
@@ -282,12 +263,14 @@ public class AngularController {
         String tableName =(String)o.get("tableName");
         String port = (String)o.get("port");
         
+        System.out.println("com.smi.controller.AngularController.tableStructure()"+server);
         
         try {
             TableHelper th = new TableHelper(server,username,password,databaseName,driverType,Integer.parseInt(port),tableName);
             return th.getAllResultNames();
         } catch (SQLException ex) {
             list.add("error");
+            list.add(ex.getMessage());
             return list;
         }
     }
@@ -308,7 +291,10 @@ public class AngularController {
             return th.getAllResult();
         } catch (SQLException ex) {
             list.add("error");
-            return null;
+            list.add(ex.getMessage());
+            HashMap<Integer, List<String>> m = new LinkedHashMap<>();
+            m.put(0, list);
+            return m;
         }
     }
 }

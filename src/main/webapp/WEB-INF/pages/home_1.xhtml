@@ -24,6 +24,14 @@
         <link href="/Dashboard/resources/css/bootstrap-tagsinput.css" rel="stylesheet" type="text/css"/>
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
+
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+        <script src="/Dashboard/resources/js/angularController/dashboardController.js"></script>
+
+
     </head>
 
     <body class="nav-md" ng-controller="dashboardController" ng-init="init('${user}')">
@@ -43,7 +51,7 @@
                                 <img src="/Dashboard/resources/images/img.png" alt="..." class="img-circle profile_img" />
                             </div>
                             <div class="profile_info">
-                                <span>Welcome,</span>
+                                <span>Bienvenue,</span>
                                 <h2>#{user}</h2>
                             </div>
                             <div class="clearfix"></div>
@@ -56,12 +64,18 @@
                         <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                             <div class="menu_section">
                                 <ul class="nav side-menu">
-                                    <li><a><i class="fa fa-line-chart"></i>Statistique</a>
+                                    <li ng-show="fullUser.profile == 'A'"><a><i class="fa fa-line-chart"></i>Statistique</a>
                                         <ul class="nav child_menu">
                                             <li>
                                                 <a  href="/Dashboard/new">
                                                     Nouvelle Statistique
-                                                    <i class="fa fa-terminal pull-right"></i>
+                                                    <i class="fa fa-plus pull-right"></i>
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a  href="/Dashboard/statistiques/visualize">
+                                                    Consulter Statistique
+                                                    <i class="fa fa-eye pull-right"></i>
                                                 </a>
                                             </li>
                                             <li>
@@ -72,12 +86,13 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li><a><i class="fa fa-window-restore"></i>Dashboards</a>
+                                    <li>
+                                        <a><i class="fa fa-window-restore"></i>Dashboards</a>
                                         <ul class="nav child_menu">
                                             <li>
                                                 <a  href="/Dashboard/create/new">
                                                     Nouveau dashboard
-                                                    <i class="fa fa-terminal pull-right"></i>
+                                                    <i class="fa fa-plus pull-right"></i>
                                                 </a>
                                             </li>
                                             <li>
@@ -94,38 +109,10 @@
                                             </li>
                                         </ul>
                                     </li>
-                                    <li><a><i class="fa fa-user"></i> Utilisateur</a>
-                                        <ul class="nav child_menu">
-                                            <li>
-                                                <a>
-                                                    Nouvel Utilisateur
-                                                    <i class="fa fa-terminal pull-right"></i>
-                                                </a>
-                                            </li>
-                                            <li >
-                                                <a>
-                                                    Modifier Utilisateur
-                                                    <i class="fa fa-edit pull-right"></i>
-                                                </a>
-                                                
-                                            </li>
-                                        </ul>
+                                    <li ng-show="fullUser.profile == 'A'"><a href="/Dashboard/users/"><i class="fa fa-user"></i> Utilisateurs</a>
                                     </li>
-                                    <li><a><i class="fa fa-address-card"></i> Role</a> 
-                                        <ul class="nav child_menu">
-                                            <li>
-                                                <a>
-                                                    Nouveau Role
-                                                    <i class="fa fa-terminal pull-right"></i>
-                                                </a>
-                                            </li>
-                                            <li>
-                                                <a ng-click="add()">
-                                                    Modifier Role
-                                                    <i class="fa fa-edit pull-right"></i>
-                                                </a>
-                                            </li>
-                                        </ul>
+                                    <li ng-show="fullUser.profile == 'A'"><a href="/Dashboard/roles"><i class="fa fa-address-card"></i> Rôles</a> 
+                                       
                                     </li>
 
                                 </ul>
@@ -142,84 +129,75 @@
                     <div class="nav_menu">
                         <nav>
                             <div class="nav toggle">
-    <div class="dropdown">
-        <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-            <i class="fa fa-bars"></i>
-        </a>
+                                <div class="dropdown">
+                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
 
-        <ul class="dropdown-menu">
-            <li>
-                <a href="/Dashboard/home">
-                    Acceuil
-                    <i class="fa fa-home pull-right"></i>
-                </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/Dashboard/home">
+                                                Acceuil
+                                                <i class="fa fa-home pull-right"></i>
+                                            </a>
 
-            </li>
-            <li class="divider"></li>
-            <li class="dropdown">
-                <a>Statistiques
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/new">Nouveau
-                            <span class="fa fa-line-chart pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/statistiques/search">Modifier
-                            <span class="fa fa-edit pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown"><a>Dashboards
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/create/new">Nouveau
-                            <span class="fa fa-window-maximize pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/consulte">Consulter
-                            <span class="fa fa-dashboard pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/search">Modifier
-                            <span class="fa fa-pencil pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Utilisateurs
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="\Dashboard\users\ajout">Nouveau
-                            <span class="fa fa-user-plus pull-right"></span>
-                        </a></li>
-                    <li><a href="\Dashboard\users">Modifier
-                            <span class="fa fa-user-o pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Rôles
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Nouveau
-                            <span class="fa fa-users pull-right"></span>
-                        </a></li>
-                    <li><a href="#">Modifier
-                            <span class="fa fa-vcard pull-right" ></span>
-                        </a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a>Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/new">Nouveau
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a>
+                                                </li>
+                                                <li><a href="/Dashboard/statistiques/visualize">Consulter
+                                                        <span class="fa fa-eye pull-right"></span>
+                                                    </a>
+                                                </li>
+                                                <li><a href="/Dashboard/statistiques/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a>Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/create/new">Nouveau
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/consulte">Consulter
+                                                        <span class="fa fa-eye pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a href="\Dashboard\users">Utilisateurs
+                                                
+                                            </a>
+                                        </li>
+                                        <li ng-show="fullUser.profile == 'A'">
+                                            <a href="/Dashboard/roles">Rôles
+                                            </a>
+                                            
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
                                     <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                         <img src="/Dashboard/resources/images/img.png" alt=""  />${user}
                                         <span class=" fa fa-angle-down"></span>
                                     </a>
-                                    
+
                                 </li>
 
                             </ul>
@@ -248,6 +226,7 @@
                         </div>
 
                         <div class="clearfix"></div>
+
                         
                     </div>
                 </div>
@@ -261,30 +240,16 @@
 
             </div>
         </div>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
         <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
-        
+
         <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/js/custom.min.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/factory/Stat.js" type="text/javascript"></script>
-        <script src="/Dashboard/resources/js/angularController/dashboardController.js"></script>
         <script>
-
-                                                                            function formSubmit() {
-                                                                                $("#logoutForm").submit();
-                                                                            }
-                                                                            function toggleIcon(e) {
-                                                                                $(e.target)
-                                                                                        .find(".more-less")
-                                                                                        .toggleClass('glyphicon-plus glyphicon-minus');
-                                                                            }
-                                                                            $('.panel-group').on('hidden.bs.collapse', toggleIcon);
-                                                                            $('.panel-group').on('shown.bs.collapse', toggleIcon);
-   
+            var function formSubmit() {
+                    $("#logoutForm").submit(); 
+                }
         </script>
     </body>
 </html>

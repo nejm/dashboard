@@ -1,36 +1,29 @@
-var my2App = angular.module('my2App', ['ngResource'])
-        .factory('Stat', function ($resource) {
-            return $resource("/Dashboard/rest/statistique", {id: "@id"}, {
-                update: {
-                    method: 'PUT'
-                }
-            });
-        })
-        .controller('dashboardController', function ($scope, $http, Stat, $location) {
-            
-            $scope.states = [];
-            $scope.init = function(user){
-                
-                $http.get("/Dashboard/rest/statistique/created/"+user).then(function(response){
-                   $scope.myStats = response.data;
-                   console.log($scope.myStats);
-                }); 
-            }
-            
-            $scope.add = function () {
+var my2App = angular.module('my2App', ['ngResource']);
 
-            }
-            
-            $scope.edit = function(id){
-                $location.path('/Dashboard/edit/'+id);
-            }
-            $scope.see = function(id){
-                console.log("see : "+id);
-            }
-            
-            $scope.newDashboard = function(){
-                
-            }
+my2App.controller('dashboardController', function ($scope, $http, $location) {
+
+    $scope.states = [];
+
+    $scope.init = function (user) {
+        $http.get("/Dashboard/rest/dashboards/available/"+user.toLowerCase()).then(function(response){
+            $scope.availableDashboards = response.data;
+            console.log(response.data)
         });
+        console.log(user);
+        $http.get("/Dashboard/rest/users/get/" + user.toLowerCase()).then(function (response) {
+            $scope.fullUser = response.data;
+            console.log($scope.fullUser);
+        });
+    }
+
+    $scope.edit = function (id) {
+        $location.path('/Dashboard/edit/' + id);
+    };
+    
+    $scope.see = function (id) {
+        console.log("see : " + id);
+    };
+
+});
 
 

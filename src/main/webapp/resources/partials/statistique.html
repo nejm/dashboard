@@ -1,5 +1,6 @@
 <style>
     
+    
             .table {
                 color : black;
                 width: 100%;
@@ -165,7 +166,7 @@
                 border: 0;
             }
 </style>
-<div style="max-height: 600px; overflow-y: auto">
+<div style="max-height: 550px; overflow-y: auto;">
 <div class="modal-body" >
     <table id="table" class="table table-striped table-bordered">
         <thead>
@@ -193,7 +194,7 @@
                                 display: $.fn.dataTable.Responsive.display.modal({
                                     header: function (row) {
                                         var data = row.data();
-                                        return 'Details for ' + data[0] + ' ' + data[1];
+                                        return 'Détaille de ' + data[0];
                                     }
                                 }),
                                 renderer: $.fn.dataTable.Responsive.renderer.tableAll({
@@ -202,5 +203,6 @@
                             }
                         }
                     });
-    })
+        $('#table_wrapper > div > div ').removeClass();
+    });
 </script>

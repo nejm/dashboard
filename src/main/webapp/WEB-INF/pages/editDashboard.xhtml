@@ -127,17 +127,24 @@
 
                                         </li>
                                         <li class="divider"></li>
-                                        <li class="dropdown">
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
                                             <a>Statistiques
                                                 <i class="fa fa-angle-right pull-right"></i>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="/Dashboard/new">Nouveau
-                                                        <span class="fa fa-line-chart pull-right"></span>
-                                                    </a></li>
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a>
+                                                </li>
+                                                <li><a href="/Dashboard/statistiques/visualize">Consulter
+                                                        <span class="fa fa-eye pull-right"></span>
+                                                    </a>
+                                                </li>
                                                 <li><a href="/Dashboard/statistiques/search">Modifier
                                                         <span class="fa fa-edit pull-right"></span>
-                                                    </a></li>
+                                                    </a>
+                                                </li>
+
                                             </ul>
                                         </li>
                                         <li class="dropdown"><a>Dashboards
@@ -145,41 +152,25 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="/Dashboard/create/new">Nouveau
-                                                        <span class="fa fa-window-maximize pull-right"></span>
+                                                        <span class="fa fa-plus pull-right"></span>
                                                     </a></li>
                                                 <li><a href="/Dashboard/dashboards/consulte">Consulter
-                                                        <span class="fa fa-dashboard pull-right"></span>
+                                                        <span class="fa fa-eye pull-right"></span>
                                                     </a></li>
                                                 <li><a href="/Dashboard/dashboards/search">Modifier
-                                                        <span class="fa fa-pencil pull-right"></span>
+                                                        <span class="fa fa-edit pull-right"></span>
                                                     </a></li>
                                             </ul>
                                         </li>
-                                        <li class="dropdown">
-                                            <a href="#">Utilisateurs
-                                                <i class="fa fa-angle-right pull-right"></i>
+                                       <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a href="\Dashboard\users">Utilisateurs
+                                                
                                             </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="\Dashboard\users\ajout">Nouveau
-                                                        <span class="fa fa-user-plus pull-right"></span>
-                                                    </a></li>
-                                                <li><a href="\Dashboard\users">Modifier
-                                                        <span class="fa fa-user-o pull-right"></span>
-                                                    </a></li>
-                                            </ul>
                                         </li>
-                                        <li class="dropdown">
-                                            <a href="#">Rôles
-                                                <i class="fa fa-angle-right pull-right"></i>
+                                        <li ng-show="fullUser.profile == 'A'">
+                                            <a href="/Dashboard/roles">Rôles
                                             </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Nouveau
-                                                        <span class="fa fa-users pull-right"></span>
-                                                    </a></li>
-                                                <li><a href="#">Modifier
-                                                        <span class="fa fa-vcard pull-right" ></span>
-                                                    </a></li>
-                                            </ul>
+                                            
                                         </li>
                                     </ul>
                                 </div>
@@ -236,7 +227,14 @@
                         <ul id="sortable">
                             <li style="cursor: move;position: relative" ng-repeat="stat in dashboard track by $index" id="{{stat.id}}">
                                 <div class="panel panel-default">
-                                    <div class="panel-heading">{{stat.name}}</div>
+                                    <div class="panel-heading" style="height: 50px;">
+                                        {{stat.title}}
+                                        <div class="pull-right">
+                                            <button class="btn btn-sm btn-default"  ng-click="addTitle($index)">
+                                                <i class="fa fa-edit"/>
+                                            </button>
+                                        </div>
+                                    </div>
                                     <div class="panel-body" style="height: 250px">
                                         <div ng-if="stat.type != 'text'"><img height="200px" src='/Dashboard/resources/images/chart_line.png'  /></div>
                                         <div>{{stat.description}}</div>

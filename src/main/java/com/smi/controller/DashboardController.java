@@ -159,9 +159,14 @@ public class DashboardController {
         DashboardStat ds = new DashboardStat();
         ds.setIdDashboard(Long.parseLong(o.get("id_dashboard").toString()));
         List<String> stats = (List<String>) o.get("statistiques");
+        List<String> s = (List<String>) o.get("stats");
+        int i = 0;
         for (String idStat : stats) {
             ds.setIdStat(Long.parseLong(idStat));
+            if(s.get(i) !=  null)
+                ds.setText(s.get(i));
             dashboardStatService.save(ds);
+            i++;
         }
     }
 

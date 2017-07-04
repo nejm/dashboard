@@ -17,13 +17,13 @@
         <!-- Custom Theme Style -->
 
         <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jsPlumb/dist/css/jsplumb.css" />
-        
+
 
         <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/css/bootstrap-select.min.css" />
 
 
 
-    
+
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/normalize.css" rel="stylesheet" type="text/css"/>
@@ -57,7 +57,7 @@
                         <br />
 
                         <!-- sidebar menu -->
-                        
+
                         <!-- /sidebar menu -->
 
                     </div>
@@ -67,79 +67,83 @@
                 <div class="top_nav">
                     <div class="nav_menu">
                         <nav>
-                           <div class="nav toggle">
-    <div class="dropdown">
-        <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-            <i class="fa fa-bars"></i>
-        </a>
+                            <div class="nav toggle">
+                                <div class="dropdown">
+                                    <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+                                        <i class="fa fa-bars"></i>
+                                    </a>
+                                    
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/Dashboard/home">
+                                                Acceuil
+                                                <i class="fa fa-home pull-right"></i>
+                                            </a>
 
-        <ul class="dropdown-menu">
-            <li>
-                <a href="/Dashboard/home">
-                    Acceuil
-                    <i class="fa fa-home pull-right"></i>
-                </a>
+                                        </li>
+                                        <li class="divider"></li>
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a>Statistiques
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/new">Nouveau
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a>
+                                                </li>
+                                                <li><a href="/Dashboard/statistiques/visualize">Consulter
+                                                        <span class="fa fa-eye pull-right"></span>
+                                                    </a>
+                                                </li>
+                                                <li><a href="/Dashboard/statistiques/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a>
+                                                </li>
 
-            </li>
-            <li class="divider"></li>
-            <li class="dropdown">
-                <a>Statistiques
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/new">Nouveau
-                            <span class="fa fa-line-chart pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/statistiques/search">Modifier
-                            <span class="fa fa-edit pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown"><a>Dashboards
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/create/new">Nouveau
-                            <span class="fa fa-window-maximize pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/consulte">Consulter
-                            <span class="fa fa-dashboard pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/search">Modifier
-                            <span class="fa fa-pencil pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Utilisateurs
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="\Dashboard\users\ajout">Nouveau
-                            <span class="fa fa-user-plus pull-right"></span>
-                        </a></li>
-                    <li><a href="\Dashboard\users">Modifier
-                            <span class="fa fa-user-o pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Rôles
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Nouveau
-                            <span class="fa fa-users pull-right"></span>
-                        </a></li>
-                    <li><a href="#">Modifier
-                            <span class="fa fa-vcard pull-right" ></span>
-                        </a></li>
-                </ul>
-            </li>
-        </ul>
-    </div>
-</div>
-                            
+                                            </ul>
+                                        </li>
+                                        <li class="dropdown"><a>Dashboards
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/create/new">Nouveau
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/consulte">Consulter
+                                                        <span class="fa fa-eye pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="/Dashboard/dashboards/search">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a href="#">Utilisateurs
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="\Dashboard\users\ajout">Nouveau
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a></li>
+                                                <li><a href="\Dashboard\users">Modifier
+                                                        <span class="fa fa-edit pull-right"></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a href="#">Rôles
+                                                <i class="fa fa-angle-right pull-right"></i>
+                                            </a>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="/Dashboard/roles">Modifier
+                                                        <span class="fa fa-vcard pull-right" ></span>
+                                                    </a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+
                             <ul class="nav navbar-nav navbar-right">
                                 <li class="">
                                     <a class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
@@ -154,33 +158,33 @@
                                     </ul>
                                 </li>
 
-<!--                                <li role="presentation" class="dropdown">
-                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                                        <i class="fa fa-envelope-o"></i>
-                                    </a>
-                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                                        <li>
-                                            <a>
-                                                <span class="image"><img src="/Dashboard/resources/images/img.png" alt="Profile Image" /></span>
-                                                <span>
-                                                    <span>#{user}</span>
-                                                    <span class="time">3 mins ago</span>
-                                                </span>
-                                                <span class="message">
-                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
-                                                </span>
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <div class="text-center">
-                                                <a>
-                                                    <strong>See All Alerts</strong>
-                                                    <i class="fa fa-angle-right"></i>
-                                                </a>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </li>-->
+                                <!--                                <li role="presentation" class="dropdown">
+                                                                    <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                                                        <i class="fa fa-envelope-o"></i>
+                                                                    </a>
+                                                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                                                        <li>
+                                                                            <a>
+                                                                                <span class="image"><img src="/Dashboard/resources/images/img.png" alt="Profile Image" /></span>
+                                                                                <span>
+                                                                                    <span>#{user}</span>
+                                                                                    <span class="time">3 mins ago</span>
+                                                                                </span>
+                                                                                <span class="message">
+                                                                                    Film festivals used to be do-or-die moments for movie makers. They were where...
+                                                                                </span>
+                                                                            </a>
+                                                                        </li>
+                                                                        <li>
+                                                                            <div class="text-center">
+                                                                                <a>
+                                                                                    <strong>See All Alerts</strong>
+                                                                                    <i class="fa fa-angle-right"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                        </li>
+                                                                    </ul>
+                                                                </li>-->
                             </ul>
                         </nav>
                     </div>
@@ -230,44 +234,6 @@
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span class="required">*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.email.$invalid &amp;&amp; !userForm.email.$pristine }">
-                                    <input type="email" id="email" name="email"  ng-model="newUser.email" required="required" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse1">Adresse 1 <span class="required">*</span>
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12" ng-class="{ 'has-error' : userForm.adress1.$invalid &amp;&amp; !userForm.adress1.$pristine }">
-                                    <input type="text" id="adresse1"  ng-model="newUser.address1" required="required" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse2">Adresse 2
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="adresse2"  ng-model="newUser.address2" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="adresse3">Adresse 3
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="adresse3"  ng-model="newUser.address3" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telephone">Telephone
-                                </label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="telephone" name="telephone" ng-model="newUser.telephone"  required="required" class="form-control col-md-7 col-xs-12" />
-                                </div>
-                            </div>
 
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="profils">Profils
@@ -287,7 +253,7 @@
                                         </tr>
                                     </table>
                                 </div>
-                               
+
                                 <div>
                                     <a class="btn btn-default" ng-click="addProfil(profil)">
                                         <i class="fa fa-plus"></i>

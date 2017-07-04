@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:c="http://java.sun.com/jsp/jstl/core">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
@@ -31,13 +28,13 @@
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/jquery.mCustomScrollbar.min.css" rel="stylesheet" type="text/css"/>
-        
+
         <link href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" rel="stylesheet" type="text/css"/>
         <link href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" rel="stylesheet" type="text/css"/>
-        
-       
-        
-        
+
+        <link href="/Dashboard/resources/css/scroll.css" rel="stylesheet" type="text/css"/>
+
+
         <style>
             .log{
                 bottom:0;clear:both;display:block;padding:5px 0 0;
@@ -46,13 +43,13 @@
         </style>
     </head>
 
-    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('${id}')">
+    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('#{user}', '#{id}')">
 
         <div class="container body">
             <div class="main_container">
 
-                <div class="col-md-3 left_col menu_fixed" id="">
-                    <div class="left_col scroll-view">
+                <div class="col-md-3 left_col menu_fixed">
+                    <div class="left_col scroll-view scrollable">
                         <div class="navbar nav_title" style="border: 0;">
                             <a href="Dashboard/home" class="site_title"><span>Dashboard</span></a>
                         </div>
@@ -65,7 +62,7 @@
                                 <img src="/Dashboard/resources/images/img.png" alt="..." class="img-circle profile_img" />
                             </div>
                             <div class="profile_info">
-                                <span>Welcome,</span>
+                                <span>Bienvenu,</span>
                                 <h2>${user}</h2>
                             </div>
                             <div class="clearfix"></div>
@@ -75,7 +72,7 @@
                         <br />
 
                         <!-- sidebar menu -->
-                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu " >
                             <div class="menu_section">
                                 <ul class="nav side-menu">
                                     <li class="active">
@@ -84,7 +81,7 @@
 
                                             <li ng-repeat="res in ressources">
                                                 <a>
-                                                    <span>
+                                                    <span onclick="slidChild(event.target.id)" id="R{{res.ressource.id}}">
                                                         {{res.ressource.name}}
                                                     </span>
                                                     <i class='fa fa-trash pull-right' ng-click="deleteRessource(res.ressource)"></i>
@@ -92,17 +89,18 @@
                                                     <i class='fa fa-pencil pull-right' ng-click="editRessource(res.ressource)"></i>
 
                                                 </a>
-
-                                                <ul class="nav child_menu" style="display: block;" id="{{res.ressource.id}}">
-
+                                                <ul class="nav child_menu" style="display: none;" id="{{res.ressource.id}}">
+                                 
                                                 </ul>
+
                                             </li>
                                         </ul>
                                     </li>
                                     <li class="active" id="slideStat"><a>Opérateurs de Statistiques</a>
                                         <ul id="slideStatChild" class="nav side-menu" style="display : none">
                                             <li><a ng-click="drawCondition('select')">Sélection</a></li>
-                                            <li><a ng-click="drawCondition('where')">Condition</a></li>
+                                            <li><a ng-click="drawCondition('where')">Condition (champsXvaleur)</a></li>
+                                            <li><a ng-click="drawCondition('where2')">Condition (champsXchamps)</a></li>
                                             <li><a ng-click="drawCondition('join')">Jointure</a></li>
                                         </ul>
                                     </li>
@@ -160,17 +158,24 @@
 
                                         </li>
                                         <li class="divider"></li>
-                                        <li class="dropdown">
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
                                             <a>Statistiques
                                                 <i class="fa fa-angle-right pull-right"></i>
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="/Dashboard/new">Nouveau
-                                                        <span class="fa fa-line-chart pull-right"></span>
-                                                    </a></li>
+                                                        <span class="fa fa-plus pull-right"></span>
+                                                    </a>
+                                                </li>
+                                                <li><a href="/Dashboard/statistiques/visualize">Consulter
+                                                        <span class="fa fa-eye pull-right"></span>
+                                                    </a>
+                                                </li>
                                                 <li><a href="/Dashboard/statistiques/search">Modifier
                                                         <span class="fa fa-edit pull-right"></span>
-                                                    </a></li>
+                                                    </a>
+                                                </li>
+
                                             </ul>
                                         </li>
                                         <li class="dropdown"><a>Dashboards
@@ -178,41 +183,25 @@
                                             </a>
                                             <ul class="dropdown-menu">
                                                 <li><a href="/Dashboard/create/new">Nouveau
-                                                        <span class="fa fa-window-maximize pull-right"></span>
+                                                        <span class="fa fa-plus pull-right"></span>
                                                     </a></li>
                                                 <li><a href="/Dashboard/dashboards/consulte">Consulter
-                                                        <span class="fa fa-dashboard pull-right"></span>
+                                                        <span class="fa fa-eye pull-right"></span>
                                                     </a></li>
                                                 <li><a href="/Dashboard/dashboards/search">Modifier
-                                                        <span class="fa fa-pencil pull-right"></span>
+                                                        <span class="fa fa-edit pull-right"></span>
                                                     </a></li>
                                             </ul>
                                         </li>
-                                        <li class="dropdown">
-                                            <a href="#">Utilisateurs
-                                                <i class="fa fa-angle-right pull-right"></i>
+                                        <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
+                                            <a href="\Dashboard\users">Utilisateurs
+                                                
                                             </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="\Dashboard\users\ajout">Nouveau
-                                                        <span class="fa fa-user-plus pull-right"></span>
-                                                    </a></li>
-                                                <li><a href="\Dashboard\users">Modifier
-                                                        <span class="fa fa-user-o pull-right"></span>
-                                                    </a></li>
-                                            </ul>
                                         </li>
-                                        <li class="dropdown">
-                                            <a href="#">Rôles
-                                                <i class="fa fa-angle-right pull-right"></i>
+                                        <li ng-show="fullUser.profile == 'A'">
+                                            <a href="/Dashboard/roles">Rôles
                                             </a>
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#">Nouveau
-                                                        <span class="fa fa-users pull-right"></span>
-                                                    </a></li>
-                                                <li><a href="#">Modifier
-                                                        <span class="fa fa-vcard pull-right" ></span>
-                                                    </a></li>
-                                            </ul>
+                                            
                                         </li>
                                     </ul>
                                 </div>
@@ -226,12 +215,7 @@
                                     </a>
                                     <ul class="dropdown-menu dropdown-usermenu pull-right">
                                         <li><a href="javascript:;"> Profile</a></li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <span class="badge bg-red pull-right">50%</span>
-                                                <span>Settings</span>
-                                            </a>
-                                        </li>
+
                                         <li><a href="javascript:formSubmit()"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
                                     </ul>
                                 </li>
@@ -263,7 +247,7 @@
                         <div class="clearfix"></div>
                         <div class="row">
                             <div class="panel-body" style="overflow:hidden; height : 3000px;" id='canvasbody'>
-                                <js-plumb-canvas on-connection="onConnection" x="pos_x" y="pos_y" zoom="zoomlevel">
+                                <js-plumb-canvas on-connection="onConnection" x="pos_x" y="pos_y">
                                     <ng-include src="'/Dashboard/resources/partials/'+state.template+'State.html'" ng-repeat="state in stateObjects"></ng-include>
                                 </js-plumb-canvas>
                             </div>
@@ -309,6 +293,7 @@
         <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js" type="text/javascript"></script>
         <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js" type="text/javascript"></script>
 
+        <script src="/Dashboard/resources/js/notify.min.js" type="text/javascript"></script>
         <!-- out local ng stuff -->
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
         <script src="/Dashboard/resources/js/directives.js"></script>
@@ -344,12 +329,17 @@
                                     $("#slideGraph").on('click', function () {
 
                                         $("#slideGraphChild").slideToggle();
-
                                         if ($("#slideGraphChild").height() === 0) {
                                             $("#slideStatChild").slideUp();
                                             $("#slideRessourceChild").slideUp();
                                         }
-                                    })
+                                    });
+                                    
+                                    slidChild = function(id){
+                                        var childId = id.substring(1);
+                                        $('#' + childId).slideToggle();
+                                    };
+                                    
         </script>
     </body>
 </html>

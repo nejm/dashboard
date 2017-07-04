@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.smi.model.RolesOfUser;
+import org.json.simple.JSONObject;
 
 @RestController
 public class UserController {
@@ -56,6 +57,11 @@ public class UserController {
             return new ResponseEntity<Boolean>(true, HttpStatus.OK);
         }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/rest/users/get/{username}", method = RequestMethod.GET)
+    public Users getUser(@PathVariable String username) {
+        return userService.findByUsername(username);
     }
 
     @RequestMapping(value = "/rest/users/add", method = RequestMethod.POST)
@@ -86,6 +92,33 @@ public class UserController {
             users.add(userService.findById(u.getUserId()));
         }
         return users;
+    }
+    
+    @RequestMapping(value = "/rest/users", method = RequestMethod.GET)
+    public ResponseEntity<List<Users>> getAllUsers() {
+        List<Users> stats = userService.findAll();
+        return new ResponseEntity<List<Users>>(stats, HttpStatus.OK);
+    }
+    
+    @RequestMapping(value = "/rest/role/users/add", method = RequestMethod.POST)
+    public void addAllUsers(@RequestBody JSONObject o) {
+        Integer id = (Integer) o.get("role");
+        List<Integer> users = (List<Integer>) o.get("users");
+        for(Usersandroles u : userAndRoleService.findByRole(id.longValue())){
+            userAndRoleService.delete(u);
+        }
+        Usersandroles r = new Usersandroles();
+        for(Integer idR : users){
+            r.setRoleId(id.longValue());
+            r.setUserId(idR.longValue());
+            userAndRoleService.add(r);
+        }
+    }
+
+    @RequestMapping(value = "/rest/roles", method = RequestMethod.GET)
+    public ResponseEntity<List<Role>> getAllRoles() {
+        List<Role> roles = roleService.findAll();
+        return new ResponseEntity<List<Role>>(roles, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/rest/profiles/{id}", method = RequestMethod.GET)
@@ -123,5 +156,14 @@ public class UserController {
         }
 
     }
-
+    
+    @RequestMapping(value = "/rest/roles", method = RequestMethod.POST)
+    public Long addRole(@RequestBody Role role) {
+        return roleService.save(role);
+    }
+    
+    @RequestMapping(value = "/rest/roles/delete", method = RequestMethod.POST)
+    public void deleteRole(@RequestBody Role role) {
+        roleService.delete(role);
+    }
 }

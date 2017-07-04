@@ -25,5 +25,15 @@ public class RoleServiceImpl implements RoleService{
     public Role findById(long id) {
         return roleDaoImpl.findById(id);
     }
+
+    @Override
+    public Long save(Role role) {
+        return roleDaoImpl.save(role);
+    }
+
+    @Override
+    public void delete(Role role) {
+        roleDaoImpl.delete(role);
+    }
     
 }

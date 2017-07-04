@@ -1,4 +1,5 @@
-    <js-plumb-object state-object="state" ng-style="{ 'left': state.x, 'top': state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+
+<js-plumb-object state-object="state" ng-style="{ 'left': state.x, 'top': state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
       <button class="btn btn-default pull-left" ng-click="removeState(state)">
           <span class="glyphicon glyphicon-trash"></span>
       </button>
@@ -11,13 +12,13 @@
           <div class="input-group mb-2 mr-sm-2 mb-sm-0">
             <div class="input-group-addon">X</div>
             <select class="form-control" id="inlineFormInputGroupx" style="width : 200px"  ng-model="state.barx">
-              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!=null">{{att.attribute}}</option>
+              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null'">{{att.attribute}}</option>
             </select>
           </div>
           <div class="input-group mb-2 mr-sm-2 mb-sm-0">
             <div class="input-group-addon">Y</div>
             <select class="form-control" id="inlineFormInputGroupy" style="width : 200px" ng-model="state.bary">
-              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!=null">
+              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null'">
                   {{att.attribute}}
               </option>
             </select>

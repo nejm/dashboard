@@ -1,72 +1,68 @@
-<div class="nav toggle">
-    <div class="dropdown">
-        <a id="menu_toggle"  class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
-            <i class="fa fa-bars"></i>
-        </a>
-
-        <ul class="dropdown-menu">
+<ul class="nav side-menu">
+    <li ng-if="fullUser.profile == 'A'"><a><i class="fa fa-line-chart"></i>Statistique</a>
+        <ul class="nav child_menu">
             <li>
-                <a href="/Dashboard/home">
-                    Acceuil
-                    <i class="fa fa-home pull-right"></i>
+                <a  href="/Dashboard/new">
+                    Nouvelle Statistique
+                    <i class="fa fa-terminal pull-right"></i>
                 </a>
-
             </li>
-            <li class="divider"></li>
-            <li class="dropdown">
-                <a>Statistiques
-                    <i class="fa fa-angle-right pull-right"></i>
+            <li>
+                <a ng-click="add()">
+                    Modifier Statistique
+                    <i class="fa fa-edit pull-right"></i>
                 </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/new">Nouveau
-                            <span class="fa fa-line-chart pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/statistiques/search">Modifier
-                            <span class="fa fa-edit pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown"><a>Dashboards
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="/Dashboard/create/new">Nouveau
-                            <span class="fa fa-window-maximize pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/consulte">Consulter
-                            <span class="fa fa-dashboard pull-right"></span>
-                        </a></li>
-                    <li><a href="/Dashboard/dashboards/search">Modifier
-                            <span class="fa fa-pencil pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Utilisateurs
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="\Dashboard\users\ajout">Nouveau
-                            <span class="fa fa-user-plus pull-right"></span>
-                        </a></li>
-                    <li><a href="\Dashboard\users">Modifier
-                            <span class="fa fa-user-o pull-right"></span>
-                        </a></li>
-                </ul>
-            </li>
-            <li class="dropdown">
-                <a href="#">Rôles
-                    <i class="fa fa-angle-right pull-right"></i>
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a href="#">Nouveau
-                            <span class="fa fa-users pull-right"></span>
-                        </a></li>
-                    <li><a href="#">Modifier
-                            <span class="fa fa-vcard pull-right" ></span>
-                        </a></li>
-                </ul>
             </li>
         </ul>
-    </div>
-</div>
+    </li>
+    <li><a><i class="fa fa-window-restore"></i>Dashboards</a>
+        <ul class="nav child_menu">
+            <li>
+                <a  href="/Dashboard/create/new">
+                    Nouveau dashboard
+                    <i class="fa fa-terminal pull-right"></i>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashboard/dashboards/search">
+                    Modifier dashboard
+                    <i class="fa fa-edit pull-right"></i>
+                </a>
+            </li>
+            <li>
+                <a href="/Dashboard/dashboards/consulte">
+                    Consulter dashboard
+                    <i class="fa fa-eye pull-right"></i>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li ng-if="fullUser.profile == 'A'"><a><i class="fa fa-user"></i> Utilisateur</a>
+        <ul class="nav child_menu">
+            <li>
+                <a href="/Dashboard/users/ajout">
+                    Nouvel Utilisateur
+                    <i class="fa fa-terminal pull-right"></i>
+                </a>
+            </li>
+            <li >
+                <a href="/Dashboard/users/">
+                    Modifier Utilisateur
+                    <i class="fa fa-edit pull-right"></i>
+                </a>
+
+            </li>
+        </ul>
+    </li>
+    <li ng-if="fullUser.profile == 'A'"><a><i class="fa fa-address-card"></i> Role</a> 
+        <ul class="nav child_menu">
+            <li>
+                <a href="/Dashboard/roles">
+                    Modifier Role
+                    <i class="fa fa-edit pull-right"></i>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+</ul>
