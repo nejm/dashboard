@@ -442,21 +442,33 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             }
         }
         if (typeof $scope.services[service].service.attributes == 'undefined') {
-            let db = {};
-            db = {
-                server: $scope.services[service].service.url.split(':')[2].substring(1),
-                username: ressource.login,
-                password: ressource.password,
-                databaseName: $scope.services[service].service.url.split(':')[4],
-                driverType: $scope.services[service].service.url.split(':')[1],
-                tableName: $scope.services[service].service.suburl,
-                port: $scope.services[service].service.url.split(':')[3],
+            if ($scope.services[service].service.url.indexOf('mysql') == -1) {
+                let db = {};
+                db = {
+                    type: 'oracle',
+                    server: $scope.services[service].service.url.split(':')[2].substring(1),
+                    username: ressource.login,
+                    password: ressource.password,
+                    databaseName: $scope.services[service].service.url.split(':')[4],
+                    driverType: $scope.services[service].service.url.split(':')[1],
+                    tableName: $scope.services[service].service.suburl,
+                    port: $scope.services[service].service.url.split(':')[3],
+                }
+                $http.post('/Dashboard/rest/services/tables', db).then(function (response) {
+                    $scope.services[$scope.iii].service.attributes = response.data;
+                    $scope.newState($scope.iii, 'default');
+                });
+            } else {
+                var ch = {
+                    type: 'mysql',
+                    text: $scope.services[service].service.url,
+                    username: ressource.login,
+                    password: ressource.password
+                }
+
+                $http.post('/Dashboard/rest/services/tables', ch).then(function (response) {
+                });
             }
-            $scope.iii = service;
-            $http.post('/Dashboard/rest/services/tables', db).then(function (response) {
-                $scope.services[$scope.iii].service.attributes = response.data;
-                $scope.newState($scope.iii, 'default');
-            });
         } else {
             $scope.newState(service, 'default');
         }
@@ -639,7 +651,15 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.getDataFromDataBase = function (ressource, servicce) {
         var deferred = $q.defer();
+        console.log(ressource)
+        if (ressource.indexOf("mysql") !== -1) {
+            $http.post("/Dashboard/rest/services/tablesdata", {type: 'mysql', text: ressource})
+                    .then(function () {
+                    });
+            return deferred.promise;
+        }
         let db = {
+            type: "oracle",
             server: ressource.url.split(':')[2].substring(1),
             username: ressource.login,
             password: ressource.password,
@@ -1256,7 +1276,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         if (typeof attribute[0] != 'object')
             return attribute;
         for (var i = 0; i < attribute.length; i++) {
-            if (attribute[i].attribute != null){
+            if (attribute[i].attribute != null) {
                 attr.push(attribute[i]);
                 console.log(attribute[i])
             }
@@ -2045,30 +2065,116 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         return deferred.promise;
     }
 
-    $scope.executeStat = function (stat) {
+    /****
+     */
+    $scope.generateStat2 = function (showmodal) {
         var deferred = $q.defer();
-
-        var p = $scope.generateDataToStat(stat[0]);
-        p.then(function (data) {
-            ////console.log(data);
-            if (data.stat == 'Tableau') {
-                $scope.generateTable(data.res, false);
-                ////console.log($scope.tableHTML)
+        var t = {};
+        for (var i = 0; i < $scope.stateObjects.length; i++) {
+            if ($scope.stateObjects[i].id == 0) {
+                t = $scope.stateObjects[i];
+                break;
             }
+        }
+
+        $scope.query = {};
+        $scope.query.operation = [];
+        $scope.query.ressources = [];
+        $scope.generateStatistique(t);
+        let url1 = "", url2 = "";
+        let type1 = "", type2 = "";
+        let serv1 = {}, serv2 = {};
+
+        if (typeof $scope.query.ressources[0] == 'undefined') {
+            $scope.generateStatistique(t);
+        }
+        if (typeof $scope.query.ressources[0] == 'undefined') {
+            swal("Erreur!!", "Un erreur s'est produit !!", "error");
+        }
+
+        for (var elem in $scope.services) {
+            if ($scope.services[elem].service.id == $scope.query.ressources[0].ressourceId) {
+                url1 = $scope.services[elem].service.url + $scope.services[elem].service.suburl;
+                type1 = $scope.services[elem].service.type;
+                $scope.attributes = $scope.services[elem].service.attributes;
+                serv1 = $scope.services[elem].service;
+                break;
+            }
+        }
+        if (typeof $scope.query.ressources[1] != 'undefined') {
+            for (var elem in $scope.services) {
+                if ($scope.services[elem].service.id == $scope.query.ressources[1].ressourceId) {
+                    url2 = $scope.services[elem].service.url + $scope.services[elem].service.suburl;
+                    type2 = $scope.services[elem].service.type;
+                    $scope.attributes = $scope.services[elem].service.attributes;
+                    serv2 = $scope.services[elem].service;
+                    break;
+                }
+            }
+        }
+        if (type1 == 'db') {
+            var p = $scope.getDataFromDataBase($scope.getRessource(serv1.idRessource), serv1);
+            if ($scope.query.ressources.length !== 1) {
+                if (type2 == 'db') {
+                    var p2 = $scope.getDataFromDataBase($scope.getRessource(serv2.idRessource), serv2);
+                } else {
+                    var p2 = $scope.getDataFromWS(url2);
+                }
+            }
+        } else {
+            var p = $scope.getDataFromWS(url1);
+            if ($scope.query.ressources.length !== 1) {
+                if (type2 == 'db') {
+                    var p2 = $scope.getDataFromDataBase($scope.getRessource(serv2.idRessource), serv2);
+                } else {
+                    var p2 = $scope.getDataFromWS(url2);
+                }
+            }
+        }
+
+        p.then(function (data) {
+            if ($scope.query.ressources.length > 1) {
+                p2.then(function (data2) {
+                    $scope.getResult(data, data2, showmodal);
+                    deferred.resolve();
+                });
+            } else {
+                $scope.getResult(data, null, showmodal);
+                deferred.resolve();
+            }
+
         });
 
-        stat.reduce(function (prev, curr) {
-            var p = $scope.generateDataToStat(curr);
-            p.then(function (data) {
-                ////console.log(data);
+        return deferred.promise;
+    }
+    /** */
+
+
+    $scope.executeStat = function (stat) {
+        var deferred = $q.defer();
+        console.log(stat);
+        if (typeof stat.text !== 'undefined') {
+            deferred.resolve(stat.text);
+        } else {
+            $scope.stateObjects = [];
+            $scope.links = [];
+            $scope.services = [];
+            let sdata = angular.fromJson(stat.data);
+            $scope.stateObjects = sdata.stateObjects;
+            $scope.links = sdata.links;
+            $scope.ressources = sdata.ressources;
+            let s = sdata.services;
+            for (var j = 0; j < s.length; j++) {
+                $scope.services[s[j].id] = s[j].data;
+            }
+
+            var p = $scope.generateStat2(false);
+            p.then(function () {
+                deferred.resolve(null);
             });
-        })
-//        for (var i = 0; i < stat.length; i++) {
-//            var p = $scope.generateDataToStat(stat[i]);
-//            p.then(function (data) {
-//                ////console.log($scope.query)
-//            });
-//        }
+        }
+
+        return deferred.promise;
     }
     $scope.editDashboard = function (user, id) {
         //console.log(user)
@@ -2083,7 +2189,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             $scope.dashboardData = response.data.dashboard;
             $scope.stats = response.data.stats;
             $scope.dd = response.data.statsDashboard;
-            console.log($scope.dd)
+            //console.log($scope.dd)
             if (typeof response.data.text != 'undefined') {
                 let text = angular.fromJson(response.data.text.text);
                 ////console.log(text)
@@ -2125,11 +2231,86 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
                 ////console.log($scope.stats)
                 $scope.dd = response.data;
-                myLoop();
+                //myLoop();
+                $scope.indexOfStat = 0;
+                $scope.resultNext($scope.indexOfStat);
 
             } else {
                 swal("Vide !!", "Le dashboard ne contient aucune statistique !!", "warning");
             }
+        });
+    }
+
+    $scope.DashResult = function (index) {
+
+        var deferred = $q.defer();
+
+        let type = $scope.stateObjects[$scope.stateObjects.length - 2].name;
+        if (type == 'join')
+            type = $scope.stateObjects[$scope.stateObjects.length - 3].name
+        // insert the text description if it exist
+
+        var title = $scope.stats[index].name;
+
+        if (typeof $scope.dd != 'undefined' &&
+                typeof $scope.dd.statsDashboard != 'undefined' &&
+                typeof $scope.dd.statsDashboard[index].text != 'undefined' &&
+                $scope.dd.statsDashboard[index].text != 'null') {
+            title = $scope.dd.statsDashboard[index].text;
+        }
+        let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
+                "<div class='panel-heading'>" + title + "</div></li>");
+        $('#sortable').append(li);
+
+        deferred.resolve({type: type, id: $('#sortable').children().length});
+        $scope.typeSR = "";
+        return deferred.promise;
+    }
+
+    $scope.resultNext = function (index) {
+        var typeSt = "";
+        var p = $scope.executeStat($scope.stats[index]);
+        $scope.indexOfStat++;
+        p.then(function (st) {
+            //console.log($scope.query);
+            //////////////////
+            if (st !== null) {
+                var typeSR = angular.fromJson(st);
+                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
+                        "<div class='panel-heading'>" + typeSR.title + "</div>" +
+                        "<div class='panel-body'>" + typeSR.description + "</li>");
+                $('#sortable').append(li);
+                if ($scope.indexOfStat < $scope.stats.length) {
+                    $scope.resultNext($scope.indexOfStat);
+                }
+            } else {
+
+                var p2 = $scope.DashResult(index).then(function (data) {
+                    var type = data.type;
+                    var id = 'li' + (data.id - 1);
+                    if ($scope.typeSR !== "") {
+
+                    } else {
+                        if (type == "Tableau") {
+                            $('#' + id).append($scope.tableHTML);
+                        } else if (type == "Bar") {
+                            $('#' + id).append($compile($scope.barHTML)($scope));
+                        } else if (type == "Pie") {
+                            $('#' + id).append($compile($scope.pieHTML)($scope));
+                        } else if (type == "Line") {
+                            $('#' + id).append($compile($scope.lineHTML)($scope));
+                        }
+                    }
+                    if ($scope.indexOfStat < $scope.stats.length) {
+                        $scope.resultNext($scope.indexOfStat);
+                    }
+                })
+            }
+
+            ///////////////////
+//            if ($scope.indexOfStat < $scope.stats.length) {
+//                $scope.resultNext($scope.indexOfStat);
+//            }
         });
     }
 

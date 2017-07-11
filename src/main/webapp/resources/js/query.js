@@ -85,7 +85,6 @@ sum = function (json, fieldon, field) {
         for (var j = 0; j < res.res.length; j++) {
             if (res.res[j][field] == json[i][field]) {
                 res.res[j][fieldon] = Number(Number(res.res[j][fieldon])+Number(json[i][fieldon]));
-                console.log(res.res[j][fieldon])
                 res.count[j]++;
                 found = true;
                 break;

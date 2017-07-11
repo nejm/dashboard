@@ -7,7 +7,6 @@ my2App.controller('dashboardController', function ($scope, $http, $location) {
     $scope.init = function (user) {
         $http.get("/Dashboard/rest/dashboards/available/"+user.toLowerCase()).then(function(response){
             $scope.availableDashboards = response.data;
-            console.log(response.data)
         });
         console.log(user);
         $http.get("/Dashboard/rest/users/get/" + user.toLowerCase()).then(function (response) {
