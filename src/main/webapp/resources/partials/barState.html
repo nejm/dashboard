@@ -12,13 +12,13 @@
           <div class="input-group mb-2 mr-sm-2 mb-sm-0">
             <div class="input-group-addon">X</div>
             <select class="form-control" id="inlineFormInputGroupx" style="width : 200px"  ng-model="state.barx">
-              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null'">{{att.attribute}}</option>
+              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null' && att!=''">{{att.attribute}}</option>
             </select>
           </div>
           <div class="input-group mb-2 mr-sm-2 mb-sm-0">
             <div class="input-group-addon">Y</div>
             <select class="form-control" id="inlineFormInputGroupy" style="width : 200px" ng-model="state.bary">
-              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null'">
+              <option ng-repeat="att in state.barAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null' && att!=''">
                   {{att.attribute}}
               </option>
             </select>

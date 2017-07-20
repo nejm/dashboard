@@ -122,15 +122,15 @@ public class AngularController {
                 }
             }
         }
-        
-        for(Role r : listRoles){
+
+        for (Role r : listRoles) {
             List<Statistique> statistique = new ArrayList<>();
             stats = new ArrayList<>();
             stats = statUserService.findByRole(r.getRoleName());
-            for(Statuser s : stats){
+            for (Statuser s : stats) {
                 statistique.add(statistiqueService.findById(s.getIdStat()));
             }
-            availableStats.put(r.getRoleName(),statistique);
+            availableStats.put(r.getRoleName(), statistique);
         }
 
         return new ResponseEntity<HashMap<String, List<Statistique>>>(availableStats, HttpStatus.OK);
@@ -216,7 +216,7 @@ public class AngularController {
 
     @RequestMapping(value = "/rest/ressources/update", method = RequestMethod.POST)
     public void updateService(@RequestBody Ressources ressource) {
-        System.out.println("com.smi.controller.AngularController.updateService()"+ressource.getLogin());
+        System.out.println("com.smi.controller.AngularController.updateService()" + ressource.getLogin());
         ressourceService.edit(ressource);
     }
 
@@ -253,48 +253,110 @@ public class AngularController {
     }
 
     @RequestMapping(value = "/rest/services/tables", method = RequestMethod.POST)
-    public List<String> tableStructure(@RequestBody JSONObject o){
+    public List<String> tableStructure(@RequestBody JSONObject o) throws ClassNotFoundException {
         List<String> list = new ArrayList<>();
         String server = (String) o.get("server");
-        String username = (String)o.get("username");
-        String password = (String)o.get("password");
-        String databaseName = (String)o.get("databaseName");
-        String driverType = (String)o.get("driverType");
-        String tableName =(String)o.get("tableName");
-        String port = (String)o.get("port");
-        
-        System.out.println("com.smi.controller.AngularController.tableStructure()"+server);
-        
-        try {
-            TableHelper th = new TableHelper(server,username,password,databaseName,driverType,Integer.parseInt(port),tableName);
-            return th.getAllResultNames();
-        } catch (SQLException ex) {
-            list.add("error");
-            list.add(ex.getMessage());
-            return list;
+        String username = (String) o.get("username");
+        String password = (String) o.get("password");
+        String databaseName = (String) o.get("databaseName");
+
+        String tableName = (String) o.get("tableName");
+        String port = (String) o.get("port");
+
+        System.out.println("the object : " + o);
+
+        if (o.get("type").toString().toLowerCase().equals("oracle")) {
+            String driverType = "thin";
+
+            try {
+                TableHelper th = new TableHelper(server, username, password, databaseName, driverType, Integer.parseInt(port), tableName);
+                return th.getAllResultNames();
+            } catch (SQLException ex) {
+                list.add("error");
+                list.add(ex.getMessage());
+
+                return list;
+            }
+        } else if (o.get("type").toString().toLowerCase().equals("mysql")) {
+            try {
+                TableHelper th = new TableHelper(server, username, password, databaseName, "", Integer.parseInt(port), tableName);
+                return th.getAllResultNamesMySql();
+            } catch (SQLException ex) {
+                list.add("error");
+                list.add(ex.getMessage());
+
+                return list;
+            }
         }
+        list.add("blallalalalalalalalalalalalal");
+        return list;
     }
-    
-    @RequestMapping(value = "/rest/services/tablesdata", method = RequestMethod.POST)
-    public HashMap<Integer,List<String>> tableContent(@RequestBody JSONObject o){
-        List<String> list = new ArrayList<>();
+
+    @RequestMapping(value = "/rest/ressource/test", method = RequestMethod.POST)
+    public List<String> testConnection(@RequestBody JSONObject o) {
+        List<String> errors = new ArrayList<String>();
         String server = (String) o.get("server");
-        String username = (String)o.get("username");
-        String password = (String)o.get("password");
-        String databaseName = (String)o.get("databaseName");
-        String driverType = (String)o.get("driverType");
-        String tableName =(String)o.get("tableName");
-        String port = (String)o.get("port");
-        
-        try {
-            TableHelper th = new TableHelper(server,username,password,databaseName,driverType,Integer.parseInt(port),tableName);
-            return th.getAllResult();
-        } catch (SQLException ex) {
-            list.add("error");
-            list.add(ex.getMessage());
-            HashMap<Integer, List<String>> m = new LinkedHashMap<>();
-            m.put(0, list);
-            return m;
+        String username = (String) o.get("username");
+        String password = (String) o.get("password");
+        String databaseName = (String) o.get("databaseName");
+
+        String tableName = (String) o.get("tableName");
+        String port = (String) o.get("port");
+
+        if (o.get("type").toString().toLowerCase().equals("oracle")) {
+            String driverType = "thin";
+            
+            try {
+                TableHelper th = new TableHelper(server, username, password, databaseName, driverType, Integer.parseInt(port), tableName);
+                if(!th.testConnection()) errors.add("error");
+            } catch (SQLException ex) {
+                errors.add(ex.getMessage());
+            }
+
         }
+        return errors;
+    }
+
+    @RequestMapping(value = "/rest/services/tablesdata", method = RequestMethod.POST)
+    public HashMap<Integer, List<String>> tableContent(@RequestBody JSONObject o) throws ClassNotFoundException {
+        List<String> list = new ArrayList<>();
+        HashMap<Integer, List<String>> map = new LinkedHashMap<>();
+
+        String server = (String) o.get("server");
+        String username = (String) o.get("username");
+        String password = (String) o.get("password");
+        String databaseName = (String) o.get("databaseName");
+
+        String tableName = (String) o.get("tableName");
+        String port = (String) o.get("port");
+
+        System.out.println("the object : " + o);
+
+        if (o.get("type").toString().toLowerCase().equals("oracle")) {
+            String driverType = "thin";
+
+            try {
+                TableHelper th = new TableHelper(server, username, password, databaseName, driverType, Integer.parseInt(port), tableName);
+                return th.getAllResult();
+            } catch (SQLException ex) {
+                list.add("error");
+                list.add(ex.getMessage());
+
+                map.put(0, list);
+                return map;
+            }
+        } else if (o.get("type").toString().toLowerCase().equals("mysql")) {
+            try {
+                TableHelper th = new TableHelper(server, username, password, databaseName, "", Integer.parseInt(port), tableName);
+                return th.getAllResultMySql();
+            } catch (SQLException ex) {
+                list.add("error");
+                list.add(ex.getMessage());
+
+                map.put(0, list);
+                return map;
+            }
+        }
+        return map;
     }
 }

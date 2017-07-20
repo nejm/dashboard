@@ -22,15 +22,15 @@
     </div>
     <div>
         <div class="row wherecondition" id="{{state.idd}}" ng-repeat="i in state.count track by $index">
-            <div id="wherediv{{state.idd}}p{{$index}}">
+            <div id="wherediv{{state.idd}}p{{$index}}"  ng-if="state.attributesWhere[$index].deleted != true">
                 <div>
                     <div class="col-sm-4" >
                         <select name="op" id="att0" class="form-control" ng-model="state.attributesWhere[$index].attribute">
-                            <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null'">{{att}}</option>
+                            <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null' && att!=''">{{att}}</option>
                         </select>
                     </div>
                 </div>
-                <div class="col-sm-3" style="margin-left: -8px">
+                <div class="col-sm-3" style="margin-left: -8px" >
                     <select id="op0" class="form-control" ng-model="state.attributesWhere[$index].op" ng-click="disable('0')">
                         <option><</option>
                         <option>></option>

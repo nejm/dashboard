@@ -26,7 +26,7 @@
                 <div>
                     <div class="col-sm-4" >
                         <select name="op" id="att0" class="form-control" ng-model="state.attributesWhere2[$index].attribute">
-                            <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null'">{{att}}</option>
+                            <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null' && att!=''">{{att}}</option>
                         </select>
                     </div>
                 </div>
@@ -40,7 +40,7 @@
                 </div>
                 <div class="col-sm-4" style="margin-left: -8px">
                     <select name="op" id="att0" class="form-control" ng-model="state.attributesWhere2[$index].attribute2">
-                        <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null'">{{att}}</option>
+                        <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null' && att!=''">{{att}}</option>
                     </select>
                 </div>
                 <div class="col-sm-0 pull-right" style="margin-right: 6px">

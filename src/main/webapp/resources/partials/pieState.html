@@ -11,13 +11,13 @@
           <div class="input-group mb-2 mr-sm-2 mb-sm-0">
             <div class="input-group-addon">Attributs</div>
             <select class="form-control" id="inlineFormInputGroupx" style="width : 200px"  ng-model="state.pieLabels">
-              <option ng-repeat="att in state.pieAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null'">{{att.attribute}}</option>
+              <option ng-repeat="att in state.pieAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null' && att!=''">{{att.attribute}}</option>
             </select>
           </div>
           <div class="input-group mb-2 mr-sm-2 mb-sm-0">
             <div class="input-group-addon">Données</div>
             <select class="form-control" id="inlineFormInputGroupy" style="width : 200px" ng-model="state.pieData">
-              <option ng-repeat="att in state.pieAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null'">
+              <option ng-repeat="att in state.pieAttributes track by $index" value="{{att.attribute}}" ng-if="att.attribute!='null.null' && att!=''">
                   {{att.attribute}}
               </option>
             </select>

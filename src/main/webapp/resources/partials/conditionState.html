@@ -18,9 +18,9 @@
             </js-plumb-connection>
         </js-plumb-endpoint>
     </div>
-
     <div  class="row selectcondition" id="{{state.idd}}" ng-repeat="i in state.count track by $index">
-        <div id="selectdiv{{state.idd}}p{{$index}}">
+        
+        <div id="selectdiv{{state.idd}}p{{$index}}" ng-if="state.Sattributes[$index].deleted != true">
             <div class="col-sm-5" style="margin-right : -25px">
                 <select name="op"  ng-change="selectAttributes(state.id)" id="op0" class="form-control" style="padding : -15px" ng-model="state.Sattributes[$index].op">
                     <option value=""></option>
@@ -33,7 +33,6 @@
             </div>
             <div class="col-sm-6" style="margin-left: 6px">
                 <select name="op" ng-change="selectAttributes(state.id)" id="att0" class="form-control" ng-model="state.Sattributes[$index].attribute">
-                    <option></option>
                     <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null'">{{att}}</option>
                 </select>
             </div>

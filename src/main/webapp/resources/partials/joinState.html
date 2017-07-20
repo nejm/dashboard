@@ -25,7 +25,7 @@
             <div id="joindiv{{state.idd}}p{{$index}}">
                 <div class="col-sm-4">
                     <select name="joinop" ng-model="state.sLeftAttributes[$index]" class="form-control" style="padding : -15px">
-                        <option ng-repeat="att in state.leftAttributes" ng-if="att!='null.null'">{{att}}</option>
+                        <option ng-repeat="att in state.leftAttributes" ng-if="att!='null.null' && att!=''">{{att}}</option>
                     </select>
                 </div>
                 <div class="col-sm-3" style="margin-left: -10px">
@@ -38,7 +38,7 @@
                 </div>
                 <div class="col-sm-4" style="margin-left: -10px">
                     <select name="op" class="form-control" ng-model="state.sRightAttributes[$index]">
-                        <option ng-repeat="att in state.rightAttributes" ng-if="att!='null.null'">{{att}}</option>
+                        <option ng-repeat="att in state.rightAttributes" ng-if="att!='null.null' && att!=''">{{att}}</option>
                     </select>
                 </div>
                 <div class="col-sm-1">

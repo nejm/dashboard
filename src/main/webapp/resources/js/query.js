@@ -22,6 +22,14 @@ var merge = function (obj1, obj2) {
  * @returns {Array} Projection
  */
 select = function (json, fields) {
+    var t = [];
+    for (var i = 0; i < fields.length; i++) {
+        if (typeof fields[i].deleted == 'undefined') {
+            t.push(fields[i]);
+        }
+    }
+    fields = t;
+    console.log("select fields", t);
     var result = [];
     if (fields == null || fields.length == 0) {
         result = json;
@@ -46,14 +54,21 @@ select = function (json, fields) {
         }
     }
     var field = "";
+    var attributesOn = [];
+    console.log("array", array);
     for (var i = 0; i < array.length; i++) {
-        //console.log(array[i].op);
-        if (typeof array[i].op == 'undefined') {
-            field = array[i].attribute;
-        } else if (array[i].op == 'sum') {
-            result = sum(result, array[i].attribute, field).result;
+        if (typeof array[i].op == 'undefined' || (array[i].op == "" && typeof array[i].deleted == 'undefined')) {
+            attributesOn.push(array[i].attribute);
+        }
+    }
+
+    var sumattr = [];
+    var avgattr = [];
+    for (var i = 0; i < array.length; i++) {
+        if (array[i].op == 'sum') {
+            sumattr.push(array[i].attribute);
         } else if (array[i].op == 'avg') {
-            result = avg(result, array[i].attribute, field);
+            avgattr.push(array[i].attribute);
         } else if (array[i].op == 'min') {
             result = min(result, array[i].attribute, field);
         } else if (array[i].op == 'max') {
@@ -62,8 +77,64 @@ select = function (json, fields) {
             result = distinct(result, array[i].attribute);
         }
     }
-    //console.log(result)
+    if (sumattr.length > 0)
+        result = sumGroup(json, attributesOn, sumattr).data;
+    if (avgattr.length > 0)
+        result = avg(json, attributesOn, avgattr);
+    console.log("select : ", result);
     return result;
+}
+
+conditionIsTrue = function (values1, values2, attributes) {
+    for (var i = 0; i < attributes.length; i++) {
+        if (values1[attributes[i]] != values2[attributes[i]])
+            return false;
+    }
+    return true;
+}
+
+sumGroup = function (json, attributes, sumattr) {
+    var data = [];
+    data[0] = {};
+    var count = [];
+    var cc = 0;
+    var found = false;
+    for (var i = 0; i < attributes.length; i++) {
+        data[0][attributes[i]] = json[0][attributes[i]];
+
+    }
+    for (var i = 0; i < sumattr.length; i++) {
+        data[0]["sum." + sumattr[i]] = json[0][sumattr[i]];
+    }
+
+    count[0] = 1;
+
+    for (var i = 1; i < json.length; i++) {
+        found = false;
+        for (var j = 0; j < data.length; j++) {
+            if (conditionIsTrue(json[i], data[j], attributes)) {
+                found = true;
+                count[j]++;
+                for (var l = 0; l < sumattr.length; l++) {
+                    data[j]["sum." + sumattr[l]] = Number(data[j]["sum." + sumattr[l]]) + Number(json[i][sumattr[l]]);
+                }
+            }
+            cc = j + 1;
+        }
+
+        if (!found) {
+            data[cc] = {};
+            count[cc] = 1;
+            for (var m = 0; m < attributes.length; m++) {
+                data[cc][attributes[m]] = json[i][attributes[m]];
+            }
+            for (var n = 0; n < sumattr.length; n++) {
+                data[cc]["sum." + sumattr[n]] = json[i][sumattr[n]];
+            }
+        }
+    }
+
+    return {data: data, count: count};
 }
 
 sum = function (json, fieldon, field) {
@@ -78,13 +149,13 @@ sum = function (json, fieldon, field) {
         res.count[i] = 0;
     }
     res.res.push(json[0]);
-    
+
     res.count[0] = 1;
     for (var i = 1; i < json.length; i++) {
         found = false;
         for (var j = 0; j < res.res.length; j++) {
             if (res.res[j][field] == json[i][field]) {
-                res.res[j][fieldon] = Number(Number(res.res[j][fieldon])+Number(json[i][fieldon]));
+                res.res[j][fieldon] = Number(Number(res.res[j][fieldon]) + Number(json[i][fieldon]));
                 res.count[j]++;
                 found = true;
                 break;
@@ -103,38 +174,49 @@ sum = function (json, fieldon, field) {
         res.result2[i][field] = res.res[i][field];
         res.result2[i][fieldon] = res.res[i][fieldon];
     }
-    //console.log(res);
+    console.log(res);
     return res;
 }
 
-sumAll = function (json, fieldon) {
-    var res = {
-        res: 0,
-        count: json.length,
-    };
-    
-    for (var i = 0; i < json.length; i++) {
-        res.res += json[i][fieldon];
-    }
-    //console.log(res);
-    return res;
-}
 
-avg = function (json, fieldon, field) {
-    var result = sum(json, fieldon, field).result2;
-    var count = sum(json, fieldon, field).count;
+avg = function (json, attributes, avgattributes) {
+    console.log("calc", attributes, avgattributes);
+    var result = sumGroup(json, attributes, avgattributes).data;
+    var count = sumGroup(json, attributes, avgattributes).count;
     var newRes = [];
+    console.log("avg", result)
     for (var i = 0; i < result.length; i++) {
         newRes[i] = {};
-        for (elem in result[i]) {
-            if (elem == fieldon) {
-                newRes[i]["avg." + elem] = result[i][elem] / count[i];
-            } else {
-                newRes[i][elem] = result[i][elem];
+        if (attributes.length > 0) {
+            for (var j = 0; j < attributes.length; j++) {
+                for (var elem in result[i]) {
+                    console.log("comparaison", elem, avgattributes[j])
+                    if (elem == "sum." + avgattributes[j]) {
+                        newRes[i]["avg." + avgattributes[j]] = result[i][elem] / count[i];
+                        console.log("calc", newRes[i]);
+                    } else {
+                        newRes[i][elem] = result[i][elem];
+                    }
+                }
+
+            }
+        } else {
+            for (var j = 0; j < avgattributes.length; j++) {
+
+                for (var elem in result[i]) {
+                    console.log("comparaison", elem, avgattributes[j])
+                    if (elem == "sum." + avgattributes[j]) {
+                        newRes[i]["avg." + avgattributes[j]] = result[i][elem] / count[i];
+                        console.log("calc", newRes[i]);
+                    } else {
+                        newRes[i][elem] = result[i][elem];
+                    }
+                }
             }
         }
 
     }
+    console.log("avg res", newRes);
     return newRes;
 }
 
@@ -217,6 +299,7 @@ max = function (json, field, aux) {
 
 where = function (json, attr, operator, value) {
     var res = [];
+    var at = [];
     if (attr === null)
         return json;
     //console.log(attr, operator, value);
@@ -276,7 +359,7 @@ where2 = function (json, attr, operator, attr2) {
     switch (operator) {
         case '>':
             for (var i = 0; i < json.length; i++) {
-                console.log(json[i][attr] , " ? > " , json[i][attr2],json[i][attr] > json[i][attr2]);
+                console.log(json[i][attr], " ? > ", json[i][attr2], json[i][attr] > json[i][attr2]);
                 if (json[i][attr] > json[i][attr2]) {
                     res.push(json[i]);
                 }

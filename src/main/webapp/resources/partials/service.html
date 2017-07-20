@@ -20,15 +20,23 @@
                        ng-model="service.name" class="form-control" id="nomservice"
                        placeholder="Nom">
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-if="currentRessource.type=='ws'">
                 <label for="url">Url</label> 
                 <input type="text"
                        class="form-control" id="urlservice" disabled
                        placeholder="{{currentRessource.url}}"
                        ng-model="currentRessource.url">
             </div>
+            <div class="form-group" ng-if="currentRessource.type=='db'">
+                <label for="url">Url</label> 
+                <input type="text"
+                       class="form-control" id="urlservice" disabled
+                       placeholder="{{currentRessource.serverType}}://{{currentRessource.address}}"
+                       ng-model="currentRessource.url">
+            </div>
             <div class="form-group">
-                <label for="url">SubUrl</label> 
+                <label for="url" ng-if="currentRessource.type=='ws'">SubUrl</label> 
+                <label for="url" ng-if="currentRessource.type=='db'">Table</label> 
                 <input type="text"
                        ng-model="service.suburl" class="form-control"
                        id="suburlservice" placeholder="subUrl">
