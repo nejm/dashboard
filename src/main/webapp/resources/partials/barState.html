@@ -4,7 +4,7 @@
           <span class="glyphicon glyphicon-trash"></span>
       </button>
     <h3 ng-click="setActiveState(state)">{{state.name}}</h3>
-    <hr>
+    <hr class="hr">
         <div style="position:absolute; top: -10px; left:50%;">
           <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="TopCenter" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle"></js-plumb-endpoint>
         </div>

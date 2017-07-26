@@ -1,0 +1,69 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <button type="button" class="close" ng-click="closeModal()">&times;</button>
+        <h4 class="modal-title">Expression</h4>
+    </div>
+
+    <div class="modal-body">
+        <form>
+                <div class="form-group col-sm-6">
+                    <label>Nom : </label>
+                </div>
+                <div class="form-group col-sm-6">
+                    <input class="form-control" type="text" ng-model="expressionState.expressionName"/>
+                </div>
+            <div class="form-group col-sm-6">
+                <textarea class="form-control" rows="6" ng-model="expressionState.expression"></textarea>
+            </div>
+            <!--            <div class="col-sm-6" style="height: 150px; overflow: auto;">
+                            <div class="list-group" style="width: 100%">
+                                <a href="#" class="list-group-item" ng-repeat="att in expressionState.attributes" ng-click="addop(att)">{{att}}</a>
+                            </div>
+            
+                        </div>-->
+
+            <div class="form-group col-sm-6">
+                <div>
+                    <div class="col-sm-9">
+                        <select class="form-group form-control" ng-model="expressionAttr">
+                            <option ng-repeat="att in expressionState.attributes">{{att}}</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-default" ng-click="addToExpression(expressionAttr, 'attr')"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-9">
+                        <select class="form-group form-control" ng-model="expressionOp">
+                            <option>+</option>
+                            <option>-</option>
+                            <option>*</option>
+                            <option>/</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-default" ng-click="addToExpression(expressionOp, 'op')"><i class="fa fa-plus"></i></button>
+                    </div>
+                </div>
+                <div>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" ng-model="expressionVal"/>
+                    </div>
+                    <div class="col-sm-3">
+                        <button class="btn btn-default" ng-click="addToExpression(expressionVal, 'val')"><i class="fa fa-plus" ></i></button>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+        <div>
+            <p class="bg-danger">{{currentExpressionError}}</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" ng-click="expressionState.expression = ''">Reset</button>
+        <button type="button" class="btn btn-primary" ng-click="validateExpression(expressionState)">Ajouter</button>
+    </div>
+</div>
+

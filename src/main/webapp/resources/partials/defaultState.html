@@ -1,16 +1,25 @@
-<js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
-  <button class="btn btn-default pull-left" ng-click="removeState(state)">
-      <span class="glyphicon glyphicon-trash"></span>
-  </button>
-<h3>{{state.name}}</h3>
-<hr />
-  <div ng-repeat="att in state.attributes">
-    <h4 style="text-align : left; padding-left : 10px">{{att}}</h4>
-  </div>
-  <div style="position:absolute;  top:50%; left:{{position}};">
-      <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
-          <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
-          </js-plumb-connection>
-      </js-plumb-endpoint>
-  </div>
-</js-plumb-object>
+
+<div>
+    <js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+        <button class="btn btn-default pull-left" ng-click="removeState(state)">
+            <i class="fa fa-trash"></i>
+        </button>
+        <button class="btn btn-default pull-right" ng-click="expandState(state)">
+            <i class="fa fa-expand"></i>
+        </button>
+        <h3>{{state.name}}</h3>
+
+        <hr class="hr">
+        <div style="position:absolute;  top:100px; left:{{position}};">
+            <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
+                <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
+                </js-plumb-connection>
+            </js-plumb-endpoint>
+        </div>
+        <div id="s{{state.idd}}" style="overflow: hidden">
+            <div id="{{state.idd}}" ng-repeat="att in state.attributes">
+                <h4 style="text-align : left; padding-left : 10px">{{att}}</h4>
+            </div>
+        </div>
+    </js-plumb-object>
+</div>
