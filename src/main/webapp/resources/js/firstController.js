@@ -1,6 +1,9 @@
-myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile) {
+myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnBuilder, $q, $timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile) {
 
-
+/////////////////////////
+    $scope.pageSize = 10;
+    $scope.currentPage = 0;
+    $scope.states = [];
     $scope.log = "";
     $scope.allUsers = [];
     $scope.myStats = [];
@@ -38,19 +41,33 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             type: 'db'
         }]
 
-        $rootScope.connections  = [];
-        
-        $rootScope.deleteLink = function(link){
-            var ind = -1;
-            for(var i=0;i<$scope.links.length;i++){
-                if($scope.links[i].link.source.sources1[1].uuid == link.target){
-                    ind = i;
-                    break;
-                }
-                    
-            }
-            $scope.links.splice(ind,1);
+    $rootScope.connections = [];
+    $scope.getDataIndexed = function (start, max) {
+        if (start < 0)
+            return $scope.filtredData;
+        var realMax = max;
+        var r = [];
+        if (max * start + max > $scope.statData.length)
+            realMax = $scope.statData.length;
+        for (var i = realMax * start; i < (start * realMax) + realMax; i++) {
+            r.push($scope.statData[i]);
         }
+
+        return r;
+    }
+
+    $rootScope.deleteLink = function (link) {
+        var ind = -1;
+        for (var i = 0; i < $scope.links.length; i++) {
+            if ($scope.links[i].link.source.sources1[1].uuid == link.target) {
+                ind = i;
+                break;
+            }
+
+        }
+        $scope.links.splice(ind, 1);
+    }
+
 
     $scope.targetEndpointStyle = {
         endpoint: "Dot",
@@ -115,7 +132,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 var isEmpty = true;
                 for (var p in cur) {
                     isEmpty = false;
-                    recurse(cur[p], prop ? prop + "." + p : p);
+                    recurse(cur[p], prop ? prop + ":" + p : p);
                 }
                 if (isEmpty && prop)
                     result[prop] = {};
@@ -136,7 +153,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 // Start the timer
     $timeout(tick, $scope.tickInterval);
     $scope.getRessource = function (id) {
-        console.log($scope.ressources)
+        //console.log($scope.ressources)
         for (var i = 0; i < $scope.ressources.length; i++) {
             if ($scope.ressources[i].ressource.id == id)
             {
@@ -170,7 +187,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 type: ressource.type
             }
             $http.post("/Dashboard/rest/ressource/test", savedRessource).then(function (response) {
-                console.log("test ressource", response.data)
+                //console.log("test ressource", response.data)
             });
             $http.post("/Dashboard/rest/ressources/save", savedRessource)
                     .then(function (response) {
@@ -237,7 +254,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                                 ressource: ressource.id
                             }
                             nb++;
-                            ////////console.log(deletedService)
+                            //////////console.log(deletedService)
                             $http.post("/Dashboard/rest/services/delete", deletedService).then(function (response) {
                                 $scope.log = "\n Service supprimer avec succées" + $scope.log;
                             });
@@ -306,7 +323,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             })
         } else {
             $scope.services[service.id].service = service;
-            //////console.log($scope.services[service.id].service = service)
+            ////////console.log($scope.services[service.id].service = service)
             let updatedService = {
                 id: service.id,
                 name: service.name,
@@ -336,7 +353,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             $scope.services[service.id].service.idRessource = res.id;
             $scope.services[service.id].service.type = res.type;
         }
-//console.log($scope.services[service.id].service.type)
+////console.log($scope.services[service.id].service.type)
         if ($scope.services[service.id].service.type == 'ws') {
             var url = $scope.services[service.id].service.url + $scope.services[service.id].service.suburl;
             $scope.services[service.id].service.attributes = [];
@@ -350,11 +367,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                     $scope.services[$scope.ii].service.attributes.push(elem);
                 }
             }, function (err) {
-//////////console.log('Fail to Load REST WS : ' + url);
+////////////console.log('Fail to Load REST WS : ' + url);
             });
         } else {
             let db = {};
-            console.log(service)
+            //console.log(service)
             db = {
                 server: $scope.currentRessource.url.split(':')[1],
                 username: $scope.currentRessource.login,
@@ -365,7 +382,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 port: $scope.currentRessource.url.split(':')[2],
                 type: $scope.currentRessource.url.split(':')[0]
             }
-            console.log(db)
+            //console.log(db)
             $scope.iii = service.id;
             $http.post('/Dashboard/rest/services/tables', db).then(function (response) {
                 $scope.services[$scope.iii].service.attributes = response.data;
@@ -387,11 +404,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             'service': service
         };
         $scope.services[service.id].service['suburl'] = $scope.services[service.id].service["url"];
-        ////////console.log(service);
+        //////////console.log(service);
         var uid;
-        ////////console.log($scope.ressources.length)
+        //////////console.log($scope.ressources.length)
         for (var i = 0; i < $scope.ressources.length; i++) {
-//////////console.log($scope.ressources[i].ressource.id, service.ressource);
+////////////console.log($scope.ressources[i].ressource.id, service.ressource);
             if ($scope.ressources[i].ressource.id == service.ressource) {
                 uid = $scope.ressources[i].ressource.id;
                 $scope.services[service.id].service.url = $scope.ressources[i].ressource.url;
@@ -404,7 +421,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         if ($scope.services[service.id].service.type == 'ws') {
 //get the attribute from a REST
             var url = $scope.services[service.id].service.url + $scope.services[service.id].service.suburl;
-            ////////console.log(url)
+            //////////console.log(url)
             $scope.services[service.id].service.attributes = [];
             $http.get(url).then(function (response) {
 
@@ -443,7 +460,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     }
 
     $scope.drawService = function (service) {
-        console.log("SERVIceEEEEEEEEe", $scope.services[service])
+        console.log("service", $scope.services[service].service);
         var ressource = {};
         for (var i = 0; i < $scope.ressources.length; i++) {
             if ($scope.ressources[i].ressource.id == $scope.services[service].service.idRessource) {
@@ -462,17 +479,33 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 port: $scope.services[service].service.url.split(':')[2],
                 type: $scope.services[service].service.url.split(':')[0]
             }
-            console.log(db);
             $scope.iii = service;
             $http.post('/Dashboard/rest/services/tables', db).then(function (response) {
-                console.log($scope.iii)
+                $scope.services[$scope.iii].service.attributesL = response.data.length;
                 $scope.services[$scope.iii].service.attributes = response.data;
                 $scope.newState($scope.iii, 'default');
             });
-        }else{
+        } else {
+            $scope.services[service].service.attributesL = $scope.services[service].service.attributes.length;
+            //console.log('rest',service)
             $scope.newState(service, 'default');
         }
     };
+
+    $scope.expand = function (s) {
+        var h = angular.element("#s" + s.idd)[0].offsetHeight;
+        if (typeof s.realHeight == 'undefined' || s.realHeight == 0) {
+            s.realHeight = h;
+        }
+        console.log(s.realHeight, h, s.realHeight == h);
+        if (s.realHeight == h) {
+            $("#s" + s.idd).height(213);
+        } else if (h < s.realHeight) {
+            $("#s" + s.idd).height(s.realHeight);
+        }
+
+    }
+
     $scope.drawCondition = function (type) {
         if (typeof type === 'undefined')
             return;
@@ -569,11 +602,13 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             $scope.stat = stat;
             $scope.newState(id, 'line');
         }
-////////console.log($scope.stat);
+//////////console.log($scope.stat);
     }
     $scope.getBro = function (state) {
         var st = $scope.stateObjects[$scope.getStateById(state.idd)];
-        console.log("state", st);
+        //console.log("states", $scope.stateObjects);
+        if (typeof st.name == 'undefined')
+            st.name = 'expression';
         if (st.name != 'join') {
             for (var i = 0; i < $scope.links.length; i++) {
                 if ($scope.links[i].link.target.id == state.id) {
@@ -584,7 +619,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         } else {
             let r = [{}, {}];
             for (var i = 0; i < $scope.links.length; i++) {
-//                ////console.log($scope.links[i].link.target.name)
+//                //////console.log($scope.links[i].link.target.name)
                 if ($scope.links[i].link.target.id == state.id) {
                     if (angular.equals(r[0], {})) {
                         r[0] = $scope.links[i].link.source;
@@ -594,11 +629,12 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                     }
                 }
             }
-////console.log(r)
+//////console.log(r)
         }
     }
 
     $scope.generateStatistique = function (qr) {
+        //console.log("qrqr", qr)
         if ((r = $scope.getBro(qr)) == null) {
             $scope.query.ressources.push({
                 ressourceId: qr.id,
@@ -607,6 +643,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             return $scope.query;
         } else {
             let r = $scope.getBro(qr);
+            let e = {};
             if (r.type == 's') {
                 $scope.query.stat = r.name;
                 if (r.name == 'Bar') {
@@ -626,31 +663,39 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 let a = [], b = [], c = [];
                 if (r.name == 'where') {
                     a = $scope.stateObjects[$scope.getStateById(r.idd)].attributesWhere;
-                    console.log("where attrs", a)
+                    //console.log("where attrs", a)
                 } else if (r.name == 'select') {
                     a = $scope.stateObjects[$scope.getStateById(r.idd)].Sattributes;
-                    console.log("atttttt", a)
+                    //console.log("atttttt", a)
                 } else if (r.name == 'join') {
                     a = $scope.stateObjects[$scope.getStateById(r.idd)].sLeftAttributes;
                     b = $scope.stateObjects[$scope.getStateById(r.idd)].sRightAttributes;
                     c = $scope.stateObjects[$scope.getStateById(r.idd)].op;
                 } else if (r.name == 'where2') {
-//console.log(r);
+////console.log(r);
                     a = $scope.stateObjects[$scope.getStateById(r.idd)].attributesWhere2;
                 } else if (r.name = 'expression') {
+                    if (typeof $scope.query.expressions == 'undefined')
+                        $scope.query.expressions = [];
                     $scope.query.expression = $scope.stateObjects[$scope.getStateById(r.idd)].expression;
                     $scope.query.expressionName = $scope.stateObjects[$scope.getStateById(r.idd)].expressionName;
                     $scope.query.expressions.push({
                         expression: $scope.stateObjects[$scope.getStateById(r.idd)].expression,
                         name: $scope.stateObjects[$scope.getStateById(r.idd)].expressionName
-                    })
+                    });
+                    e = {
+                        expression: $scope.stateObjects[$scope.getStateById(r.idd)].expression,
+                        name: $scope.stateObjects[$scope.getStateById(r.idd)].expressionName
+                    }
+
                 }
                 $scope.query.operation.push({
                     'type': r.name,
                     'attributes': a,
                     'attributes2': b,
                     'operation': c,
-                    'stat': r
+                    'stat': r,
+                    'expression': e
                 });
             }
             if (typeof r.length != 'undefined') {
@@ -665,7 +710,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.getDataFromDataBase = function (ressource, service) {
         var deferred = $q.defer();
-        console.log(service);
+        //console.log(service);
         let db = {
             type: ressource.url.split(':')[0],
             server: ressource.url.split(':')[1],
@@ -690,7 +735,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                             }
                             data.push(o);
                         }
-                        ////console.log(data);
+                        //////console.log(data);
                         deferred.resolve(data);
                     });
                 });
@@ -702,7 +747,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         $http.get(url)
                 .then(function (response) {
                     if (response.data == null) {
-                        //////////console.log('Fail to Load REST WS : ' + url2);
+                        ////////////console.log('Fail to Load REST WS : ' + url2);
                     }
                     let data = [];
                     for (var i = 0; i < response.data.length; i++) {
@@ -714,22 +759,20 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         return deferred.promise;
     };
     $scope.generateStat = function (showmodal) {
-        console.log('all objects',$scope.stateObjects)
-        console.log("100000000000000000", $scope.stateObjects)
         var t = {};
+        $scope.query = {};
+        $scope.query.operation = [];
+        $scope.query.ressources = [];
+        $scope.query.expressions = [];
+        $scope.query.stat = {};
         for (var i = 0; i < $scope.stateObjects.length; i++) {
             if ($scope.stateObjects[i].id == 0) {
                 t = $scope.stateObjects[i];
                 break;
             }
         }
-        
-        console.log("generating",$scope.links);
-        
-        $scope.query = {};
-        $scope.query.operation = [];
-        $scope.query.ressources = [];
-        $scope.query.expressions = [];
+
+        //console.log("generating", $scope.links);
         $scope.generateStatistique(t);
         let url1 = "", url2 = "";
         let type1 = "", type2 = "";
@@ -740,8 +783,8 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         if (typeof $scope.query.ressources[0] == 'undefined') {
             swal("Erreur!!", "Un erreur s'est produit !!", "error");
         }
-        
-        console.log("id ::", $scope.query)
+
+        //console.log("id ::", $scope.query)
 
         for (var elem in $scope.services) {
             if ($scope.services[elem].service.id == $scope.query.ressources[0].ressourceId) {
@@ -801,9 +844,6 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 let x = [];
                 for (var k = 0; k < $scope.stateObjects[i].attributes.length; k++)
                 {
-                    /*x.push($scope.stateObjects[i].name+ 
-                     " : "+ 
-                     $scope.stateObjects[i].attributes[k]);*/
                     x.push($scope.stateObjects[i].attributes[k]);
                 }
                 return x;
@@ -814,7 +854,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.lastRes = [];
     $scope.getResult = function (res, res2, showmodal) {
-
+        //console.log("json", res);
         $scope.statAttributes = [];
         let a = false;
         var joined = false;
@@ -840,8 +880,8 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                         return obj2;
                     });
                 if ($scope.query.ressources[0].ressource == "join") {
-                    //console.log($scope.getStateById($scope.query.ressources[0].ressourceId))
-                    //console.log($scope.getStateById($scope.query.ressources[0].ressourceId));
+                    ////console.log($scope.getStateById($scope.query.ressources[0].ressourceId))
+                    ////console.log($scope.getStateById($scope.query.ressources[0].ressourceId));
                     $scope.query.ressources[0] = $scope.getBro($scope.getStateById($scope.query.ressources[0].ressourceId))[0];
                     $scope.query.ressources[1] = $scope.getBro($scope.getStateById($scope.query.ressources[1].ressourceId))[1];
                 }
@@ -857,6 +897,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 });
                 res = join(res, res2, array, array2, arrayop);
             } else if ($scope.query.operation[i].type === 'select') {
+
                 res = select(res, $scope.query.operation[i].attributes);
                 var array = $.map($scope.query.operation[i].attributes, function (value) {
                     return [value];
@@ -873,7 +914,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 a = true;
             } else if ($scope.query.operation[i].type === 'where') {
                 for (var j = 0; j < $scope.query.operation[i].attributes.length; j++) {
-                    ////////console.log(res);
+                    //////////console.log(res);
                     if (typeof $scope.query.operation[i].attributes[j].attribute != 'undefined')
                         res = where(res,
                                 $scope.query.operation[i].attributes[j].attribute,
@@ -890,20 +931,21 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                             attributesArray[j].op,
                             attributesArray[j].attribute2);
                 }
+            } else {
+                res = $scope.executeExpression($scope.query.operation[i].expression, res);
             }
 
         }
-
-        console.log("expression", $scope.query.expression);
-        for (var i = 0 ; i < $scope.query.expressions.length; i++) {
-            res = $scope.executeExpression($scope.query.expressions[i],res);
-        }
+        /*if(typeof $scope.query.expressions != 'undefined')
+         for (var i = 0 ; i < $scope.query.expressions.length; i++) {
+         res = $scope.executeExpression($scope.query.expressions[i],res);
+         }*/
         if (!a) {
             $scope.statAttributes = $scope.attributes;
         }
         if ($scope.query.stat == 'Tableau') {
-            console.log("0 generate table", res);
             $scope.generateTable(res, showmodal);
+            //console.log("0 generate table done");
         } else if ($scope.query.stat == 'Bar') {
             $scope.generateBar(res, $scope.query.x, $scope.query.y, showmodal);
         } else if ($scope.query.stat == 'Pie') {
@@ -915,7 +957,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     }
 
 //    $scope.getResult = function (res, res2, showmodal) {
-//        //////////console.log("get result");
+//        ////////////console.log("get result");
 //        $scope.statAttributes = [];
 //        let a = false;
 //        let joined = false;
@@ -940,7 +982,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 //                        }
 //                        return obj2;
 //                    });
-//                //////console.log("JOIN", $scope.query)
+//                ////////console.log("JOIN", $scope.query)
 //                $scope.statAttributes = $scope.getAttributes($scope.query.ressources[0].ressourceId).concat($scope.getAttributes($scope.query.ressources[1].ressourceId))
 //                let array = $.map($scope.query.operation[i].attributes, function (value) {
 //                    return [$scope.query.ressources[0].ressource + ": " + value];
@@ -959,9 +1001,9 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 //        //the where condition second
 //        for (var i = 0; i < $scope.query.operation.length; i++) {
 //            if ($scope.query.operation[i].type === 'where') {
-//                //if(joined) ////////////console.log()
+//                //if(joined) //////////////console.log()
 //                for (var j = 0; j < $scope.query.operation[i].attributes.length; j++) {
-//                    ////////console.log(res);
+//                    //////////console.log(res);
 //                    res = where(res,
 //                            $scope.query.operation[i].attributes[j].attribute,
 //                            $scope.query.operation[i].attributes[j].op,
@@ -974,7 +1016,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 //            if ($scope.query.operation[i].type == 'select') {
 //
 //                res = select(res, $scope.query.operation[i].attributes);
-//                ////console.log(res);
+//                //////console.log(res);
 //                var array = $.map($scope.query.operation[i].attributes, function (value) {
 //                    return [value];
 //                });
@@ -1003,7 +1045,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 //        }
 //
 //        //})
-//        ////////////console.log(res);
+//        //////////////console.log(res);
 //    }
     $scope.linesStat = [];
     $scope.indexLine = 0;
@@ -1050,36 +1092,27 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             }
         }
         $scope.legend = {};
-        $scope.options = {
-            legend: {
-                labels: {
-                    generateLabels: function (chart) {
-                        $scope.legend = chart.generateLegend();
-                    }
-
-                }
-            }}
-
+        if ($scope.labelsPie.length < 5)
+            $scope.options = {
+                legend: {
+                    display: true
+                }}
+        else
+            $scope.options = {};
         $scope.pieStat.push({
             dataPie: $scope.dataPie,
-            labelsPie: $scope.labelsPie
+            labelsPie: $scope.labelsPie,
+            options: $scope.options
         });
-        //////console.log($scope.legend)
+        ////////console.log($scope.legend)
         //$scope.pieHTML = "<div style='position : absolute; height : 100%; width : 100%;'><canvas class='chart chart-pie' chart-data='dataPie' chart-labels='labelsPie'></canvas></div>";
-        $scope.pieHTML = "<canvas style='display : block' height='40%' class='chart chart-pie'  chart-data='pieStat[" + $scope.indexPie + "].dataPie' chart-labels='pieStat[" + $scope.indexPie + "].labelsPie' chart-options='options'></canvas>";
-        //////console.log($scope.pieHTML)
+        $scope.pieHTML = "<canvas style='display : block' height='40%' class='chart chart-pie'  chart-data='pieStat[" + $scope.indexPie + "].dataPie' chart-labels='pieStat[" + $scope.indexPie + "].labelsPie' chart-options='pieStat[" + $scope.indexPie + "].options'></canvas>";
+        ////////console.log($scope.pieHTML)
         $scope.indexPie++;
     }
 
-    $scope.pieLegend = function () {
-//console.log($scope.legend);
-    }
-
     $scope.generateTable = function (res, showmodal) {
-        console.log("generate table", res);
-        if (showmodal) {
-            $scope.openModal('statistique', null);
-        }
+
         if (!Array.isArray(res)) {
             let k = [];
             k[0] = res;
@@ -1095,9 +1128,44 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             $scope.statData[0] = "vide";
             $scope.statAttributes[0] = "Pas de données";
         }
-////console.log("#TABLE data : ", $scope.statData);
-        $scope.tableHTML = $scope.createTableHtml();
+//////console.log("#TABLE data : ", $scope.statData);
+        if (showmodal) {
+            $scope.openModal('statistique', null);
+            $scope.dtColumns = [];
+            var responsive = {details: {
+                    display: $.fn.dataTable.Responsive.display.modal({
+                        header: function (row) {
+                            var data = row.data();
+                            return 'Detaille'
+                        }
+                    }),
+                    renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+                        tableClass: 'table'
+                    })
+                }};
+
+            for (var elem in $scope.statData[0]) {
+                $scope.dtColumns.push(DTColumnBuilder.newColumn(elem.replace('.', '')).withTitle(elem));
+            }
+
+//            for (var i = 0; i < $scope.statAttributes.length; i++) {
+//                $scope.dtColumns.push(DTColumnBuilder.newColumn($scope.statAttributes[i]).withTitle($scope.statAttributes[i]));
+//            }
+            $scope.dtOptions = DTOptionsBuilder.fromFnPromise($scope.createTableHtmlV2())
+                    .withBootstrap()
+                    .withPaginationType('simple_numbers')
+                    .withOption('responsive', responsive)
+                    // Active Responsive plugin
+                    .withScroller()
+                    // Do not forget to add the scorllY option!!!
+                    .withOption('scrollY', 250);
+            //console.log("attributeData", $scope.dtColumns)
+        } else {
+            $scope.tableHTML = $scope.createTableHtml();
+        }
     }
+
+
 
     $scope.barStat = [];
     $scope.indexBar = 0;
@@ -1109,7 +1177,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         if (showmodal)
             $scope.openModal('bar', 'null');
         for (var i = 0; i < res.length; i++) {
-            //////////////console.log(res[i]);
+            ////////////////console.log(res[i]);
             for (var elem in res[i]) {
                 if (elem == x) {
                     $scope.labelsBar.push(res[i][elem]);
@@ -1133,7 +1201,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     $scope.modals = [];
     $scope.openModal = function (name, id) {
         if (id != 'null') {
-            console.log($scope.getRessource(id))
+            //console.log($scope.getRessource(id))
             $scope.currentRessource = $scope.getRessource(id);
         }
 
@@ -1142,6 +1210,20 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             scope: $scope
         });
         $scope.modals.push($scope.modalInstance);
+    };
+    $scope.openModalWithPromess = function (name, id) {
+        var deferred = $q.defer();
+        if (id != 'null') {
+            $scope.currentRessource = $scope.getRessource(id);
+        }
+
+        $scope.modalInstance = $uibModal.open({
+            templateUrl: '/Dashboard/resources/partials/' + name + '.html',
+            scope: $scope
+        });
+        $scope.modals.push($scope.modalInstance);
+        deferred.resolve();
+        return deferred.promise;
     };
     $scope.closeModal = function () {
         if (typeof $scope.modalInstance !== 'undefined' && $scope.modalInstance !== null) {
@@ -1170,12 +1252,17 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         return k;
     }
     /*$scope.$watchCollection('stateObjects',function(obj){
-     //////////console.log(obj)
+     ////////////console.log(obj)
      })*/
     $scope.removeState = function (state) {
         if (!$scope.isSourceState(state.idd)) {
+            //console.log(state)
             let father = $scope.getBro(state);
-            if (father !== null && typeof father !== 'undefined') {
+            if (father !== null && typeof father != 'undefined') {
+                if (state.name == 'expression' && typeof state.currentexpressionposition != 'undefined') {
+                    father.attributes.splice(state.currentexpressionposition, 1);
+                    //console.log("expression", father.attributes)
+                }
                 if (Array.isArray(father)) {
                     delete father[0].sources1[1].connections;
                     delete father[1].sources1[1].connections;
@@ -1191,9 +1278,13 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             if (index !== -1) {
                 $scope.stateObjects.splice(index, 1);
             }
+
+
         } else {
             sweetAlert("Oops...", "Cannot delete parent state!", "error");
         }
+
+
     };
     var getNextUUID = function () {
         $localStorage.lastUUID++;
@@ -1201,7 +1292,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     }
 
     $scope.newState = function (state, type) {
-        var id, name, attributes, typ, attributesv2, attributes2;
+        var id, name, attributes, typ, attributesv2, attributes2, l = 0;
         var idd = Date.now();
         var posy = 500;
         if ($scope.stateObjects.length > 0 && $scope.stateObjects[$scope.stateObjects.length - 1].y > 100) {
@@ -1233,12 +1324,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         }
         if (type == 'default') {
             var error = false;
-            //console.log(state);
             id = state;
             name = $scope.services[state].service.name;
+            l = $scope.services[state].service.attributesL;
             attributes = $scope.services[state].service.attributes;
             if (typeof $scope.services[state].service.attributes != 'undefined' && $scope.services[state].service.attributes.length > 0 && $scope.services[state].service.attributes[0] != "error") {
-
                 attributesv2 = $scope.services[state].service.attributes.map(function (obj) {
                     return  $scope.services[state].service.name + ': ' + obj;
                 });
@@ -1256,6 +1346,10 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             attributes = [];
             typ = 's';
         }
+
+        if (type == 'expression') {
+            name = 'expression';
+        }
         var uuid1 = getNextUUID();
         var uuid2 = getNextUUID();
         var uuid3 = getNextUUID();
@@ -1266,7 +1360,8 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         c[0] = 0;
         if (!error) {
             $scope.stateObjects.push({
-                'expanded' : false,
+                'realHeight': 0,
+                'expanded': false,
                 'id': id,
                 'idd': idd,
                 'name': name,
@@ -1277,6 +1372,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 'Sattributes': [],
                 'attributesv2': attributesv2,
                 'attributesWhere': [],
+                'attributesL': l,
                 'sources1': [
                     {uuid: uuid1},
                     {uuid: uuid2},
@@ -1293,7 +1389,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 'y': posy + 20
             });
         } else {
-            console.log($scope.services[state]);
+            //console.log($scope.services[state]);
             if (typeof $scope.services[state].service.attributes != 'undefined' && $scope.services[state].service.attributes[0] == "error")
                 $scope.log = "\n " + $scope.services[state].service.attributes[1] + " " + $scope.log;
             $.notify("Erreur service", "error");
@@ -1304,7 +1400,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     $scope.activeState = null;
     $scope.setActiveState = function (state) {
         $scope.activeState = state;
-        //////////////console.log(state);
+        ////////////////console.log(state);
         return state;
     };
     $scope.copyAttribute = function (attribute) {
@@ -1314,7 +1410,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         for (var i = 0; i < attribute.length; i++) {
             if (attribute[i].attribute != null) {
                 attr.push(attribute[i]);
-                console.log(attribute[i])
+                //console.log(attribute[i])
             }
         }
         return attr;
@@ -1364,7 +1460,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 array.push(stat.attributes[i]);
             }
         }
-        console.log("values", array);
+        //console.log("values", array);
         stat.barAttributes = array;
         stat.lineAttributes = array;
         stat.pieAttributes = array;
@@ -1372,11 +1468,12 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     $scope.selectAttributes = function (id) {
         var stat = $scope.getNextStat(id);
         $scope.changeStatValue(id);
-        if(stat != null) stat.barAttributes = stat.attributes;
+        if (stat != null)
+            stat.barAttributes = stat.attributes;
         if (stat != null && stat.name != "join") {
             if (stat.name == "select") {
                 stat.attributes = $scope.copyAttribute(stat.Sattributes);
-                //console.log(stat)
+                ////console.log(stat)
             }
             for (var i = 0; i < $scope.stateObjects.length; i++) {
                 if ($scope.stateObjects[i].id == id) {
@@ -1421,16 +1518,17 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 'source': $scope.getState($rootScope.connections.source),
                 'target': $scope.getState($rootScope.connections.target)
             }});
-        console.log($scope.links);
+        //console.log($scope.links);
         let source = $scope.getState($rootScope.connections.source);
+        //console.log("11111", source);
         let target = $scope.getState($rootScope.connections.target);
         if (source.name == "select") {
             source.attributes = $scope.copyAttribute(source.Sattributes);
         }
-////console.log(source, '-->', target);
+//////console.log(source, '-->', target);
 
         $('#b' + target.idd).removeClass('disabled');
-        ////////console.log(source, target)
+        //////////console.log(source, target)
         if (target.type == 'o') {
             $scope.attributes = $scope.copyAttribute(source.attributes);
             target.attributes = $scope.copyAttribute(source.attributes);
@@ -1450,6 +1548,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                     target.vattributes = $scope.getAttr(source.Sattributes);
                 }
 
+            }
+
+            //console.log("connection :: ", source)
+            if (source.type == 'e') {
+                target.vattributes.push(source.name);
             }
 
             if (target.name == 'join') {
@@ -1480,11 +1583,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
         }
         if (target.type == 's') {
-//console.log(source)
+////console.log(source)
             if (source.name == "where") {
                 target.attributes = source.vattributes;
             } else if (source.name == "select") {
-                console.log(source.Sattributes)
+                //console.log(source.Sattributes)
                 target.attributes = $scope.copyAttribute(source.Sattributes);
             } else
                 target.attributes = $scope.copyAttribute(source.attributes);
@@ -1508,7 +1611,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 target.barAttributes = array.concat(array2);
                 target.pieAttributes = array.concat(array2);
                 target.lineAttributes = array.concat(array2);
-                //////////console.log(target.barAttributes)
+                ////////////console.log(target.barAttributes)
                 f = true;
                 g = true;
             } else {
@@ -1566,7 +1669,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 target.barAttributes = attrs;
                 target.pieAttributes = attrs;
                 target.lineAttributes = attrs;
-                //console.log(target)
+                ////console.log(target)
             }
         }
     }
@@ -1657,7 +1760,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.visualizeStat = function (stat) {
         var data = angular.fromJson(stat.data)
-        ////console.log(data);
+        //////console.log(data);
         $scope.stateObjects = data.stateObjects;
         $scope.links = data.links;
         $scope.ressources = data.ressources;
@@ -1674,11 +1777,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         $scope.username = username.toLowerCase();
         $http.get("/Dashboard/rest/users/get/" + $scope.username).then(function (response) {
             $scope.fullUser = response.data;
-            //console.log($scope.fullUser);
+            ////console.log($scope.fullUser);
         });
-        ////console.log($scope.username);
+        //////console.log($scope.username);
         $http.get("/Dashboard/rest/statistique/available/" + $scope.username).then(function (response) {
-////console.log(response.data)
+//////console.log(response.data)
             for (var elem in response.data) {
                 for (var i = 0; i < response.data[elem].length; i++) {
                     if (!$scope.foundStat(response.data[elem][i])) {
@@ -1704,7 +1807,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             }
             $http.get("/Dashboard/rest/services").then(function (response) {
                 $scope.services = [];
-                console.log(response.data);
+                //console.log(response.data);
                 for (var i in response.data) {
                     $scope.addServiceFromDB(response.data[i]);
                 }
@@ -1720,10 +1823,11 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 $scope.dashboardName = response.data.name;
                 let data = angular.fromJson(response.data.data);
                 $scope.stateObjects = data.stateObjects;
+                //console.log("object", $scope.stateObjects)
                 $scope.links = data.links;
                 $timeout(function () {
                     for (var i = 0; i < $scope.stateObjects.length; i++) {
-                        console.log($scope.stateObjects[i].idd);
+                        //console.log($scope.stateObjects[i].idd);
                         $('#b' + $scope.stateObjects[i].idd).removeClass('disabled')
                     }
 
@@ -1747,7 +1851,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             $scope.stateObjects[$scope.getStateById(id)].Sattributes[index]['deleted'] = true;
         } else if ($scope.stateObjects[$scope.getStateById(id)].name == 'where') {
             //$scope.stateObjects[$scope.getStateById(id)].attributesWhere[index]['deleted'] = true;
-            console.log($scope.stateObjects[$scope.getStateById(id)].attributesWhere[index] = {deleted: true})
+            //console.log($scope.stateObjects[$scope.getStateById(id)].attributesWhere[index] = {deleted: true})
         }
         $('#' + type + 'div' + id + 'p' + index).remove();
     }
@@ -1778,7 +1882,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         $scope.statistique.creationDate = Date.now();
         if ($scope.edit) {
             $http.post("/Dashboard/rest/statistique/edit", $scope.statistique).then(function (response) {
-                swal("modification avec succées","success");
+                swal("modification avec succées", "success");
                 $scope.closeModal();
             });
         } else {
@@ -1821,7 +1925,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 data: $scope.services[elem]
             });
         }
-//////////console.log(services);
+////////////console.log(services);
         $scope.username = username;
         let data = {
             stateObjects: $scope.stateObjects,
@@ -1845,7 +1949,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.getStat = function (sid, rep) {
         $http.get("/Dashboard/rest/statistique/" + sid).then(function (response) {
-////////////console.log(response.data);
+//////////////console.log(response.data);
             let sdata = angular.fromJson(response.data.data);
             $scope.stateObjects = sdata.stateObjects;
             $scope.links = sdata.links;
@@ -1854,7 +1958,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             for (var i = 0; i < s.length; i++) {
                 $scope.services[s[i].id] = s[i].data;
             }
-////////////console.log($scope.stateObjects);
+            //console.log("preview", $scope.stateObjects)
             $scope.generateStat(rep);
         });
     }
@@ -1895,7 +1999,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 }
             } else if (type == 'p') {
                 if (table[i].roleId == value.roleId) {
-//////////console.log(i);
+////////////console.log(i);
                     return i;
                 }
             }
@@ -1914,7 +2018,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 if ($scope.users.indexOf(obj) == -1) {
                     if ($scope.profiles.length == 0) {
                         $scope.users.push(obj);
-                        //////////console.log($scope.containes($scope.allUsers, obj, 'u'));
+                        ////////////console.log($scope.containes($scope.allUsers, obj, 'u'));
                         $scope.allUsers.splice($scope.containes($scope.allUsers, obj, 'u'), 1);
                     } else {
                         let found = false
@@ -1934,7 +2038,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
                 }
             } else if ($scope.profiles.indexOf(obj) == -1) {
-                //////////console.log(obj)
+                ////////////console.log(obj)
                 $scope.profiles.push(obj);
                 $scope.allProfiles.splice($scope.containes($scope.allProfiles, obj, 'p'), 1);
                 for (i in $scope.users) {
@@ -1950,7 +2054,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 }
                 let indexes = [];
                 for (var i in $scope.allUsers) {
-                    ////////console.log($scope.allUsers[i], " : ", $scope.usersAndRoles[$scope.allUsers[i].username])
+                    //////////console.log($scope.allUsers[i], " : ", $scope.usersAndRoles[$scope.allUsers[i].username])
                     if ($scope.usersAndRoles[$scope.allUsers[i].username].indexOf(obj.roleName) !== -1) {
 
                         $scope.removedUsers.push({
@@ -1960,7 +2064,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                         indexes.push($scope.allUsers[i]);
                     }
                 }
-                //////////console.log($scope.removedUsers);
+                ////////////console.log($scope.removedUsers);
                 for (var i = 0; i < indexes.length; i++) {
                     let j = 0;
                     while (j < $scope.allUsers.length) {
@@ -1981,7 +2085,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     $scope.initOrConsult = function (user, id) {
         $http.get("/Dashboard/rest/users/get/" + user.toLowerCase()).then(function (response) {
             $scope.fullUser = response.data;
-            //console.log($scope.fullUser);
+            ////console.log($scope.fullUser);
         });
         if (id == 0) {
             $scope.initDashboard(user);
@@ -2000,7 +2104,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         $http.get("/Dashboard/rest/rolesanduser").then(function (response) {
             $scope.usersAndRoles = response.data;
         });
-        ////////////console.log(user);
+        //////////////console.log(user);
         $scope.username = user;
         $scope.statistiques = {
             my: [],
@@ -2008,7 +2112,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         }
 
         $http.get("/Dashboard/rest/statistique/available/" + $scope.username).then(function (response) {
-//console.log(response.data)
+////console.log(response.data)
             for (var key in response.data) {
                 if (key == $scope.username.toLowerCase()) {
                     $scope.statistiques.my = response.data[key];
@@ -2019,7 +2123,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                     });
                 }
             }
-////////console.log($scope.statistiques);
+//////////console.log($scope.statistiques);
         });
     }
     $scope.detailStat = function (detail) {
@@ -2029,9 +2133,9 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         $timeout(function () {
             $scope.liD = 'li' + $('#sortable').children().length;
             if ($scope.stats[$scope.idexLoop].id == 0) {
-//////console.log(angular.fromJson($scope.stats[$scope.idexLoop].text))
+////////console.log(angular.fromJson($scope.stats[$scope.idexLoop].text))
                 let text = angular.fromJson($scope.stats[$scope.idexLoop].text);
-                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
+                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
                         "<div class='panel-heading'>" + text.title + "</div></li>");
                 $('#sortable').append(li);
                 $('#' + $scope.liD).append(text.description);
@@ -2061,7 +2165,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                     title = $scope.dd.statsDashboard[$scope.idexLoop].text;
                 }
                 title = $scope.stats[$scope.idexLoop].name;
-                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
+                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
                         "<div class='panel-heading'>" + title + "</div></li>");
                 $('#sortable').append(li);
                 $timeout(function () {
@@ -2069,15 +2173,15 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
                         $('#' + $scope.liD).append($compile($scope.tableHTML)($scope));
                     } else if (type == "Bar") {
-                        ////////console.log($scope.barHTML)
+                        //////////console.log($scope.barHTML)
 
                         $('#' + $scope.liD).append($compile($scope.barHTML)($scope));
                     } else if (type == "Pie") {
 
-                        ////////console.log($scope.pieHTML)
+                        //////////console.log($scope.pieHTML)
                         $('#' + $scope.liD).append($compile($scope.pieHTML)($scope));
                     } else if (type == "Line") {
-                        ////////console.log($scope.lineHTML)
+                        //////////console.log($scope.lineHTML)
                         $('#' + $scope.liD).append($compile($scope.lineHTML)($scope));
                     }
                 }, 850);
@@ -2182,6 +2286,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         }
 
         p.then(function (data) {
+
             if ($scope.query.ressources.length > 1) {
                 p2.then(function (data2) {
                     $scope.getResult(data, data2, showmodal);
@@ -2200,7 +2305,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.executeStat = function (stat) {
         var deferred = $q.defer();
-        console.log(stat);
+        //console.log(stat);
         if (typeof stat.text !== 'undefined') {
             deferred.resolve(stat.text);
         } else {
@@ -2225,22 +2330,22 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         return deferred.promise;
     }
     $scope.editDashboard = function (user, id) {
-//console.log(user)
+////console.log(user)
         $http.get("/Dashboard/rest/users/get/" + user.toLowerCase()).then(function (response) {
             $scope.fullUser = response.data;
         });
         $scope.username = user;
         $scope.initDashboard($scope.username)
-        //////console.log($scope.username)
+        ////////console.log($scope.username)
         $http.get('/Dashboard/rest/dashboards/' + id).then(function (response) {
-////console.log(response.data)
+//////console.log(response.data)
             $scope.dashboardData = response.data.dashboard;
             $scope.stats = response.data.stats;
             $scope.dd = response.data.statsDashboard;
-            //console.log($scope.dd)
+            ////console.log($scope.dd)
             if (typeof response.data.text != 'undefined') {
                 let text = angular.fromJson(response.data.text.text);
-                ////console.log(text)
+                //////console.log(text)
                 let obj = {
                     id: 0,
                     name: text.title,
@@ -2275,7 +2380,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                     $scope.stats.splice($scope.indexDesc, 0, $scope.descDash);
                 }
 
-////console.log($scope.stats)
+//////console.log($scope.stats)
                 $scope.dd = response.data;
                 //myLoop();
                 $scope.indexOfStat = 0;
@@ -2301,7 +2406,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 $scope.dd.statsDashboard[index].text != 'null') {
             title = $scope.dd.statsDashboard[index].text;
         }
-        let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
+        let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
                 "<div class='panel-heading'>" + title + "<div  style='position : absolute;right : 0;top:0;margin-top:5px'><button class='btn btn-default btn-sm' ng-click='exportToPDF(" + $('#sortable').children().length + ")'><i class='fa fa-file-pdf-o'></i></button></div></div></li>");
         $('#sortable').append($compile(li)($scope));
         deferred.resolve({type: type, id: $('#sortable').children().length});
@@ -2311,7 +2416,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.exportToPDF = function (id) {
 
-        console.log($("#li" + id + "  canvas"));
+        //console.log($("#li" + id + "  canvas"));
         var canvas = $("#li" + id + " canvas");
         var imgData = canvas.toDataURL("image/jpeg", 1.0);
         var pdf = new jsPDF();
@@ -2321,14 +2426,15 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.resultNext = function (index) {
         var typeSt = "";
+        //console.log("next result")
         var p = $scope.executeStat($scope.stats[index]);
         $scope.indexOfStat++;
         p.then(function (st) {
-            //console.log($scope.query);
+            ////console.log($scope.query);
             //////////////////
             if (st !== null) {
                 var typeSR = angular.fromJson(st);
-                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : auto;position : relative'>" +
+                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
                         "<div class='panel-heading'>" + typeSR.title + "</div>" +
                         "<div class='panel-body'>" + typeSR.description + "</li>");
                 $('#sortable').append(li);
@@ -2367,7 +2473,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     }
 
     $scope.preview = function (stat) {
-//////console.log(stat)
+        //console.log("preview", stat)
         $scope.getStat(stat, true);
     }
 
@@ -2404,14 +2510,14 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.saveDashboard = function () {
         $scope.getStatsFromDash();
-        //console.log($scope.titles)
+        ////console.log($scope.titles)
         $scope.modalInstance = $uibModal.open({
             templateUrl: '/Dashboard/resources/partials/saveDashboard.html',
             scope: $scope
         });
     }
     $scope.editDashboardModal = function () {
-//////console.log($scope.dashboardData)
+////////console.log($scope.dashboardData)
         $scope.modalInstance = $uibModal.open({
             templateUrl: '/Dashboard/resources/partials/editDashboard.html',
             scope: $scope
@@ -2465,7 +2571,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             dateCreation: Date.now(),
             createdBy: $scope.username
         };
-        //////console.log(dashboardObj)
+        ////////console.log(dashboardObj)
         $http.post("/Dashboard/rest/dashboard/edit", dashboardObj).then(function (response) {
             $scope.log = "\n Dashboard modifier avec succées" + $scope.log;
             let share = {
@@ -2493,7 +2599,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                         stats.push("null");
                 }
             }
-////console.log($scope.dashboard);
+//////console.log($scope.dashboard);
             let dashboardStats = {
                 id_dashboard: $scope.dashboardData.id,
                 statistiques: $scope.dashboardStatistiques,
@@ -2542,7 +2648,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                                 stats.push("null");
                         }
                     }
-                    //console.log(stats);
+                    ////console.log(stats);
                     let dashboardStats = {
                         id_dashboard: response.data,
                         statistiques: $scope.dashboardStatistiques,
@@ -2562,39 +2668,41 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     }
 
     $scope.addExpression = function (state) {
-        console.log("aaaaaaaa",state)
+        //console.log("aaaaaaaa", $scope.getBro(state))
         $scope.openModal('expression');
         var attrs = [];
+        if ($scope.getBro(state).name == 'select')
+            state.vattributes = $scope.getBro(state).Sattributes;
         if (typeof state.vattributes[0] == 'object') {
             for (var i = 0; i < state.vattributes.length; i++) {
-                if (state.vattributes[i].attribute != ""){
+                if (state.vattributes[i].attribute != "") {
                     let op = "";
-                    if(typeof state.vattributes[i].op !='undefined'){
-                        op = state.vattributes[i].op+ ".";
+                    if (typeof state.vattributes[i].op != 'undefined') {
+                        op = state.vattributes[i].op + ".";
                     }
-                    attrs[i] = op+state.vattributes[i].attribute
+                    attrs[i] = op + state.vattributes[i].attribute
                 }
-                    
-            }
 
+            }
             state.attributes = attrs;
             $scope.expressionState = state;
         } else
             $scope.expressionState = state;
     }
-    
-    $scope.expandState = function(state){
-        
-        if(!state.expanded){
-            state.realheight = $('#s'+state.idd).height();
-            $('#s'+state.idd).height(200);
-            state.expanded = true;
-        }else{
-            console.log(state)
-            $('#s'+state.idd).height(state.realheight);
-            state.expanded = false;
-        }
-    }
+
+//    $scope.expandState = function(state){
+//        var h = $('#s'+state.idd).height();
+//        //console.log(typeof state.realheight,state.realheight)
+//        if(typeof state.realheight == 'undefined') state.realheight = h;
+//        
+//        if(!state.expanded){
+//            
+//            state.expanded = true;
+//        }else{
+//            $('#s'+state.idd).height(h);
+//            state.expanded = false;
+//        }
+//    }
 
     $scope.addop = function (op) {
         if (typeof $scope.expressionState.expression == 'undefined')
@@ -2605,10 +2713,10 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
 
     $scope.evaluateExpression = function (row, expression) {
         var st = "";
-        console.log("bbbbb", row, expression)
+        //console.log("bbbbb", row, expression)
         for (var i = 0; i < expression.length; i++) {
             if (expression[i] != "") {
-                console.log("row", row[expression[i]])
+                //console.log("row", row[expression[i]])
                 if (expression[i] != '+' && expression[i] != '-' && expression[i] != '*' && expression[i] != '/' && expression[i] != '(' && expression[i] != ')') {
                     if (isNaN(expression[i]))
                         st += row[expression[i]];
@@ -2619,16 +2727,16 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
                 }
             }
         }
-        console.log("expressions", eval(st));
+        //console.log("expressions", eval(st));
         return st;
     }
     $scope.addToExpression = function (val, type) {
-        if(typeof  $scope.expressionState.expression == 'undefined'){
-             $scope.expressionState.expression = "";
+        if (typeof $scope.expressionState.expression == 'undefined') {
+            $scope.expressionState.expression = "";
         }
         var mathexpression = $scope.expressionState.expression.split(" ");
         mathexpression.splice(mathexpression.length - 1, 1);
-        console.log("exxxxxx", val, mathexpression)
+        //console.log("exxxxxx", val, mathexpression)
         if (typeof val == 'undefined') {
             $scope.currentExpressionError = "0000x";
         } else if (mathexpression.length == 0 && type == 'op') {
@@ -2654,58 +2762,68 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
     }
 
     $scope.executeExpression = function (expression, res) {
-        console.log('expression',expression)
+        //console.log('expression', expression)
         var array = expression.expression.split(" ");
         var expressions = [];
+        //console.log('length', res)
         for (var j = 0; j < res.length; j++) {
             expressions.push($scope.evaluateExpression(res[j], array));
             res[j][expression.name] = eval(expressions[j]);
+            //console.log('result of', res[j][expression.name])
         }
-        console.log("expressions", res);
+        //console.log("expressions", res);
         return res;
     }
-    
-    $scope.validateExpression = function(state){
-        console.log("expression state",state);
+
+    $scope.validateExpression = function (state) {
+        //console.log("expression", state.currentexpressionposition)
+        if (typeof state.currentexpressionposition == 'undefined') {
+            state.attributes.push(state.expressionName);
+            state.currentexpressionposition = state.attributes.length - 1;
+        } else
+            state.attributes[state.currentexpressionposition - 1] = state.expressionName;
+        //console.log("expression state", state);
         var index = $scope.getStateById(state.idd);
         $scope.stateObjects[index] = state;
         $scope.currentExpressionError = "";
         $scope.expressionState = {};
         $scope.closeModal();
     }
-    
+
     $scope.createTableHtml = function () {
-        console.log('table', $scope.statData)
-        var obj = {};
-        var tableObj = [];
-        for (var i = 0; i < $scope.statData.length; i++) {
-            obj = {};
-            for (elem in $scope.statData[i]) {
-                console.log("002200", elem == "")
-                if (elem != "") {
-                    obj[elem] = $scope.statData[i][elem];
-                }
-            }
-            tableObj.push(obj);
-        }
-        $scope.statData = tableObj;
-        console.log("003300", $scope.statAttributes);
-        var tb = [];
-        console.log("llll", $scope.statAttributes)
-        for (var i = 0; i < $scope.statAttributes.length; i++) {
-            if ($scope.statAttributes[i] != '') {
-                tb.push($scope.statAttributes[i]);
-            }
-        }
-        console.log(tb)
-        $scope.statAttributes = tb;
+        //console.log('table', $scope.statData);
+        //var deferred = $q.defer();
+        /*var obj = {};
+         var tableObj = [];
+         for (var i = 0; i < $scope.statData.length; i++) {
+         obj = {};
+         for (elem in $scope.statData[i]) {
+         //console.log("002200", elem == "")
+         if (elem != "") {
+         obj[elem] = $scope.statData[i][elem];
+         }
+         }
+         tableObj.push(obj);
+         }
+         $scope.statData = tableObj;
+         //console.log("003300", $scope.statAttributes);
+         var tb = [];
+         //console.log("llll", $scope.statAttributes)
+         for (var i = 0; i < $scope.statAttributes.length; i++) {
+         if ($scope.statAttributes[i] != '') {
+         tb.push($scope.statAttributes[i]);
+         }
+         }
+         //console.log(tb)
+         $scope.statAttributes = tb;*/
         var id = Date.now();
-        let tableString = "<table id=" + id + " class='table table-striped table-bordered nowrap' cellspacing='0' width='100%'><thead><tr>";
+        let tableString = "<table id='" + id + "' class='table table-striped table-bordered nowrap' cellspacing='0' width='100%'><thead><tr>";
         for (var i = 0; i < $scope.statAttributes.length; i++) {
             tableString += "<th>" + $scope.statAttributes[i] + "</th>";
         }
         tableString += "</thead><tbody>";
         for (var i = 0; i < $scope.statData.length; i++) {
+////console.log('i = ', i)
             tableString += "<tr>";
             for (var j = 0; j < $scope.statAttributes.length; j++) {
                 tableString += "<td>" + $scope.statData[i][$scope.statAttributes[j]] + "</td>";
@@ -2713,8 +2831,7 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
             tableString += "</tr>";
         }
         tableString += "</tbody></table>";
-        console.log("data001 : ", $scope.statData);
-        console.log("data002 : ", $scope.statAttributes);
+        //deferred.resolve(tableString);
         setTimeout(function () {
             $('#' + id).DataTable({
                 bPaginate: true,
@@ -2748,5 +2865,27 @@ myApp.controller('FirstExampleController', function ($q, $timeout, $rootScope, $
         return tableString;
     }
 
+    $scope.createTableHtmlV2 = function () {
+        var deferred = $q.defer();
+        var a = [];
+        console.log($scope.statData)
+        for (var i = 0; i < $scope.statData.length; i++) {
+            a[i] = {};
+            for (var elem in $scope.statData[i]) {
+                var x = elem.replace('.', '');
+                if ($scope.statData[i][elem] === null) {
+                    a[i][x] = '';
+                } else
+                    a[i][x] = $scope.statData[i][elem];
+            }
+        }
+        console.log('data', a);
+        deferred.resolve(a);
+
+        return deferred.promise;
+    }
+
 });
+
+
 

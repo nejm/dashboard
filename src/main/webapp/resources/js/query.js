@@ -64,6 +64,7 @@ select = function (json, fields) {
 
     var sumattr = [];
     var avgattr = [];
+    var distinctattr = [];
     for (var i = 0; i < array.length; i++) {
         if (array[i].op == 'sum') {
             sumattr.push(array[i].attribute);
@@ -77,11 +78,12 @@ select = function (json, fields) {
             result = distinct(result, array[i].attribute);
         }
     }
+    
     if (sumattr.length > 0)
         result = sumGroup(json, attributesOn, sumattr).data;
     if (avgattr.length > 0)
         result = avg(json, attributesOn, avgattr);
-    console.log("select : ", result);
+    //console.log("select : ", result);
     return result;
 }
 
@@ -101,7 +103,6 @@ sumGroup = function (json, attributes, sumattr) {
     var found = false;
     for (var i = 0; i < attributes.length; i++) {
         data[0][attributes[i]] = json[0][attributes[i]];
-
     }
     for (var i = 0; i < sumattr.length; i++) {
         data[0]["sum." + sumattr[i]] = json[0][sumattr[i]];
@@ -222,7 +223,7 @@ avg = function (json, attributes, avgattributes) {
 
 distinct = function (json, field) {
     var res = [];
-    console.log(field)
+    
     for (var i = 0; i < json.length; i++) {
         var found = false;
         for (var j = 0; j < res.length; j++) {

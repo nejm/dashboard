@@ -1,12 +1,13 @@
 
-    <js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
-      <button class="btn btn-default pull-left" ng-click="removeState(state)">
-          <span class="glyphicon glyphicon-trash"></span>
-      </button>
+<js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+    <button class="btn btn-default pull-left" ng-click="removeState(state)">
+        <span class="glyphicon glyphicon-trash"></span>
+    </button>
     <h3 ng-click="setActiveState(state)">{{state.name}}</h3>
-        <div style="position:absolute; top: -10px; left:50%;">
-          <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="TopCenter" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle"></js-plumb-endpoint>
-        </div>
+    <div style="position:absolute; top: -10px; left:50%;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="TopCenter" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle"></js-plumb-endpoint>
+    </div>
+    
         <div style="position:absolute; bottom: -10px; left:50%;">
             <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="BottomCenter" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
                 <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">

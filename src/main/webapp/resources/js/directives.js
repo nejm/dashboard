@@ -48,10 +48,10 @@ myApp.directive('jsPlumbCanvas', function ($rootScope) {
                     'source': $(conn.source).attr('uuid')
                 };
                 $rootScope.deleteLink(link);
-                //jsPlumb.detach(conn);
+                jsPlumb.detach(conn);
             });
             instance.bind("connection", function (info, origEvent) {
-                console.log(info);
+                //console.log(info);
                 if (typeof origEvent !== 'undefined' && origEvent.type == 'drop') {
                     //console.log("[connection] event in jsPlumbCanvas Directive [DRAG & DROP]", info, origEvent);
                     var targetUUID = $(info.target).attr('uuid');

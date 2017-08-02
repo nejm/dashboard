@@ -37,9 +37,7 @@
         <link href="/Dashboard/resources/css/animate.min.css" rel="stylesheet" />
         <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
 
-        <link rel="stylesheet" type="text/css" href="/Dashboard/resources/css/normalize.css" />
-        <link rel="stylesheet" type="text/css" href="/Dashboard/resources/css/effect2.css" />
-        <script src="/Dashboard/resources/js/modernizr.custom.js"></script>
+
 
 
 
@@ -47,10 +45,82 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
         <script src="/Dashboard/resources/js/angularController/dashboardController.js"></script>
-        
         <style>
-            #sortable { list-style-type: none; margin: 0; padding: 0; }
-            #sortable li {float: left; width: 49.9%; height: 330px;text-align: center; margin-bottom: 0px}
+            .input-group-addon {
+                min-width: 300px;
+                text-align : left;
+            }
+            ul {
+                margin: 0;
+                padding: 0;
+                list-style: none;
+            }
+
+            .navT li {
+                border-bottom: 1px solid #eee;
+            }
+
+            .navT li a {
+                font-size: 14px;
+            }
+
+            .panel-body {
+                padding: 0;
+            }
+
+            .panel-group .panel+.panel {
+                margin-top: 0;
+                border-top: 0;
+            }
+
+            .panel-group .panel {
+                border-radius: 0;
+            }
+
+            .panel-default>.panel-heading {
+                color: #333;
+                background-color: #fff;
+                border-color: #e4e5e7;
+                padding: 0;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+            }
+
+            .panel-default>.panel-heading a {
+                display: block;
+                padding: 10px 15px;
+                text-decoration: none;
+            }
+
+            .panel-default>.panel-heading a:after {
+                content: "";
+                position: relative;
+                top: 1px;
+                display: inline-block;
+                font-family: 'Glyphicons Halflings';
+                font-style: normal;
+                font-weight: 400;
+                line-height: 1;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                float: right;
+                transition: transform .25s linear;
+                -webkit-transition: -webkit-transform .25s linear;
+            }
+
+            .panel-default>.panel-heading a[aria-expanded="true"] {
+                background-color: #eee;
+            }
+
+            .panel-default>.panel-heading a[aria-expanded="true"]:after {
+                content: "\e113";
+            }
+
+            .panel-default>.panel-heading a[aria-expanded="false"]:after {
+                content: "\e114";
+            }
         </style>
 
     </head>
@@ -58,7 +128,7 @@
     <body class="nav-md" ng-controller="dashboardController" ng-init="init('${user}')" style="overflow-x: hidden">
         <div class="container body">
             <div class="main_container">
-                <div class="col-md-3 left_col">
+                <div class="col-md-3 left_col menu_fixed">
                     <div class="left_col scroll-view">
                         <div class="navbar nav_title" style="border: 0;">
                             <a href="/home" class="site_title"><span>Dashboard</span></a>
@@ -232,27 +302,47 @@
 
                 <!-- page content -->
                 <div class="right_col" role="main">
-                    <div class="">
-                        <div class="page-title">
-                            <div class="title_left">
-                                <h3>Home</h3>
-                            </div>
-                            <!--<div class="title_right">
-                                <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Search for..." />
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-default" type="button">Go!</button>
-                                        </span>
+                    <div class="page-title">
+                        <div class="title_left">
+                            <h3>Home</h3>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="panel panel-default">
+                        <div class="panel panel-title"><h1> </h1></div>
+                        <div class="panel-body">
+                            <div class="col-sm-4">
+                                <div class="panel-group" id="accordionMenu" role="tablist" aria-multiselectable="true">
+                                    <div class="panel panel-default" ng-repeat="res in ressources track by $index">
+                                        <div class="panel-heading" role="tab" id="R{{$index}}">
+                                            <h4 class="panel-title">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordionMenu" href="#S{{$index}}" aria-expanded="true" aria-controls="S{{$index}}">
+                                                    {{res.name}}
+                                                </a>
+                                            </h4>
+                                        </div>
+                                        <div id="S{{$parent.$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" ng-repeat="ser in res.services track by $index">
+                                            <div class="panel-body">
+                                                <ul class="nav navT">
+                                                    <li><a href="#" ng-click="getService(res, ser)">{{ser.name}}</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>-->
+
+                            </div>
+
+                            <div class="col-sm-8" id="attrs" style="height: 450px; overflow: auto">
+
+                                <div class="input-group" ng-repeat="att in attributes">
+                                    <span class="input-group-addon">{{att}}</span>
+                                    <input type="text" class="form-control"></input>
+                                </div>
+                            </div>  
                         </div>
-                        
-                        <div class="clearfix"></div>
-
-
                     </div>
+                    <button class="btn btn-primary pull-right">Valider</button>
                 </div>
                 <!-- /page content -->
                 <!-- footer content -->
@@ -270,9 +360,9 @@
         <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/js/custom.min.js" type="text/javascript"></script>
         <script>
-                            function formSubmit() {
-                                        document.getElementById("logoutForm").submit();
-                                    }
+                                                function formSubmit() {
+                                                    document.getElementById("logoutForm").submit();
+                                                }
         </script>
     </body>
 </html>

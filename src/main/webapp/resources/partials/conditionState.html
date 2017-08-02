@@ -33,7 +33,7 @@
             </div>
             <div class="col-sm-6" style="margin-left: 6px">
                 <select name="op" ng-change="selectAttributes(state.id)" id="att0" class="form-control" ng-model="state.Sattributes[$index].attribute">
-                    <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null'">{{att}}</option>
+                    <option ng-repeat="att in state.vattributes track by $index" ng-if="att!='null.null' && att!=null">{{att}}</option>
                 </select>
             </div>
             <div class="col-sm-1 pull-right" style="margin-right: 6px">

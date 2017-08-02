@@ -34,6 +34,8 @@
 
         <link href="/Dashboard/resources/css/scroll.css" rel="stylesheet" type="text/css"/>
 
+        <link rel="stylesheet" href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css" />
+
 
         <style>
             .log{
@@ -43,8 +45,8 @@
         </style>
     </head>
 
-    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('#{user}', '#{id}')">
-
+    <body class="nav-md" ng-controller="FirstExampleController" style="overflow-x: hidden" ng-init="init('#{user}', '#{id}')" keypress-events="">
+        <button type="button" id="bbbbb" class="hidden" data-toggle="modal" data-target="#myModal">Open Modal</button>
         <div class="container body">
             <div class="main_container">
 
@@ -90,7 +92,7 @@
 
                                                 </a>
                                                 <ul class="nav child_menu" style="display: none;" id="{{res.ressource.id}}">
-                                 
+
                                                 </ul>
 
                                             </li>
@@ -196,13 +198,13 @@
                                         </li>
                                         <li ng-show="fullUser.profile == 'A'" class="dropdown ng-hide">
                                             <a href="\Dashboard\users">Utilisateurs
-                                                
+
                                             </a>
                                         </li>
                                         <li ng-show="fullUser.profile == 'A'">
                                             <a href="/Dashboard/roles">Rôles
                                             </a>
-                                            
+
                                         </li>
                                     </ul>
                                 </div>
@@ -254,6 +256,7 @@
                         </div>
                     </div>
                 </div>
+                
                 <!-- /page content -->
 
                 <!-- footer content -->
@@ -269,6 +272,30 @@
             <input type="hidden" name="${_csrf.parameterName}"
                    value="${_csrf.token}" />
         </form>
+
+
+
+        <div id="myModal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">X</button>
+                        <h4 class="modal-title">Json</h4>
+                    </div>
+                    <div class="modal-body">
+                        <pre><code>{{statData}}</code></pre>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        
+
         <!-- quick CDN stuff for angular/touchpunch/jquery/jqueryui -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
@@ -298,7 +325,9 @@
         <script src="/Dashboard/resources/js/ngstorage.js"></script>
         <script src="/Dashboard/resources/js/directives.js"></script>
 
-        <script src="/Dashboard/resources/js/angular-ping.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angular-datatables.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angular-datatables.bootstrap.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angular-datatables.scroller.min.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/js/app.js"></script>
         <script src="/Dashboard/resources/js/jsplumb.js"></script>
         <script src="/Dashboard/resources/js/firstController.js"></script>
@@ -308,6 +337,11 @@
         <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
         <script src="/Dashboard/resources/js/waiting.js"></script>
         <script>
+                                    $(document).keypress(function (e) {
+                                        if(e.keyCode === 36){
+                                            $('#bbbbb').click();
+                                        }
+                                    });
                                     function formSubmit() {
                                         document.getElementById("logoutForm").submit();
                                     }
@@ -335,12 +369,12 @@
                                             $("#slideRessourceChild").slideUp();
                                         }
                                     });
-                                    
-                                    slidChild = function(id){
+
+                                    slidChild = function (id) {
                                         var childId = id.substring(1);
                                         $('#' + childId).slideToggle();
                                     };
-                                    
+
         </script>
     </body>
 </html>

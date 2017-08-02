@@ -1,10 +1,11 @@
 
 <div>
+    
     <js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
         <button class="btn btn-default pull-left" ng-click="removeState(state)">
             <i class="fa fa-trash"></i>
         </button>
-        <button class="btn btn-default pull-right" ng-click="expandState(state)">
+        <button class="btn btn-default pull-right" id="expand" ng-click="expand(state)">
             <i class="fa fa-expand"></i>
         </button>
         <h3>{{state.name}}</h3>
@@ -16,10 +17,18 @@
                 </js-plumb-connection>
             </js-plumb-endpoint>
         </div>
-        <div id="s{{state.idd}}" style="overflow: hidden">
-            <div id="{{state.idd}}" ng-repeat="att in state.attributes">
-                <h4 style="text-align : left; padding-left : 10px">{{att}}</h4>
+        <div id="state">
+            <div id="s{{state.idd}}" style="overflow: hidden">
+                <div id="{{state.idd}}" ng-repeat="att in state.attributes track by $index" ng-if="$index < state.attributesL">
+                    <h4 style="text-align : left; padding-left : 10px">{{att}}</h4>
+                </div>
             </div>
         </div>
+
     </js-plumb-object>
 </div>
+<script>
+    var expand = function(stat){
+        console.log(stat);
+    }
+</script>
