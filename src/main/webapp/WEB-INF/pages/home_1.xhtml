@@ -45,6 +45,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
         <script src="/Dashboard/resources/js/angularController/dashboardController.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
         <style>
             .input-group-addon {
                 min-width: 300px;
@@ -312,19 +313,19 @@
                         <div class="panel panel-title"><h1> </h1></div>
                         <div class="panel-body">
                             <div class="col-sm-4">
-                                <div class="panel-group" id="accordionMenu" role="tablist" aria-multiselectable="true">
+                                <div class="panel-group" id="accordionMenu" role="tablist">
                                     <div class="panel panel-default" ng-repeat="res in ressources track by $index">
                                         <div class="panel-heading" role="tab" id="R{{$index}}">
                                             <h4 class="panel-title">
-                                                <a role="button" data-toggle="collapse" data-parent="#accordionMenu" href="#S{{$index}}" aria-expanded="true" aria-controls="S{{$index}}">
+                                                <a role="button" data-toggle="collapse" data-parent="#accordionMenu" href="#S{{$index}}" aria-expanded="false" aria-controls="S{{$index}}">
                                                     {{res.name}}
                                                 </a>
                                             </h4>
                                         </div>
-                                        <div id="S{{$parent.$index}}" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne" ng-repeat="ser in res.services track by $index">
+                                        <div id="S{{$index}}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
                                             <div class="panel-body">
                                                 <ul class="nav navT">
-                                                    <li><a href="#" ng-click="getService(res, ser)">{{ser.name}}</a></li>
+                                                    <li><a href="#" ng-repeat="ser in res.services track by $index" ng-click="getService(res, ser)">{{ser.name}}</a></li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -332,17 +333,17 @@
                                 </div>
 
                             </div>
-
+                            
                             <div class="col-sm-8" id="attrs" style="height: 450px; overflow: auto">
 
                                 <div class="input-group" ng-repeat="att in attributes">
                                     <span class="input-group-addon">{{att}}</span>
-                                    <input type="text" class="form-control"></input>
+                                    <input type="text" class="form-control" ng-model="attributesToSave[att]"></input>
                                 </div>
                             </div>  
                         </div>
                     </div>
-                    <button class="btn btn-primary pull-right">Valider</button>
+                    <button class="btn btn-primary pull-right" ng-click="saveAttributes()">Valider</button>
                 </div>
                 <!-- /page content -->
                 <!-- footer content -->
@@ -353,11 +354,10 @@
 
             </div>
         </div>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
         <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
 
-        <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
         <script src="/Dashboard/resources/js/custom.min.js" type="text/javascript"></script>
         <script>
                                                 function formSubmit() {

@@ -6,7 +6,7 @@ myApp.controller('searchController', function ($scope, $http) {
 
     $scope.init = function (username) {
         $scope.username = username.toLowerCase();
-        
+        $scope.dashboards = [];
         $http.get("/Dashboard/rest/users/get/"+username.toLowerCase()).then(function(response){
             $scope.fullUser = response.data;
         });

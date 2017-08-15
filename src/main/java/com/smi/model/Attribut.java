@@ -55,6 +55,8 @@ public class Attribut implements Serializable {
     private Long serviceid;
     @Column(name = "ALIAS")
     private String alias;
+    @Column(name = "ORIGINAL")
+    private String original;
     @Column(name = "DESCRIPTION")
     private String description;
 
@@ -87,6 +89,14 @@ public class Attribut implements Serializable {
 
     public void setAlias(String alias) {
         this.alias = alias;
+    }
+    
+    public String getOriginal() {
+        return original;
+    }
+
+    public void setOriginal(String original) {
+        this.original = original;
     }
 
     public String getDescription() {

@@ -22,6 +22,7 @@ var merge = function (obj1, obj2) {
  * @returns {Array} Projection
  */
 select = function (json, fields) {
+    console.log("selection")
     var t = [];
     for (var i = 0; i < fields.length; i++) {
         if (typeof fields[i].deleted == 'undefined') {
@@ -57,7 +58,7 @@ select = function (json, fields) {
     var attributesOn = [];
     console.log("array", array);
     for (var i = 0; i < array.length; i++) {
-        if (typeof array[i].op == 'undefined' || (array[i].op == "" && typeof array[i].deleted == 'undefined')) {
+        if (typeof array[i].op == 'undefined' || array[i].op == 'distinct' || (array[i].op == "" && typeof array[i].deleted == 'undefined')) {
             attributesOn.push(array[i].attribute);
         }
     }
@@ -75,15 +76,69 @@ select = function (json, fields) {
         } else if (array[i].op == 'max') {
             result = max(result, array[i].attribute, field);
         } else if (array[i].op == 'distinct') {
-            result = distinct(result, array[i].attribute);
+            distinctattr.push(array[i].attribute)
         }
     }
-    
+    if (distinctattr.length > 0)
+        result = distinct(result, distinctattr);
+    console.log("query distinct", result)
     if (sumattr.length > 0)
-        result = sumGroup(json, attributesOn, sumattr).data;
+        result = sumGroup(result, attributesOn, sumattr).data;
+    console.log("query sum", attributesOn)
     if (avgattr.length > 0)
-        result = avg(json, attributesOn, avgattr);
-    //console.log("select : ", result);
+        result = avg(result, attributesOn, avgattr);
+
+    return result;
+}
+
+normilize = function (json, attributes) {
+    var res = [];
+    for (var i = 0; i < json.length; i++) {
+        res[i] = {};
+        for (var j = 0; j < attributes.length; j++) {
+            if (json[i][attributes[j]] != null) {
+                res[i][attributes[j]] = json[i][attributes[j]];
+            } else {
+                res[i][attributes[j]] = "-";
+            }
+        }
+
+    }
+    return res;
+}
+
+standirize = function (json, attrs, attrs2) {
+    var res = json;
+    for (var i = 0; i < json.length; i++) {
+        for (var j = 0; j < attrs.length; j++) {
+            if (res[i][attrs[j]] == "-") {
+                res[i][attrs[j]] = res[i][attrs2[j]];
+                delete res[i][attrs2[j]];
+            }
+        }
+    }
+    return res;
+}
+
+function removeEmptyElem(ary) {
+    for (var i = ary.length - 1; i >= 0; i--) {
+        if (ary[i] == "") {
+            ary.splice(i, 1);
+        }
+    }
+    return ary;
+}
+
+union = function (json1, json2, attrs, attrs2, unionAttr) {
+    console.log("union", json1,json2);
+    var result = {};
+    var att = removeEmptyElem(unionAttr);
+    var res = json1;
+    res = res.concat(json2);
+    result.result = normilize(res, att);
+    result.result = standirize(result.result, attrs, attrs2);
+    result.attributes = att;
+    console.log("union", result.result, att)
     return result;
 }
 
@@ -96,6 +151,7 @@ conditionIsTrue = function (values1, values2, attributes) {
 }
 
 sumGroup = function (json, attributes, sumattr) {
+    console.log("sumGroup", json, attributes, sumattr)
     var data = [];
     data[0] = {};
     var count = [];
@@ -134,7 +190,7 @@ sumGroup = function (json, attributes, sumattr) {
             }
         }
     }
-
+    console.log("sumGroup result", data);
     return {data: data, count: count};
 }
 
@@ -221,18 +277,26 @@ avg = function (json, attributes, avgattributes) {
     return newRes;
 }
 
-distinct = function (json, field) {
+areDistinct = function (obj1, obj2, fields) {
+    for (var i = 0; i < fields.length; i++) {
+        if (obj1[fields[i]] != obj2[fields[i]])
+            return true;
+    }
+
+    return false;
+}
+
+distinct = function (json, fields) {
     var res = [];
-    
+
     for (var i = 0; i < json.length; i++) {
-        var found = false;
+        var found = true;
         for (var j = 0; j < res.length; j++) {
-            if (res[j][field] == json[i][field]) {
-                found = true;
+            found = areDistinct(res[j], json[i], fields);
+            if (!found)
                 break;
-            }
         }
-        if (!found) {
+        if (found) {
             res.push(json[i]);
         }
     }
@@ -307,6 +371,11 @@ where = function (json, attr, operator, value) {
     switch (operator) {
         case '>':
             for (var i = 0; i < json.length; i++) {
+                if (isValidDate(value)) {
+                    if (Date.parse(json[i][attr]) > Date.parse(value)) {
+                        res.push(json[i]);
+                    }
+                } else
                 if (json[i][attr] > value) {
                     res.push(json[i]);
                 }
@@ -314,6 +383,11 @@ where = function (json, attr, operator, value) {
             break;
         case '<':
             for (var i = 0; i < json.length; i++) {
+                if (isValidDate(value)) {
+                    if (Date.parse(json[i][attr]) < Date.parse(value)) {
+                        res.push(json[i]);
+                    }
+                } else
                 if (json[i][attr] < value) {
                     res.push(json[i]);
                 }
@@ -456,8 +530,42 @@ verifyAttributes = function (res, fieldon, type) {
 
     return result;
 }
-/*
- var x = [{a: 1, b: 2},{a: 2, b: 3}]
- var y = [{c: 0, d: 2},{c: 50, d: 2}]
- console.log(join(x,y,['a'],['c'],['>']))
- */
+
+function isValidDate(str) {
+    var dateReg = /^\d{2}[./-]\d{2}[./-]\d{4}$/;
+    return str.match(dateReg);
+}
+
+sortTableR = function (obj1, obj2, values) {
+    var response = [];
+    for (var i = 0; i < values.value.length; i++) {
+        if (parseFloat(obj1[values.value[i]]) - parseFloat(obj2[values.value[i]]) > 0) {
+            if (values.op[i] == 'asc')
+                response[i] = 1;
+            else
+                response[i] = -1;
+
+        } else if (parseFloat(obj1[values.value[i]]) - parseFloat(obj2[values.value[i]]) < 0) {
+            if (values.op[i] == 'desc')
+                response[i] = 1;
+            else
+                response[i] = -1;
+        } else {
+            response[i] = 0;
+        }
+        console.log("qqqqqqqqq", parseFloat(obj1[values.value[i]]), parseFloat(obj2[values.value[i]]), response[i]);
+    }
+    return response;
+}
+
+orderBy = function (json, values) {
+    
+    if(values.value.length == 0 ) return json;
+    var data = json.sort(function (a, b) {
+        return eval(a[values.value[0]]) - eval(b[values.value[0]]);
+    });
+    
+    console.log("sorted data",data);
+    return data;
+}
+

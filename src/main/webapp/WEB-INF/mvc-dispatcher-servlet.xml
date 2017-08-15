@@ -56,6 +56,7 @@
                 <value>com.smi.model.DashboardUser</value>
                 <value>com.smi.model.Ressources</value>
                 <value>com.smi.model.Service</value>
+                <value>com.smi.model.Attribut</value>
             </list>
         </property>
     </bean>
@@ -85,6 +86,7 @@
     <bean id="dashboarduserdao" class="com.smi.dao.DashboardUserDaoImpl"></bean>
     <bean id="ressourceDao" class="com.smi.dao.RessourceDaoImpl"></bean>
     <bean id="serviceDao" class="com.smi.dao.ServiceDaoImpl"></bean>
+    <bean id="attributDao" class="com.smi.dao.AttributDaoImpl"></bean>
     
     <bean id="userService" class="com.smi.service.ImplUserService"></bean>
     <bean id="usersService" class="com.smi.service.UserServiceImpl"></bean>
@@ -97,6 +99,7 @@
     <bean id="ressourceService" class="com.smi.service.RessourceServiceImpl"></bean>
     <bean id="serviceService" class="com.smi.service.ServiceServiceImpl"></bean>
     <bean id="userAndRoleService" class="com.smi.service.UserAndRoleServiceImpl"></bean>
+    <bean id="attributService" class="com.smi.service.AttributServiceImpl"></bean>
     
     
     <bean

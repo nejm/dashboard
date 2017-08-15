@@ -179,5 +179,12 @@ public class HelloController {
         model.setViewName("roles");
         return model;
     }
+    
+    @RequestMapping(value = "/raw", method = RequestMethod.GET)
+    public ModelAndView raw() {
+        ModelAndView model = new ModelAndView();
+        model.setViewName("rawData");
+        return model;
+    }
 
 }

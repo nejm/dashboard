@@ -1,0 +1,36 @@
+<js-plumb-object state-object="state" ng-style="{ 'left': state.x, 'top': state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
+    <button class="btn btn-default pull-left" ng-click="removeState(state)">
+        <span class="glyphicon glyphicon-trash"></span>
+    </button>
+    <div class="col-sm-0 pull-right" id="add">
+        <button class="btn btn-default disabled" id="b{{state.idd}}"  ng-click = "addcond('order', state.idd)">
+            <span class="glyphicon glyphicon-plus" ></span>
+        </button>
+    </div>
+    <h3 ng-click="setActiveState(state)">Order</h3>
+
+    <hr class="hr">
+    <div style="position:absolute; top: -10px; left:50%;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="TopCenter" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle"></js-plumb-endpoint>
+    </div>
+    <form class="form-inline">
+        <div ng-repeat="i in state.count track by $index">
+            <div class="input-group">
+                <select class="form-control" style="width: 160px;margin-right: 5px" ng-model="order.value[$index]">
+                    <option ng-repeat="att in state.attributes track by $index" value="{{$index}}" ng-if="att != 'null.null' && att != ''">{{att}}</option>
+                </select>
+                <select class="form-control" style="width: 80px;margin-right: 5px" ng-model="order.op[$index]">
+                    <option value="asc">ASC</option>
+                    <option value="desc">DESC</option>
+                </select>
+                <button class="btn btn-default" ><i class="fa fa-minus"></i></button>
+            </div>
+        </div>
+    </form>
+    <div style="position:absolute; bottom: -10px; left:50%;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="BottomCenter" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
+            <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
+            </js-plumb-connection>
+        </js-plumb-endpoint>
+    </div>
+</js-plumb-object>

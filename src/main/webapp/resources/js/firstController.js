@@ -1,6 +1,8 @@
-myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnBuilder, $q, $timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile) {
+myApp.controller('FirstExampleController', function ($location, DTOptionsBuilder, DTColumnBuilder, $q, $timeout, $rootScope, $filter, $scope, $http, $localStorage, $uibModal, $compile) {
 
 /////////////////////////
+    $scope.dtOptions = [];
+    $scope.dtColumns = [];
     $scope.pageSize = 10;
     $scope.currentPage = 0;
     $scope.states = [];
@@ -32,6 +34,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     $scope.links = [];
     $scope.index = 0;
     $rootScope.stateObjects = [];
+    $scope.aliases = [];
     $scope.stateObjects = [];
     $scope.options = [{
             name: 'Service Web',
@@ -40,7 +43,10 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             name: 'Base de données',
             type: 'db'
         }]
-
+    $scope.order = {
+        value: [],
+        op: []
+    };
     $rootScope.connections = [];
     $scope.getDataIndexed = function (start, max) {
         if (start < 0)
@@ -163,6 +169,19 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         return {};
     }
 
+    $scope.getRaw = function (c, o) {
+        var data = {
+            c: $scope.statAttributes,
+            o: $scope.statData
+        }
+        sessionStorage.dt = angular.toJson(data);
+        window.location = "/Dashboard/raw";
+    }
+
+    $scope.getDataFromSession = function () {
+        $scope.dt = angular.fromJson(sessionStorage.dt);
+    }
+
     $scope.addRessource = function (ressource, type) {
         ressource.type = type;
         var found = false;
@@ -187,7 +206,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                 type: ressource.type
             }
             $http.post("/Dashboard/rest/ressource/test", savedRessource).then(function (response) {
-                //console.log("test ressource", response.data)
+//console.log("test ressource", response.data)
             });
             $http.post("/Dashboard/rest/ressources/save", savedRessource)
                     .then(function (response) {
@@ -382,7 +401,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                 port: $scope.currentRessource.url.split(':')[2],
                 type: $scope.currentRessource.url.split(':')[0]
             }
-            //console.log(db)
+//console.log(db)
             $scope.iii = service.id;
             $http.post('/Dashboard/rest/services/tables', db).then(function (response) {
                 $scope.services[$scope.iii].service.attributes = response.data;
@@ -460,7 +479,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     }
 
     $scope.drawService = function (service) {
-        console.log("service", $scope.services[service].service);
+        console.log("service", service);
         var ressource = {};
         for (var i = 0; i < $scope.ressources.length; i++) {
             if ($scope.ressources[i].ressource.id == $scope.services[service].service.idRessource) {
@@ -490,8 +509,13 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             //console.log('rest',service)
             $scope.newState(service, 'default');
         }
-    };
+        $http.get("/Dashboard/rest/attributs/" + service).then(function (response) {
+            for (var i = 0; i < response.data.length; i++) {
+                $scope.aliases[response.data[i].original] = response.data[i].alias;
+            }
 
+        });
+    };
     $scope.expand = function (s) {
         var h = angular.element("#s" + s.idd)[0].offsetHeight;
         if (typeof s.realHeight == 'undefined' || s.realHeight == 0) {
@@ -499,7 +523,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         }
         console.log(s.realHeight, h, s.realHeight == h);
         if (s.realHeight == h) {
-            $("#s" + s.idd).height(213);
+            $("#s" + s.idd).height(10);
         } else if (h < s.realHeight) {
             $("#s" + s.idd).height(s.realHeight);
         }
@@ -552,6 +576,22 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             }
             $scope.conditions[id] = condition;
             $scope.newState(id, 'expression');
+        } else if (type == 'union') {
+            condition = {
+                name: 'union',
+                attributes: [],
+                'class': {}
+            }
+            $scope.conditions[id] = condition;
+            $scope.newState(id, 'union');
+        } else if (type == 'order') {
+            condition = {
+                name: 'order',
+                attributes: [],
+                'class': {}
+            }
+            $scope.conditions[id] = condition;
+            $scope.newState(id, 'order');
         }
 
     }
@@ -605,18 +645,10 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
 //////////console.log($scope.stat);
     }
     $scope.getBro = function (state) {
+        console.log("ssssssssss", state);
         var st = $scope.stateObjects[$scope.getStateById(state.idd)];
-        //console.log("states", $scope.stateObjects);
-        if (typeof st.name == 'undefined')
-            st.name = 'expression';
-        if (st.name != 'join') {
-            for (var i = 0; i < $scope.links.length; i++) {
-                if ($scope.links[i].link.target.id == state.id) {
-                    return $scope.links[i].link.source;
-                }
-            }
-            return null;
-        } else {
+        if(typeof st== 'undefined') return null;
+        if (st.name == 'join' || st.name == 'union') {
             let r = [{}, {}];
             for (var i = 0; i < $scope.links.length; i++) {
 //                //////console.log($scope.links[i].link.target.name)
@@ -629,12 +661,20 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                     }
                 }
             }
-//////console.log(r)
+        } else {
+            console.log("aaaaaaaaaaaaa", st)
+            for (var i = 0; i < $scope.links.length; i++) {
+                if ($scope.links[i].link.target.id == state.id) {
+                    console.log("st.name", $scope.links[i].link.source)
+                    return $scope.links[i].link.source;
+                }
+            }
+            return null;
         }
     }
 
     $scope.generateStatistique = function (qr) {
-        //console.log("qrqr", qr)
+        $scope.last = qr;
         if ((r = $scope.getBro(qr)) == null) {
             $scope.query.ressources.push({
                 ressourceId: qr.id,
@@ -642,70 +682,139 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             });
             return $scope.query;
         } else {
+
             let r = $scope.getBro(qr);
-            let e = {};
-            if (r.type == 's') {
-                $scope.query.stat = r.name;
-                if (r.name == 'Bar') {
-                    $scope.barAttributes = [];
-                    $scope.query.x = r.barx;
-                    $scope.query.y = r.bary;
-                } else if (r.name == 'Pie') {
-                    $scope.pieAttributes = [];
-                    $scope.query.pieLabels = r.pieLabels;
-                    $scope.query.pieData = r.pieData;
-                } else if (r.name == 'Line') {
-                    $scope.lineAttributes = [];
-                    $scope.query.lineLabels = r.lineLabels;
-                    $scope.query.lineData = r.lineData;
-                }
-            } else if (r.type == 'o') {
-                let a = [], b = [], c = [];
-                if (r.name == 'where') {
-                    a = $scope.stateObjects[$scope.getStateById(r.idd)].attributesWhere;
-                    //console.log("where attrs", a)
-                } else if (r.name == 'select') {
-                    a = $scope.stateObjects[$scope.getStateById(r.idd)].Sattributes;
-                    //console.log("atttttt", a)
-                } else if (r.name == 'join') {
-                    a = $scope.stateObjects[$scope.getStateById(r.idd)].sLeftAttributes;
-                    b = $scope.stateObjects[$scope.getStateById(r.idd)].sRightAttributes;
-                    c = $scope.stateObjects[$scope.getStateById(r.idd)].op;
-                } else if (r.name == 'where2') {
-////console.log(r);
-                    a = $scope.stateObjects[$scope.getStateById(r.idd)].attributesWhere2;
-                } else if (r.name = 'expression') {
-                    if (typeof $scope.query.expressions == 'undefined')
-                        $scope.query.expressions = [];
-                    $scope.query.expression = $scope.stateObjects[$scope.getStateById(r.idd)].expression;
-                    $scope.query.expressionName = $scope.stateObjects[$scope.getStateById(r.idd)].expressionName;
-                    $scope.query.expressions.push({
-                        expression: $scope.stateObjects[$scope.getStateById(r.idd)].expression,
-                        name: $scope.stateObjects[$scope.getStateById(r.idd)].expressionName
-                    });
-                    e = {
-                        expression: $scope.stateObjects[$scope.getStateById(r.idd)].expression,
-                        name: $scope.stateObjects[$scope.getStateById(r.idd)].expressionName
+            console.log("array", r, typeof r.length)
+            if (typeof r.length != 'undefined') {
+                for (var k = 0; k < 2; k++) {
+                    e = {};
+                    var f = r[k];
+                    let a = [], b = [], c = [], d = [];
+                    var res = [];
+                    if (f.name == 'where') {
+                        a = $scope.stateObjects[$scope.getStateById(f.idd)].attributesWhere;
+                    } else if (f.name == 'select') {
+                        a = $scope.stateObjects[$scope.getStateById(f.idd)].Sattributes;
+                        console.log("atttttt", a)
+                    } else if (f.name == 'join') {
+                        a = $scope.stateObjects[$scope.getStateById(f.idd)].sLeftAttributes;
+                        b = $scope.stateObjects[$scope.getStateById(f.idd)].sRightAttributes;
+                        c = $scope.stateObjects[$scope.getStateById(f.idd)].op;
+                    } else if (f.name == 'where2') {
+                        a = $scope.stateObjects[$scope.getStateById(f.idd)].attributesWhere2;
+                    } else if (f.name == 'expression') {
+                        if (typeof $scope.query.expressions == 'undefined')
+                            $scope.query.expressions = [];
+                        $scope.query.expression = $scope.stateObjects[$scope.getStateById(f.idd)].expression;
+                        $scope.query.expressionName = $scope.stateObjects[$scope.getStateById(f.idd)].expressionName;
+                        $scope.query.expressions.push({
+                            expression: $scope.stateObjects[$scope.getStateById(f.idd)].expression,
+                            name: $scope.stateObjects[$scope.getStateById(f.idd)].expressionName
+                        });
+                        e = {
+                            expression: $scope.stateObjects[$scope.getStateById(f.idd)].expression,
+                            name: $scope.stateObjects[$scope.getStateById(f.idd)].expressionName
+                        }
+
+                    } else if (f.name == 'union') {
+                        a = $scope.stateObjects[$scope.getStateById(f.idd)].sLeftAttributes;
+                        b = $scope.stateObjects[$scope.getStateById(f.idd)].sRightAttributes;
+                        d = $scope.stateObjects[$scope.getStateById(f.idd)].rightAttributes.concat($scope.stateObjects[$scope.getStateById(f.idd)].leftAttributes);
                     }
 
+                    $scope.query.Aoperation.push({
+                        'type': f.name,
+                        'attributes': a,
+                        'attributes2': b,
+                        'operation': c,
+                        'stat': r,
+                        'expression': e,
+                        'union': d,
+                        classes : $scope.getBro(r[k])   
+                    });
                 }
-                $scope.query.operation.push({
-                    'type': r.name,
-                    'attributes': a,
-                    'attributes2': b,
-                    'operation': c,
-                    'stat': r,
-                    'expression': e
-                });
-            }
-            if (typeof r.length != 'undefined') {
-                $scope.generateStatistique(r[1]);
                 $scope.generateStatistique(r[0]);
+                $scope.generateStatistique(r[1]);
             } else {
+                let e = {};
+                if (r.type == 's') {
+                    $scope.query.stat = r.name;
+                    if (r.name == 'Bar') {
+                        $scope.barAttributes = [];
+                        $scope.query.x = r.barx;
+                        $scope.query.y = r.bary;
+                    } else if (r.name == 'Pie') {
+                        $scope.pieAttributes = [];
+                        $scope.query.pieLabels = r.pieLabels;
+                        $scope.query.pieData = r.pieData;
+                    } else if (r.name == 'Line') {
+                        $scope.lineAttributes = [];
+                        $scope.query.lineLabels = r.lineLabels;
+                        $scope.query.lineData = r.lineData;
+                    }
+                } else if (r.type == 'o') {
+                    console.log('oooooooooooooo', r);
+                    let a = [], b = [], c = [], d = [];
+                    var res = [];
+                    if (r.name == 'where') {
+                        a = $scope.stateObjects[$scope.getStateById(r.idd)].attributesWhere;
+                    } else if (r.name == 'select') {
+                        a = $scope.stateObjects[$scope.getStateById(r.idd)].Sattributes;
+                        console.log("atttttt", a)
+                    } else if (r.name == 'join') {
+                        a = $scope.stateObjects[$scope.getStateById(r.idd)].sLeftAttributes;
+                        b = $scope.stateObjects[$scope.getStateById(r.idd)].sRightAttributes;
+                        c = $scope.stateObjects[$scope.getStateById(r.idd)].op;
+                    } else if (r.name == 'where2') {
+                        a = $scope.stateObjects[$scope.getStateById(r.idd)].attributesWhere2;
+                    } else if (r.name == 'expression') {
+                        if (typeof $scope.query.expressions == 'undefined')
+                            $scope.query.expressions = [];
+                        $scope.query.expression = $scope.stateObjects[$scope.getStateById(r.idd)].expression;
+                        $scope.query.expressionName = $scope.stateObjects[$scope.getStateById(r.idd)].expressionName;
+                        $scope.query.expressions.push({
+                            expression: $scope.stateObjects[$scope.getStateById(r.idd)].expression,
+                            name: $scope.stateObjects[$scope.getStateById(r.idd)].expressionName
+                        });
+                        e = {
+                            expression: $scope.stateObjects[$scope.getStateById(r.idd)].expression,
+                            name: $scope.stateObjects[$scope.getStateById(r.idd)].expressionName
+                        }
+
+                    } else if (r.name == 'union') {
+                        a = $scope.stateObjects[$scope.getStateById(r.idd)].sLeftAttributes;
+                        b = $scope.stateObjects[$scope.getStateById(r.idd)].sRightAttributes;
+                        d = $scope.stateObjects[$scope.getStateById(r.idd)].rightAttributes.concat($scope.stateObjects[$scope.getStateById(r.idd)].leftAttributes);
+                    }
+
+                    $scope.query.operation.push({
+                        'type': r.name,
+                        'attributes': a,
+                        'attributes2': b,
+                        'operation': c,
+                        'stat': r,
+                        'expression': e,
+                        'union': d
+                    });
+                    var x = (typeof r.length != 'undefined') ? $scope.getBro(r) : null;
+                    $scope.query.Aoperation.push({
+                        'type': r.name,
+                        'attributes': a,
+                        'attributes2': b,
+                        'operation': c,
+                        'stat': r,
+                        'expression': e,
+                        'union': d,
+                        classes : $scope.getBro(r)
+                    });
+                }
+
+
+
                 $scope.generateStatistique(r);
             }
-        }
 
+        }
     }
 
     $scope.getDataFromDataBase = function (ressource, service) {
@@ -723,19 +832,20 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         };
         $http.post("/Dashboard/rest/services/tablesdata", db)
                 .then(function (response) {
-                    $scope.restable = response.data;
+                    var restable = response.data;
+                    console.log("db 0", response.data);
                     $http.post("/Dashboard/rest/services/tables", db).then(function (response) {
                         let data = [];
                         var j = 0;
-                        for (var elem in $scope.restable) {
-                            var cu = $scope.restable[elem];
+                        for (var elem in restable) {
+                            var cu = restable[elem];
                             let o = {};
-                            for (var i = 0; i < $scope.restable[elem].length; i++) {
+                            for (var i = 0; i < restable[elem].length; i++) {
                                 o[response.data[i]] = cu[i];
                             }
                             data.push(o);
                         }
-                        //////console.log(data);
+                        console.log("db", data);
                         deferred.resolve(data);
                     });
                 });
@@ -762,6 +872,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         var t = {};
         $scope.query = {};
         $scope.query.operation = [];
+        $scope.query.Aoperation = [];
         $scope.query.ressources = [];
         $scope.query.expressions = [];
         $scope.query.stat = {};
@@ -829,6 +940,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         p.then(function (data) {
             if ($scope.query.ressources.length > 1) {
                 p2.then(function (data2) {
+                    console.log("ddddd", data, data2);
                     $scope.getResult(data, data2, showmodal);
                 });
             } else {
@@ -855,13 +967,15 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     $scope.lastRes = [];
     $scope.getResult = function (res, res2, showmodal) {
         //console.log("json", res);
+        console.log("getResult", $scope.query.Aoperation);
+        $scope.query.operation = $scope.query.Aoperation;
         $scope.statAttributes = [];
         let a = false;
         var joined = false;
         for (var i = $scope.query.operation.length - 1; i >= 0; i--) {
+            console.log("resultat",res);
             // for (var i = 0; i < $scope.query.operation.length; i++) {
             if ($scope.query.operation[i].type === 'join') {
-
                 a = true;
                 joined = true;
                 res = $.map(res, function (obj1) {
@@ -880,8 +994,6 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                         return obj2;
                     });
                 if ($scope.query.ressources[0].ressource == "join") {
-                    ////console.log($scope.getStateById($scope.query.ressources[0].ressourceId))
-                    ////console.log($scope.getStateById($scope.query.ressources[0].ressourceId));
                     $scope.query.ressources[0] = $scope.getBro($scope.getStateById($scope.query.ressources[0].ressourceId))[0];
                     $scope.query.ressources[1] = $scope.getBro($scope.getStateById($scope.query.ressources[1].ressourceId))[1];
                 }
@@ -896,9 +1008,11 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                     return [value];
                 });
                 res = join(res, res2, array, array2, arrayop);
-            } else if ($scope.query.operation[i].type === 'select') {
+            } 
+            else if ($scope.query.operation[i].type === 'select') {
 
                 res = select(res, $scope.query.operation[i].attributes);
+               
                 var array = $.map($scope.query.operation[i].attributes, function (value) {
                     return [value];
                 });
@@ -912,7 +1026,8 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                     }
                 }
                 a = true;
-            } else if ($scope.query.operation[i].type === 'where') {
+            } 
+            else if ($scope.query.operation[i].type === 'where') {
                 for (var j = 0; j < $scope.query.operation[i].attributes.length; j++) {
                     //////////console.log(res);
                     if (typeof $scope.query.operation[i].attributes[j].attribute != 'undefined')
@@ -921,7 +1036,8 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                                 $scope.query.operation[i].attributes[j].op,
                                 $scope.query.operation[i].attributes[j].value);
                 }
-            } else if ($scope.query.operation[i].type === 'where2') {
+            } 
+            else if ($scope.query.operation[i].type === 'where2') {
                 var attributesArray = $.map($scope.query.operation[i].attributes, function (value) {
                     return [value];
                 });
@@ -931,26 +1047,50 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                             attributesArray[j].op,
                             attributesArray[j].attribute2);
                 }
-            } else {
+            } 
+            else if ($scope.query.operation[i].type === 'union') {
+                a = true;
+                let array = $.map($scope.query.operation[i].attributes, function (value) {
+                    return [value];
+                });
+                let array2 = $.map($scope.query.operation[i].attributes2, function (value) {
+                    return [value];
+                });
+                console.log("nnnnnnnnn", $scope.query.operation)
+                var r = union(res, res2, array, array2, $scope.query.operation[i].union);
+                res = r.result;
+                $scope.statAttributes = [];
+                $scope.statAttributes = r.attributes;
+            } 
+            else if (typeof $scope.query.operation[i] != 'undefined' && $scope.query.operation[i].type !== 'order') {
                 res = $scope.executeExpression($scope.query.operation[i].expression, res);
             }
 
         }
-        /*if(typeof $scope.query.expressions != 'undefined')
-         for (var i = 0 ; i < $scope.query.expressions.length; i++) {
-         res = $scope.executeExpression($scope.query.expressions[i],res);
-         }*/
         if (!a) {
             $scope.statAttributes = $scope.attributes;
         }
         if ($scope.query.stat == 'Tableau') {
+//            $scope.generateTable(res, showmodal);
             $scope.generateTable(res, showmodal);
-            //console.log("0 generate table done");
-        } else if ($scope.query.stat == 'Bar') {
+            /*var ress = {
+             draw: 1,
+             recordsTotal: res.length,
+             recordsFiltered: res.length,
+             data: res,
+             }
+             $http.post("/Dashboard/rest/data", angular.toJson(ress)).then(function (response) {
+             $scope.generateTableServerSide(true);
+             });*/
+
+        } 
+        else if ($scope.query.stat == 'Bar') {
             $scope.generateBar(res, $scope.query.x, $scope.query.y, showmodal);
-        } else if ($scope.query.stat == 'Pie') {
+        } 
+        else if ($scope.query.stat == 'Pie') {
             $scope.generatePie(res, $scope.query.pieLabels, $scope.query.pieData, showmodal);
-        } else if ($scope.query.stat == 'Line') {
+        } 
+        else if ($scope.query.stat == 'Line') {
             $scope.generateLine(res, $scope.query.lineLabels, $scope.query.lineData, showmodal);
         }
 
@@ -1111,20 +1251,28 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         $scope.indexPie++;
     }
 
+    $scope.dtInstance = {};
     $scope.generateTable = function (res, showmodal) {
-
+        console.log("ordering", $scope.order);
         if (!Array.isArray(res)) {
             let k = [];
             k[0] = res;
             $scope.statData = k;
         } else {
-            $scope.statAttributes = [];
-            for (let e in res[0]) {
-                $scope.statAttributes.push(e);
+            if (typeof $scope.statAttributes == 'undefined' || $scope.statAttributes.length == 0) {
+
+                $scope.statAttributes = [];
+                for (let e in res[0]) {
+                    $scope.statAttributes.push(e);
+                }
             }
             $scope.statData = res;
         }
+
+
+
         if ($scope.statData.length === 0) {
+            console.log("$scope.statData", res)
             $scope.statData[0] = "vide";
             $scope.statAttributes[0] = "Pas de données";
         }
@@ -1143,29 +1291,92 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                         tableClass: 'table'
                     })
                 }};
+            //console.log("normilizing",$scope.statAttributes);
+//            for (var i = 0; i < $scope.statAttributes; i++) {
+//                $scope.dtColumns.push(DTColumnBuilder.newColumn($scope.statAttributes[i].replace('.', '')).withTitle(elem));
+//            }
 
             for (var elem in $scope.statData[0]) {
-                $scope.dtColumns.push(DTColumnBuilder.newColumn(elem.replace('.', '')).withTitle(elem));
+                $scope.dtColumns.push(DTColumnBuilder.newColumn(elem.replace('.', ':')).withTitle(elem));
+            }
+
+            console.log("ordering", $scope.order)
+            $scope.dtOptions = DTOptionsBuilder.fromFnPromise($scope.createTableHtmlV2())
+                    .withBootstrap()
+                    .withPaginationType('simple_numbers')
+                    .withOption('bDeferRender', true)
+                    .withOption('responsive', responsive)
+                    .withOption('ordering', true)
+                    .withOption('colReorder', true)
+
+                    // Active Responsive plugin
+                    .withScroller()
+                    // Do not forget to add the scorllY option!!!
+                    .withOption('scrollY', 250)
+                    .withOption('order', $scope.getOrdering())
+                    .withOption("fnPreDrawCallback", function (oSettings) {
+                        /* reset currData before each draw*/
+                        $scope.currData = [];
+                    })
+                    .withOption("fnRowCallback", function (nRow, aData, iDisplayIndex, iDisplayIndexFull) {
+                        /* push this row of data to currData array*/
+                        $scope.currData.push(aData);
+
+                    })
+
+        } else {
+
+            $scope.tableHTML = $scope.createTableHtml();
+            console.log($scope.tableHTML)
+        }
+    }
+
+    $scope.getOrdering = function () {
+        var o = [];
+        for (var i = 0; i < $scope.order.value.length; i++) {
+            o.push([$scope.order.value[i], $scope.order.op[i]]);
+        }
+        return o;
+    }
+
+    $scope.dtInstanceCallback = function (_dtInstance) {
+        $scope.dtInstance = _dtInstance;
+    };
+    $scope.generateTableServerSide = function (showmodal) {
+        if (showmodal) {
+            $scope.openModal('statistique', null);
+            $scope.dtColumns = [];
+            var responsive = {details: {
+                    display: $.fn.dataTable.Responsive.display.modal({
+                        header: function (row) {
+                            var data = row.data();
+                            return 'Detaille'
+                        }
+                    }),
+                    renderer: $.fn.dataTable.Responsive.renderer.tableAll({
+                        tableClass: 'table'
+                    })
+                }};
+            for (var i = 0; i < $scope.statAttributes.length; i++) {
+                $scope.dtColumns.push(DTColumnBuilder.newColumn($scope.statAttributes[i].replace('.', '')).withTitle($scope.statAttributes[i]));
             }
 
 //            for (var i = 0; i < $scope.statAttributes.length; i++) {
 //                $scope.dtColumns.push(DTColumnBuilder.newColumn($scope.statAttributes[i]).withTitle($scope.statAttributes[i]));
 //            }
-            $scope.dtOptions = DTOptionsBuilder.fromFnPromise($scope.createTableHtmlV2())
-                    .withBootstrap()
-                    .withPaginationType('simple_numbers')
-                    .withOption('responsive', responsive)
-                    // Active Responsive plugin
-                    .withScroller()
-                    // Do not forget to add the scorllY option!!!
-                    .withOption('scrollY', 250);
-            //console.log("attributeData", $scope.dtColumns)
-        } else {
-            $scope.tableHTML = $scope.createTableHtml();
+            $scope.dtOptions = DTOptionsBuilder.newOptions().withOption('ajax', {
+                url: "/Dashboard/rest/getdata",
+                type: "GET",
+            })
+                    .withDataProp('data')
+                    .withOption('processing', true)
+                    .withOption('serverSide', true)
+                    .withPaginationType('simple_numbers') // for get full pagination options // first / last / prev / next and page numbers
+                    .withDisplayLength(10)
+                    .withOption('responsive', responsive);
+            console.log($scope.dtOptions);
         }
     }
-
-
 
     $scope.barStat = [];
     $scope.indexBar = 0;
@@ -1256,7 +1467,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
      })*/
     $scope.removeState = function (state) {
         if (!$scope.isSourceState(state.idd)) {
-            //console.log(state)
+//console.log(state)
             let father = $scope.getBro(state);
             if (father !== null && typeof father != 'undefined') {
                 if (state.name == 'expression' && typeof state.currentexpressionposition != 'undefined') {
@@ -1335,7 +1546,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             } else
                 error = true;
             typ = 'r';
-        } else if (type == 'condition' || type == 'where' || type == 'join' || type == 'where2' || type == 'expression') {
+        } else if (type == 'condition' || type == 'where' || type == 'join' || type == 'where2' || type == 'expression' || type == 'union' || type == 'order') {
             id = state;
             name = $scope.conditions[state].name;
             attributes = [];
@@ -1389,7 +1600,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                 'y': posy + 20
             });
         } else {
-            //console.log($scope.services[state]);
+//console.log($scope.services[state]);
             if (typeof $scope.services[state].service.attributes != 'undefined' && $scope.services[state].service.attributes[0] == "error")
                 $scope.log = "\n " + $scope.services[state].service.attributes[1] + " " + $scope.log;
             $.notify("Erreur service", "error");
@@ -1400,7 +1611,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     $scope.activeState = null;
     $scope.setActiveState = function (state) {
         $scope.activeState = state;
-        ////////////////console.log(state);
+        console.log(state);
         return state;
     };
     $scope.copyAttribute = function (attribute) {
@@ -1460,7 +1671,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                 array.push(stat.attributes[i]);
             }
         }
-        //console.log("values", array);
+//console.log("values", array);
         stat.barAttributes = array;
         stat.lineAttributes = array;
         stat.pieAttributes = array;
@@ -1543,6 +1754,16 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                 target.vattributes = array.concat(array2);
                 target.attributes = source.leftAttributes.concat(source.rightAttributes);
             }
+            if (source.name == 'union') {
+                let array = source.leftAttributes.map(function (el) {
+                    return el;
+                });
+                let array2 = source.rightAttributes.map(function (el) {
+                    return el;
+                });
+                target.vattributes = array.concat(array2);
+                target.attributes = source.leftAttributes.concat(source.rightAttributes);
+            }
             if (source.type == 'o' && source.name != 'join') {
                 if (source.name == 'select') {
                     target.vattributes = $scope.getAttr(source.Sattributes);
@@ -1550,19 +1771,20 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
 
             }
 
-            //console.log("connection :: ", source)
+//console.log("connection :: ", source)
             if (source.type == 'e') {
                 target.vattributes.push(source.name);
             }
 
-            if (target.name == 'join') {
+            if (target.name == 'join' || target.name == 'union') {
                 if (source.name == 'select') {
+                    console.log(source.attributes);
                     if (target.targets[0].uuid == targetUUID) {
-                        target.rightAttributes = source.attributes;
+                        target.rightAttributes = $scope.getAttr(source.attributes);
                         target.rightRessource = source.name;
                         target.rightRessourceId = source.id;
                     } else {
-                        target.leftAttributes = source.attributes;
+                        target.leftAttributes = $scope.getAttr(source.attributes);
                         target.leftRessource = source.name;
                         target.leftRessourceId = source.id;
                     }
@@ -1587,7 +1809,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             if (source.name == "where") {
                 target.attributes = source.vattributes;
             } else if (source.name == "select") {
-                //console.log(source.Sattributes)
+//console.log(source.Sattributes)
                 target.attributes = $scope.copyAttribute(source.Sattributes);
             } else
                 target.attributes = $scope.copyAttribute(source.attributes);
@@ -1958,7 +2180,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             for (var i = 0; i < s.length; i++) {
                 $scope.services[s[i].id] = s[i].data;
             }
-            //console.log("preview", $scope.stateObjects)
+//console.log("preview", $scope.stateObjects)
             $scope.generateStat(rep);
         });
     }
@@ -2129,70 +2351,6 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     $scope.detailStat = function (detail) {
         swal("Détail", detail);
     }
-    var myLoop = function () {
-        $timeout(function () {
-            $scope.liD = 'li' + $('#sortable').children().length;
-            if ($scope.stats[$scope.idexLoop].id == 0) {
-////////console.log(angular.fromJson($scope.stats[$scope.idexLoop].text))
-                let text = angular.fromJson($scope.stats[$scope.idexLoop].text);
-                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
-                        "<div class='panel-heading'>" + text.title + "</div></li>");
-                $('#sortable').append(li);
-                $('#' + $scope.liD).append(text.description);
-            } else {
-                $scope.stateObjects = [];
-                $scope.links = [];
-                $scope.services = [];
-                let sdata = angular.fromJson($scope.stats[$scope.idexLoop].data);
-                $scope.stateObjects = sdata.stateObjects;
-                $scope.links = sdata.links;
-                $scope.ressources = sdata.ressources;
-                let s = sdata.services;
-                for (var j = 0; j < s.length; j++) {
-                    $scope.services[s[j].id] = s[j].data;
-                }
-                $scope.generateStat(false);
-                let type = $scope.stateObjects[$scope.stateObjects.length - 2].name;
-                if (type == 'join')
-                    type = $scope.stateObjects[$scope.stateObjects.length - 3].name
-                // insert the text description if it exist
-
-                var title = $scope.stats[$scope.idexLoop].name;
-                if (typeof $scope.dd != 'undefined' &&
-                        typeof $scope.dd.statsDashboard != 'undefined' &&
-                        typeof $scope.dd.statsDashboard[$scope.idexLoop].text != 'undefined' &&
-                        $scope.dd.statsDashboard[$scope.idexLoop].text != 'null') {
-                    title = $scope.dd.statsDashboard[$scope.idexLoop].text;
-                }
-                title = $scope.stats[$scope.idexLoop].name;
-                let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
-                        "<div class='panel-heading'>" + title + "</div></li>");
-                $('#sortable').append(li);
-                $timeout(function () {
-                    if (type == "Tableau") {
-
-                        $('#' + $scope.liD).append($compile($scope.tableHTML)($scope));
-                    } else if (type == "Bar") {
-                        //////////console.log($scope.barHTML)
-
-                        $('#' + $scope.liD).append($compile($scope.barHTML)($scope));
-                    } else if (type == "Pie") {
-
-                        //////////console.log($scope.pieHTML)
-                        $('#' + $scope.liD).append($compile($scope.pieHTML)($scope));
-                    } else if (type == "Line") {
-                        //////////console.log($scope.lineHTML)
-                        $('#' + $scope.liD).append($compile($scope.lineHTML)($scope));
-                    }
-                }, 850);
-            }
-
-            $scope.idexLoop++;
-            if ($scope.idexLoop < $scope.stats.length) {
-                myLoop();
-            }
-        }, 1000)
-    }
 
 
 
@@ -2236,6 +2394,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
 
         $scope.query = {};
         $scope.query.operation = [];
+        $scope.operationIndex = 0;
         $scope.query.ressources = [];
         $scope.generateStatistique(t);
         let url1 = "", url2 = "";
@@ -2380,7 +2539,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                     $scope.stats.splice($scope.indexDesc, 0, $scope.descDash);
                 }
 
-//////console.log($scope.stats)
+                console.log("stats", $scope.stats)
                 $scope.dd = response.data;
                 //myLoop();
                 $scope.indexOfStat = 0;
@@ -2407,7 +2566,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             title = $scope.dd.statsDashboard[index].text;
         }
         let li = $("<li id='li" + $('#sortable').children().length + "' class='panel panel-default' style='overflow : hidden;position : relative'>" +
-                "<div class='panel-heading'>" + title + "<div  style='position : absolute;right : 0;top:0;margin-top:5px'><button class='btn btn-default btn-sm' ng-click='exportToPDF(" + $('#sortable').children().length + ")'><i class='fa fa-file-pdf-o'></i></button></div></div></li>");
+                "<div class='panel-heading'>" + title + "<div  style='position : absolute;right : 0;top:0;margin-top:5px'><button class='btn btn-default btn-sm' ng-click='getInfo(" + $('#sortable').children().length + ")'><i class='fa fa-info'></i></button></div></div></li>");
         $('#sortable').append($compile(li)($scope));
         deferred.resolve({type: type, id: $('#sortable').children().length});
         $scope.typeSR = "";
@@ -2416,12 +2575,16 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
 
     $scope.exportToPDF = function (id) {
 
-        //console.log($("#li" + id + "  canvas"));
+//console.log($("#li" + id + "  canvas"));
         var canvas = $("#li" + id + " canvas");
         var imgData = canvas.toDataURL("image/jpeg", 1.0);
         var pdf = new jsPDF();
         pdf.addImage(imgData, 'JPEG', 0, 0);
         pdf.save("test.pdf");
+    }
+
+    $scope.getInfo = function (index) {
+        console.log($scope.stats[index]);
     }
 
     $scope.resultNext = function (index) {
@@ -2449,14 +2612,16 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                     if ($scope.typeSR !== "") {
 
                     } else {
-                        if (type == "Tableau") {
-                            $('#' + id).append($scope.tableHTML);
-                        } else if (type == "Bar") {
+                        console.log("tableau", type)
+                        if (type == "Bar") {
                             $('#' + id).append($compile($scope.barHTML)($scope));
                         } else if (type == "Pie") {
                             $('#' + id).append($compile($scope.pieHTML)($scope));
                         } else if (type == "Line") {
                             $('#' + id).append($compile($scope.lineHTML)($scope));
+                        } else {
+                            console.log("tableau", $scope.tableHTML)
+                            $('#' + id).append($compile($scope.tableHTML)($scope));
                         }
                     }
                     if ($scope.indexOfStat < $scope.stats.length) {
@@ -2473,7 +2638,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     }
 
     $scope.preview = function (stat) {
-        //console.log("preview", stat)
+//console.log("preview", stat)
         $scope.getStat(stat, true);
     }
 
@@ -2668,7 +2833,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     }
 
     $scope.addExpression = function (state) {
-        //console.log("aaaaaaaa", $scope.getBro(state))
+//console.log("aaaaaaaa", $scope.getBro(state))
         $scope.openModal('expression');
         var attrs = [];
         if ($scope.getBro(state).name == 'select')
@@ -2716,7 +2881,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
         //console.log("bbbbb", row, expression)
         for (var i = 0; i < expression.length; i++) {
             if (expression[i] != "") {
-                //console.log("row", row[expression[i]])
+//console.log("row", row[expression[i]])
                 if (expression[i] != '+' && expression[i] != '-' && expression[i] != '*' && expression[i] != '/' && expression[i] != '(' && expression[i] != ')') {
                     if (isNaN(expression[i]))
                         st += row[expression[i]];
@@ -2727,7 +2892,7 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                 }
             }
         }
-        //console.log("expressions", eval(st));
+//console.log("expressions", eval(st));
         return st;
     }
     $scope.addToExpression = function (val, type) {
@@ -2762,7 +2927,9 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     }
 
     $scope.executeExpression = function (expression, res) {
-        //console.log('expression', expression)
+        console.log('expression', expression)
+        if (expression == null || typeof expression.expression == 'undefined')
+            return;
         var array = expression.expression.split(" ");
         var expressions = [];
         //console.log('length', res)
@@ -2771,12 +2938,12 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
             res[j][expression.name] = eval(expressions[j]);
             //console.log('result of', res[j][expression.name])
         }
-        //console.log("expressions", res);
+//console.log("expressions", res);
         return res;
     }
 
     $scope.validateExpression = function (state) {
-        //console.log("expression", state.currentexpressionposition)
+//console.log("expression", state.currentexpressionposition)
         if (typeof state.currentexpressionposition == 'undefined') {
             state.attributes.push(state.expressionName);
             state.currentexpressionposition = state.attributes.length - 1;
@@ -2791,8 +2958,8 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
     }
 
     $scope.createTableHtml = function () {
-        //console.log('table', $scope.statData);
-        //var deferred = $q.defer();
+//console.log('table', $scope.statData);
+//var deferred = $q.defer();
         /*var obj = {};
          var tableObj = [];
          for (var i = 0; i < $scope.statData.length; i++) {
@@ -2858,33 +3025,69 @@ myApp.controller('FirstExampleController', function (DTOptionsBuilder, DTColumnB
                     }
                 }
             });
-            $('.dataTables_paginate').css({'margin-top': '10px'});
+            $('.paging_simple_numbers').removeClass('dataTables_paginate');
+            $('.paging_simple_numbers').parent().removeClass('col-sm-7');
+            $('.paging_simple_numbers').parent().addClass('col-sm-9');
         }, 1000)
 
-
+        //console.log("tttttttttt",tableString)
         return tableString;
     }
 
     $scope.createTableHtmlV2 = function () {
+
         var deferred = $q.defer();
+        var b = $scope.statData;
         var a = [];
-        console.log($scope.statData)
-        for (var i = 0; i < $scope.statData.length; i++) {
+        for (var i = 0; i < b.length; i++) {
             a[i] = {};
-            for (var elem in $scope.statData[i]) {
-                var x = elem.replace('.', '');
-                if ($scope.statData[i][elem] === null) {
-                    a[i][x] = '';
+            for (var elem in b[i]) {
+                var x = elem.replace('.', ':');
+                if (b[i][elem] === null || b[i][elem] === 'null') {
+                    a[i][x] = '-';
                 } else
-                    a[i][x] = $scope.statData[i][elem];
+                    a[i][x] = b[i][elem];
             }
         }
-        console.log('data', a);
-        deferred.resolve(a);
 
+        deferred.resolve(a);
         return deferred.promise;
     }
 
+    $scope.Imprimer = function () {
+        var doc = new jsPDF('landscape');
+        var item = $scope.currData;
+        console.log("after sorting", $scope.currData)
+        var col = [];
+        for (var elem in item[0]) {
+            if (elem.indexOf(':') != -1) {
+                col.push(elem.substr(elem.indexOf(':') + 1).replace('_', ' '))
+            } else {
+                col.push(elem.replace('_', ' '));
+            }
+        }
+        var rows = [];
+        var temp = [];
+        for (var i = 0; i < item.length; i++) {
+            temp = [];
+            for (var key in item[i]) {
+                temp.push(item[i][key]);
+            }
+            rows.push(temp);
+        }
+
+        console.log(col)
+        doc.autoTable(col, rows, {
+            startY: 60,
+            tableWidth: 'auto',
+            columnWidth: 'auto',
+            styles: {
+                fontSize: 7,
+                overflow: 'linebreak'
+            }
+        });
+        doc.save("s" + Date.now());
+    };
 });
 
 

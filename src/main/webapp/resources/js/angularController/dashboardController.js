@@ -3,7 +3,8 @@ var my2App = angular.module('my2App', ['ngResource']);
 my2App.controller('dashboardController', function ($scope, $http, $location) {
 
     $scope.states = [];
-
+    $scope.attributesToSave = [];
+    $scope.currentService = {};
     $scope.merge = function (obj1, obj2) {
         var struct = [];
         struct = obj1;
@@ -62,7 +63,8 @@ my2App.controller('dashboardController', function ($scope, $http, $location) {
     }
 
     $scope.getService = function (ressource, service) {
-        console.log(ressource, service);
+        console.log("service",service)
+        $scope.currentService = service;
         $scope.attributes = [];
         if (ressource.type == 'db') {
             let db = {};
@@ -103,6 +105,21 @@ my2App.controller('dashboardController', function ($scope, $http, $location) {
     $scope.see = function (id) {
         console.log("see : " + id);
     };
+    
+    $scope.saveAttributes = function(){
+        var t = [];
+        for(var elem in $scope.attributesToSave){
+            t.push({
+                serviceid : $scope.currentService.id,
+                alias : $scope.attributesToSave[elem],
+                original : elem,
+                description : ""
+            });
+        }
+        $http.post("/Dashboard/rest/attribut/save",t).then(function(){
+            console.log("done");
+        })
+    }
 
 });
 

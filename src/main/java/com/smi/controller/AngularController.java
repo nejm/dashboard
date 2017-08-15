@@ -1,8 +1,14 @@
 package com.smi.controller;
 
+import java.io.File;
 import com.smi.dao.UserAndRoleDao;
 import com.smi.model.*;
 import com.smi.service.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,10 +18,14 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
+import org.json.simple.parser.JSONParser;
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +33,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -69,6 +80,10 @@ public class AngularController {
     @Autowired
     @Qualifier("userAndRoleService")
     UserAndRoleService userAndRoleService;
+
+    @Autowired
+    @Qualifier("attributService")
+    AttributService attributService;
 
     @RequestMapping(value = "/rest/statistique", method = RequestMethod.GET)
     public ResponseEntity<List<Statistique>> getAll() {
@@ -305,10 +320,12 @@ public class AngularController {
 
         if (o.get("type").toString().toLowerCase().equals("oracle")) {
             String driverType = "thin";
-            
+
             try {
                 TableHelper th = new TableHelper(server, username, password, databaseName, driverType, Integer.parseInt(port), tableName);
-                if(!th.testConnection()) errors.add("error");
+                if (!th.testConnection()) {
+                    errors.add("error");
+                }
             } catch (SQLException ex) {
                 errors.add(ex.getMessage());
             }
@@ -359,4 +376,53 @@ public class AngularController {
         }
         return map;
     }
+
+    @RequestMapping(value = "/rest/attributs/{id}", method = RequestMethod.GET)
+    public List<Attribut> getAttributs(@PathVariable Long id) {
+        return attributService.getByService(id);
+    }
+
+    @RequestMapping(value = "/rest/attribut/save", method = RequestMethod.POST)
+    public void saveAttributs(@RequestBody List<Attribut> attributs) {
+        attributService.save(attributs);
+    }
+
+    @RequestMapping(value = "/rest/data", method = RequestMethod.POST)
+    public String saveJson(@RequestBody JSONObject o) {
+        System.out.println(o.toString());
+        try (FileWriter file = new FileWriter("data.json")) {
+
+            file.write(o.toString());
+            file.flush();
+            File f = new File("data.json");
+            return f.getAbsolutePath();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error";
+        }
+    }
+
+    @RequestMapping(value = "/rest/getdata", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    JSONObject getJson() throws IOException {
+        try {
+            JSONParser parser = new JSONParser();
+            Object obj = parser.parse(new FileReader("data.json"));
+            JSONObject jsonObject = (JSONObject) obj;
+            
+            return jsonObject;
+        } catch (FileNotFoundException ex) {
+            java.util.logging.Logger.getLogger(AngularController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (IOException ex) {
+            java.util.logging.Logger.getLogger(AngularController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        } catch (ParseException ex) {
+            java.util.logging.Logger.getLogger(AngularController.class.getName()).log(Level.SEVERE, null, ex);
+            return null;
+        }
+
+    }
+
 }

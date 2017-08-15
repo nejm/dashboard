@@ -1,6 +1,13 @@
-
+<style>
+    div.tooltip-inner{
+        font-size: 25px; 
+    }
+    .tooltip{
+        margin-top: 16px;
+    }
+</style>
 <div>
-    
+
     <js-plumb-object state-object="state" ng-style="{ 'left':state.x, 'top':state.y }" class="state_window" ng-mouseenter="setActiveState(state)">
         <button class="btn btn-default pull-left" ng-click="removeState(state)">
             <i class="fa fa-trash"></i>
@@ -11,7 +18,7 @@
         <h3>{{state.name}}</h3>
 
         <hr class="hr">
-        <div style="position:absolute;  top:100px; left:{{position}};">
+        <div style="position:absolute;  top:50px; left:{{position}};">
             <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
                 <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
                 </js-plumb-connection>
@@ -20,7 +27,9 @@
         <div id="state">
             <div id="s{{state.idd}}" style="overflow: hidden">
                 <div id="{{state.idd}}" ng-repeat="att in state.attributes track by $index" ng-if="$index < state.attributesL">
-                    <h4 style="text-align : left; padding-left : 10px">{{att}}</h4>
+                    <h4 style="text-align : left; padding-left : 10px" data-placement="left" data-toggle="tooltip" title="{{aliases[att]}}">{{att}}</h4>
+
+
                 </div>
             </div>
         </div>
@@ -28,7 +37,7 @@
     </js-plumb-object>
 </div>
 <script>
-    var expand = function(stat){
-        console.log(stat);
-    }
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
 </script>

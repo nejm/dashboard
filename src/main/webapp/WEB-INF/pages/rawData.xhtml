@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Copyright 2017 Nejm.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <!-- Bootstrap -->
+        <link type="text/css" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+        <!-- Font Awesome -->
+
+        <link href="/Dashboard/resources/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+        <!-- Custom Theme Style -->
+
+
+
+        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/bower/jsPlumb/dist/css/jsplumb.css" />
+
+
+       
+        <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css" />
+        <link type="text/css" rel="stylesheet" href="/Dashboard/resources/css/sweetalert.css" />
+        <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" />
+        <link type="text/css" rel="stylesheet" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" />
+
+
+        <link href="/Dashboard/resources/css/bootstrap-dropdownhover.min.css" rel="stylesheet" />
+        <link href="/Dashboard/resources/css/sweetalert.css" rel="stylesheet" type="text/css"/>
+    </head>
+    <body ng-controller="FirstExampleController" ng-init="getDataFromSession()">    
+        <table class="table table-bordered table-striped">
+            <tr>
+                <td ng-repeat="c in dt.c">{{c}}</td>
+            </tr>
+            <tr ng-repeat="d in dt.o">
+                <td ng-repeat = "dd in dt.c">{{d[dd]}}</td>
+            </tr>
+        </table>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.2/js/bootstrap-select.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <!-- bower installed -->
+        <script src="/Dashboard/resources/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/fastclick.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/bower/jsPlumb/dist/js/jquery.jsPlumb-1.6.2.js"></script>
+        <script src="/Dashboard/resources/bower/angular-ui-slider/src/slider.js"></script>
+        <script src="/Dashboard/resources/js/query.js"></script>
+        <script src="/Dashboard/resources/js/angular-chart.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.1/angular-resource.min.js"></script>
+
+        <script src="/Dashboard/resources/js/bootstrap-dropdownhover.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js" type="text/javascript"></script>
+        <script src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js" type="text/javascript"></script>
+
+        <!-- out local ng stuff -->
+        <script src="/Dashboard/resources/js/angular-datatables.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angular-datatables.bootstrap.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/angular-datatables.scroller.min.js" type="text/javascript"></script>
+
+
+        <script src="/Dashboard/resources/js/ngstorage.js"></script>
+        <script src="/Dashboard/resources/js/directives.js"></script>
+        <script src="/Dashboard/resources/js/angular-datatables.min.js" type="text/javascript"></script>
+        <script src="/Dashboard/resources/js/app.js"></script>
+        <script src="/Dashboard/resources/js/jsplumb.js"></script>
+        <script src="/Dashboard/resources/js/firstController.js"></script>
+
+        <script src="/Dashboard/resources/js/bootstrap-select.js"></script>
+        <script src="/Dashboard/resources/js/sweetalert.min.js"></script>
+    </body>
+</html>
