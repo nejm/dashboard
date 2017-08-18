@@ -467,53 +467,67 @@ where2 = function (json, attr, operator, attr2) {
 }
 
 joining = function (obj1, obj2, fields1, fields2, operation) {
+    var f1,f2;
     for (var i = 0; i < fields1.length; i++) {
-        if (operation[i] === '=') {
-            if (!(obj1[fields1[i]] == obj2[fields2[i]]))
+        f1 = fields1[i].substring(fields1[i].indexOf(':')+2);
+        f2 = fields2[i].substring(fields2[i].indexOf(':')+2);
+        if (operation[i] == '=') {
+            if (!(obj1[f1] == obj2[f2]))
             {
                 return false;
             }
         }
-        if (operation[i] === '>') {
-            if (!(obj1[fields1[i]] > obj2[fields2[i]]))
+        else if (operation[i] == '>') {
+            if (!(obj1[f1] > obj2[f2]))
             {
                 return false;
             }
         }
-        if (operation[i] === '<') {
-            if (!(obj1[fields1[i]] < obj2[fields2[i]]))
+        else if (operation[i] == '<') {
+            if (!(obj1[f1] < obj2[f2]))
             {
                 return false;
             }
         }
-        if (operation[i] === '!=') {
-            if (!(obj1[fields1[i]] != obj2[fields2[i]]))
+        else if (operation[i] == '!=') {
+            if (!(obj1[f1] != obj2[f2]))
             {
                 return false;
             }
         }
     }
+    console.log("nenenneenenen",obj1, obj2, fields1, fields2, operation)
     let a = {};
+    var tableName1 = fields1[0].substring(0,fields1[0].indexOf(':'));
+    var tableName2 = fields2[0].substring(0,fields2[0].indexOf(':'));
     for (let v in obj1) {
-        a[v] = obj1[v];
+        a[tableName1+': '+v] = obj1[v];
     }
     for (let v in obj2) {
-        a[v] = obj2[v];
+        a[tableName2+': '+v] = obj2[v];
     }
     return a;
 }
 
 join = function (json1, json2, fields1, fields2, operations) {
+    console.log("jointure operation",fields1, fields2);
     var result = [];
+    var joined;
+    var auxJson1 = json1;
+    var auxJson2 = json2;
     let a;
     for (var i = 0; i < json1.length; i++) {
+        joined = false;
         for (var j = 0; j < json2.length; j++) {
-            if ((a = joining(json1[i], json2[j], fields1, fields2, operations)) != false) {
+            if ((a = joining(json1[i], json2[j], fields1, fields2, operations)) != false) {    
+                joined = true;
                 result.push(a);
             }
+            
         }
+        
     }
-    //console.log(result)
+    console.log("jointure operation",result)
     return result;
 }
 
