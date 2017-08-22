@@ -19,6 +19,12 @@
         <js-plumb-endpoint ng-repeat="endpoint in state.targets1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle">
         </js-plumb-endpoint>
     </div>
+    <div style="position:absolute; top: 100px; left:0px;">
+        <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
+            <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
+            </js-plumb-connection>
+        </js-plumb-endpoint>
+    </div>
     
 
         <div class="row selectcondition" id="{{state.idd}}" ng-repeat="i in state.count track by $index">
@@ -48,10 +54,5 @@
                 </div>
             </div>
         </div>
-    <div style="position:absolute; bottom: 10px; left:0px;">
-        <js-plumb-endpoint ng-repeat="endpoint in state.sources1" anchor="LeftMiddle" uuid="{{endpoint.uuid}}" settings="sourceEndpointStyle">
-            <js-plumb-connection ng-click="setActiveConnection($index)" ng-repeat="connection in endpoint.connections" ng-model="connection">
-            </js-plumb-connection>
-        </js-plumb-endpoint>
-    </div>
+    
 </js-plumb-object>

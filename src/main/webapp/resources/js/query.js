@@ -108,15 +108,22 @@ normilize = function (json, attributes) {
 }
 
 standirize = function (json, attrs, attrs2) {
-    var res = json;
+    var res = [];
     for (var i = 0; i < json.length; i++) {
+        var obj = json[i];
         for (var j = 0; j < attrs.length; j++) {
-            if (res[i][attrs[j]] == "-") {
-                res[i][attrs[j]] = res[i][attrs2[j]];
-                delete res[i][attrs2[j]];
+            if (obj[attrs[j]] == "-") {
+                obj[attrs[j]] = obj[attrs2[j]];
             }
         }
+        res.push(obj);
     }
+    
+    res.forEach(function(v){
+        for(var i = 0;i<attrs2.length;i++)
+        delete v[attrs2[i]] 
+    });
+    console.log("end standirize", res)
     return res;
 }
 
@@ -130,15 +137,25 @@ function removeEmptyElem(ary) {
 }
 
 union = function (json1, json2, attrs, attrs2, unionAttr) {
-    console.log("union", json1,json2);
+    console.log("union", attrs, attrs2);
     var result = {};
-    var att = removeEmptyElem(unionAttr);
+    var els = [];
+    /** get the attributes **/
+    for (var elm in json1[0])
+        els.push(elm);
+    for (var elm in json2[0])
+        els.push(elm);
+
+    var att = removeEmptyElem(els);
     var res = json1;
     res = res.concat(json2);
+    console.log("before any chinanagon", res)
     result.result = normilize(res, att);
+    console.log("normilize any chinanagon", result.result)
     result.result = standirize(result.result, attrs, attrs2);
+    console.log("standirize any chinanagon", result.result)
     result.attributes = att;
-    console.log("union", result.result, att)
+    console.log("after any chinanagon", result.result, att)
     return result;
 }
 
@@ -467,50 +484,47 @@ where2 = function (json, attr, operator, attr2) {
 }
 
 joining = function (obj1, obj2, fields1, fields2, operation) {
-    var f1,f2;
+    var f1, f2;
     for (var i = 0; i < fields1.length; i++) {
-        f1 = fields1[i].substring(fields1[i].indexOf(':')+2);
-        f2 = fields2[i].substring(fields2[i].indexOf(':')+2);
+        f1 = fields1[i].substring(fields1[i].indexOf(':') + 2);
+        f2 = fields2[i].substring(fields2[i].indexOf(':') + 2);
         if (operation[i] == '=') {
             if (!(obj1[f1] == obj2[f2]))
             {
                 return false;
             }
-        }
-        else if (operation[i] == '>') {
+        } else if (operation[i] == '>') {
             if (!(obj1[f1] > obj2[f2]))
             {
                 return false;
             }
-        }
-        else if (operation[i] == '<') {
+        } else if (operation[i] == '<') {
             if (!(obj1[f1] < obj2[f2]))
             {
                 return false;
             }
-        }
-        else if (operation[i] == '!=') {
+        } else if (operation[i] == '!=') {
             if (!(obj1[f1] != obj2[f2]))
             {
                 return false;
             }
         }
     }
-    console.log("nenenneenenen",obj1, obj2, fields1, fields2, operation)
+    console.log("nenenneenenen", obj1, obj2, fields1, fields2, operation)
     let a = {};
-    var tableName1 = fields1[0].substring(0,fields1[0].indexOf(':'));
-    var tableName2 = fields2[0].substring(0,fields2[0].indexOf(':'));
+    var tableName1 = fields1[0].substring(0, fields1[0].indexOf(':'));
+    var tableName2 = fields2[0].substring(0, fields2[0].indexOf(':'));
     for (let v in obj1) {
-        a[tableName1+': '+v] = obj1[v];
+        a[tableName1 + ': ' + v] = obj1[v];
     }
     for (let v in obj2) {
-        a[tableName2+': '+v] = obj2[v];
+        a[tableName2 + ': ' + v] = obj2[v];
     }
     return a;
 }
 
 join = function (json1, json2, fields1, fields2, operations) {
-    console.log("jointure operation",fields1, fields2);
+    console.log("jointure operation", fields1, fields2);
     var result = [];
     var joined;
     var auxJson1 = json1;
@@ -519,15 +533,15 @@ join = function (json1, json2, fields1, fields2, operations) {
     for (var i = 0; i < json1.length; i++) {
         joined = false;
         for (var j = 0; j < json2.length; j++) {
-            if ((a = joining(json1[i], json2[j], fields1, fields2, operations)) != false) {    
+            if ((a = joining(json1[i], json2[j], fields1, fields2, operations)) != false) {
                 joined = true;
                 result.push(a);
             }
-            
+
         }
-        
+
     }
-    console.log("jointure operation",result)
+    console.log("jointure operation", result)
     return result;
 }
 
@@ -573,13 +587,14 @@ sortTableR = function (obj1, obj2, values) {
 }
 
 orderBy = function (json, values) {
-    
-    if(values.value.length == 0 ) return json;
+
+    if (values.value.length == 0)
+        return json;
     var data = json.sort(function (a, b) {
         return eval(a[values.value[0]]) - eval(b[values.value[0]]);
     });
-    
-    console.log("sorted data",data);
+
+    console.log("sorted data", data);
     return data;
 }
 
