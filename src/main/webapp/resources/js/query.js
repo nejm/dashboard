@@ -118,10 +118,10 @@ standirize = function (json, attrs, attrs2) {
         }
         res.push(obj);
     }
-    
-    res.forEach(function(v){
-        for(var i = 0;i<attrs2.length;i++)
-        delete v[attrs2[i]] 
+
+    res.forEach(function (v) {
+        for (var i = 0; i < attrs2.length; i++)
+            delete v[attrs2[i]]
     });
     console.log("end standirize", res)
     return res;
@@ -360,6 +360,7 @@ min = function (json, field, aux) {
 
 
 max = function (json, field, aux) {
+    console.log("max", json, aux, field)
     var res = [];
     for (var i = 0; i < json.length; i++) {
         var found = false;
@@ -372,7 +373,16 @@ max = function (json, field, aux) {
             }
         }
         if (!found) {
-            res.push(json[i]);
+            let el = {};
+            for (var elem in json[i]) {
+                if (elem == field) {
+                    el["max." + elem] = json[i][elem];
+                } else {
+                    el[elem] = json[i][elem];
+                }
+
+            }
+            res.push(el);
         }
     }
     //console.log(res)
@@ -380,27 +390,35 @@ max = function (json, field, aux) {
 }
 
 where = function (json, attr, operator, value) {
+    console.log(attr)
     var res = [];
     var at = [];
     if (attr === null)
         return json;
-    //console.log(attr, operator, value);
+    console.log("aahhhnnnn", json,attr, operator, value);
     switch (operator) {
         case '>':
             for (var i = 0; i < json.length; i++) {
-                if (isValidDate(value)) {
-                    if (Date.parse(json[i][attr]) > Date.parse(value)) {
+                if (isNaN(json[i][attr]) && isNaN(json[i][attr])) {
+                    if (isValidDate(value) != null) {
+                        if (Date.parse(json[i][attr]) > Date.parse(value)) {
+                            res.push(json[i]);
+                        }
+                    } else
+                    if (json[i][attr] > value) {
                         res.push(json[i]);
                     }
                 } else
-                if (json[i][attr] > value) {
-                    res.push(json[i]);
+                {
+                    if (Number(json[i][attr]) > Number(value)) {
+                        res.push(json[i]);
+                    }
                 }
             }
             break;
         case '<':
             for (var i = 0; i < json.length; i++) {
-                if (isValidDate(value)) {
+                if (isValidDate(value) != null) {
                     if (Date.parse(json[i][attr]) < Date.parse(value)) {
                         res.push(json[i]);
                     }
@@ -439,7 +457,7 @@ where = function (json, attr, operator, value) {
             }
             break;
     }
-
+    console.log("after where",res)
     return res;
 }
 

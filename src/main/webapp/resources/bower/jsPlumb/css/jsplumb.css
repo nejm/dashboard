@@ -35,12 +35,6 @@
   right: -7px;
 }
 
-body {
-    padding:0;
-    margin:0;    
-    font-family:'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;    
-    background-color: whitesmoke;
-}
 
 #headerWrapper {
 	width:100%;
@@ -184,7 +178,7 @@ body {
 
 /* demo elements */
 
-a, a:visited {
+/*a, a:visited {
     text-decoration:none;
     color:black;
     border-radius:0.2em;
@@ -196,11 +190,11 @@ a, a:visited {
 
 a:hover {
     color:#7AB02C;
-}
-
+}*/
+/*
 a:active {
   color:#FF2300;
-}
+}*/
 
 .menu, #render, #explanation {   
 	background-color:#fff;	    
@@ -237,7 +231,7 @@ a:active {
    -moz-box-shadow: 2px 2px 19px #aaa;
     
 }
-path, ._jsPlumb_endpoint { cursor:pointer; }
+._jsPlumb_endpoint { cursor:pointer; }
 
 .cmd { 
   color:white;

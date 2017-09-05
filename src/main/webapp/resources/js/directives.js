@@ -41,15 +41,15 @@ myApp.directive('jsPlumbCanvas', function ($rootScope) {
 //           instance.bind("connectionMoved", function(params) {
 //               console.log("connection " + params.connection.id + " was moved");
 //           });
-            instance.bind("click", function (conn, info) {
-                console.log("you clicked on ", $(conn.source).attr('uuid'));
-                let link = {
-                    'target': $(conn.target).attr('uuid'),
-                    'source': $(conn.source).attr('uuid')
-                };
-                $rootScope.deleteLink(link);
-                jsPlumb.detach(conn);
-            });
+//            instance.bind("click", function (conn, info) {
+//                console.log("you clicked on ", $(conn.source).attr('uuid'));
+//                let link = {
+//                    'target': $(conn.target).attr('uuid'),
+//                    'source': $(conn.source).attr('uuid')
+//                };
+//                $rootScope.deleteLink(link);
+//                jsPlumb.detach(conn);
+//            });
             instance.bind("connection", function (info, origEvent) {
                 //console.log(info);
                 if (typeof origEvent !== 'undefined' && origEvent.type == 'drop') {

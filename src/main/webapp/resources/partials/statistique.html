@@ -172,18 +172,17 @@
         <h4 class="modal-title">Résultat</h4>
     </div>
     <div class="modal-body" style="height: 450px">
-        <table datatable="" dt-instance="dtInstanceCallback" dt-options="dtOptions" dt-columns="dtColumns" class="table table-striped table-bordered"></table>
-        
+        <table id="table" datatable="" dt-disable-deep-watchers="true" dt-instance="dtInstanceCallback" dt-options="dtOptions" dt-columns="dtColumns" class="table table-striped table-bordered"></table>
+
     </div>
     <div class="modal-footer">
-<!--        <button type="button" class="btn btn-default" ng-click="getRaw(dtColumns,dtOptions)">Raw</button>-->
+        <!--        <button type="button" class="btn btn-default" ng-click="getRaw(dtColumns,dtOptions)">Raw</button>-->
         <button type="button" class="btn btn-default" ng-click="Imprimer()">Imprimer</button>
         <button type="button" class="btn btn-default" ng-click="closeModal()">Fermer</button>
     </div>
 </div>
 <script type="text/javascript">
-
     setTimeout(function () {
-    $('#table_paginate').removeClass('dataTables_paginate');
+        $('.paging_simple_numbers').removeClass('dataTables_paginate');
     }, 1000);
 </script>

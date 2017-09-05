@@ -10,7 +10,7 @@
     </div>
     <h3>Union</h3>
 
-    <hr />
+    <hr class="hr"/>
     <div style="position:absolute; top:50px; right:0px;">
         <js-plumb-endpoint ng-repeat="endpoint in state.targets" anchor="RightMiddle" uuid="{{endpoint.uuid}}" settings="targetEndpointStyle">
         </js-plumb-endpoint>
@@ -25,13 +25,15 @@
             <div id="joindiv{{state.idd}}p{{$index}}">
                 <div class="col-sm-5">
                     <select name="joinop" ng-model="state.sLeftAttributes[$index]" class="form-control" style="padding : -15px">
-                        <option ng-repeat="att in state.leftAttributes" ng-if="att!='null.null' && att!=''">{{att}}</option>
+                        <option ng-repeat="att in state.leftAttributes track by $index" ng-if="att!='null.null' && att!=''">{{att}}</option>
                     </select>
                 </div>
-                
-                <div class="col-sm-5" style="margin-left: -10px">
+                <div class="col-sm-1" style="font-size: 15px ;margin-left: -12px; margin-top: 5px">
+                    <span class="fa fa-exchange"></span>
+                </div>
+                <div class="col-sm-5" style="margin-left: -12px">
                     <select name="op" class="form-control" ng-model="state.sRightAttributes[$index]">
-                        <option ng-repeat="att in state.rightAttributes" ng-if="att!='null.null' && att!=''">{{att}}</option>
+                        <option ng-repeat="att in state.rightAttributes track by $index" ng-if="att!='null.null' && att!=''">{{att}}</option>
                     </select>
                 </div>
                 <div class="col-sm-1">
