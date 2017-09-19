@@ -6,14 +6,15 @@
 
     <div class="modal-body">
         <form>
-                <div class="form-group col-sm-6">
-                    <label>Nom : </label>
-                </div>
-                <div class="form-group col-sm-6">
-                    <input class="form-control" type="text" ng-model="expressionState.expressionName"/>
-                </div>
             <div class="form-group col-sm-6">
-                <textarea class="form-control" rows="6" ng-model="expressionState.expression"></textarea>
+                <label>Nom : </label>
+            </div>
+            <div class="form-group col-sm-6">
+                <input class="form-control" type="text" ng-model="expressionState.expressionName" style="margin-left: 9px;width: 234px"/>
+            </div>
+            <div class="form-group col-sm-6">
+                <textarea class="form-control" style="width: 270px;height: 125px" ng-model="expressionState.expression" smart-area="config"></textarea>
+                
             </div>
             <!--            <div class="col-sm-6" style="height: 150px; overflow: auto;">
                             <div class="list-group" style="width: 100%">
@@ -26,7 +27,7 @@
                 <div>
                     <div class="col-sm-9">
                         <select class="form-group form-control" ng-model="expressionAttr">
-                            <option ng-repeat="att in expressionState.attributes track by $index">{{att.attribute}}</option>
+                            <option ng-repeat="att in expressionState.attributes track by $index" ng-if="att != '' && att != null">{{att}}</option>
                         </select>
                     </div>
                     <div class="col-sm-3">

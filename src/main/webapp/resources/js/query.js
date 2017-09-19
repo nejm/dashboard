@@ -22,7 +22,7 @@ var merge = function (obj1, obj2) {
  * @returns {Array} Projection
  */
 select = function (json, fields) {
-    console.log("selection")
+    //console.log("selection")
     var t = [];
     for (var i = 0; i < fields.length; i++) {
         if (typeof fields[i].deleted == 'undefined') {
@@ -30,7 +30,7 @@ select = function (json, fields) {
         }
     }
     fields = t;
-    console.log("select fields", t);
+    //console.log("select fields", t);
     var result = [];
     if (fields == null || fields.length == 0) {
         result = json;
@@ -42,7 +42,7 @@ select = function (json, fields) {
         return [value];
     });
 
-    //console.log(array)
+    ////console.log(array)
     for (var i = 0; i < json.length; i++) {
         result[i] = {};
         for (var elem in json[i]) {
@@ -56,7 +56,7 @@ select = function (json, fields) {
     }
     var field = "";
     var attributesOn = [];
-    console.log("array", array);
+    //console.log("array", array);
     for (var i = 0; i < array.length; i++) {
         if (typeof array[i].op == 'undefined' || array[i].op == 'distinct' || (array[i].op == "" && typeof array[i].deleted == 'undefined')) {
             attributesOn.push(array[i].attribute);
@@ -81,10 +81,10 @@ select = function (json, fields) {
     }
     if (distinctattr.length > 0)
         result = distinct(result, distinctattr);
-    console.log("query distinct", result)
+    //console.log("query distinct", result)
     if (sumattr.length > 0)
         result = sumGroup(result, attributesOn, sumattr).data;
-    console.log("query sum", attributesOn)
+    //console.log("query sum", attributesOn)
     if (avgattr.length > 0)
         result = avg(result, attributesOn, avgattr);
 
@@ -123,7 +123,7 @@ standirize = function (json, attrs, attrs2) {
         for (var i = 0; i < attrs2.length; i++)
             delete v[attrs2[i]]
     });
-    console.log("end standirize", res)
+    //console.log("end standirize", res)
     return res;
 }
 
@@ -137,7 +137,7 @@ function removeEmptyElem(ary) {
 }
 
 union = function (json1, json2, attrs, attrs2, unionAttr) {
-    console.log("union", attrs, attrs2);
+    //console.log("union", attrs, attrs2);
     var result = {};
     var els = [];
     /** get the attributes **/
@@ -149,13 +149,13 @@ union = function (json1, json2, attrs, attrs2, unionAttr) {
     var att = removeEmptyElem(els);
     var res = json1;
     res = res.concat(json2);
-    console.log("before any chinanagon", res)
+    //console.log("before any chinanagon", res)
     result.result = normilize(res, att);
-    console.log("normilize any chinanagon", result.result)
+    //console.log("normilize any chinanagon", result.result)
     result.result = standirize(result.result, attrs, attrs2);
-    console.log("standirize any chinanagon", result.result)
+    //console.log("standirize any chinanagon", result.result)
     result.attributes = att;
-    console.log("after any chinanagon", result.result, att)
+    //console.log("after any chinanagon", result.result, att)
     return result;
 }
 
@@ -168,7 +168,7 @@ conditionIsTrue = function (values1, values2, attributes) {
 }
 
 sumGroup = function (json, attributes, sumattr) {
-    console.log("sumGroup", json, attributes, sumattr)
+    //console.log("sumGroup", json, attributes, sumattr)
     var data = [];
     data[0] = {};
     var count = [];
@@ -207,7 +207,7 @@ sumGroup = function (json, attributes, sumattr) {
             }
         }
     }
-    console.log("sumGroup result", data);
+    //console.log("sumGroup result", data);
     return {data: data, count: count};
 }
 
@@ -248,26 +248,26 @@ sum = function (json, fieldon, field) {
         res.result2[i][field] = res.res[i][field];
         res.result2[i][fieldon] = res.res[i][fieldon];
     }
-    console.log(res);
+    //console.log(res);
     return res;
 }
 
 
 avg = function (json, attributes, avgattributes) {
-    console.log("calc", attributes, avgattributes);
+    //console.log("calc", attributes, avgattributes);
     var result = sumGroup(json, attributes, avgattributes).data;
     var count = sumGroup(json, attributes, avgattributes).count;
     var newRes = [];
-    console.log("avg", result)
+    //console.log("avg", result)
     for (var i = 0; i < result.length; i++) {
         newRes[i] = {};
         if (attributes.length > 0) {
             for (var j = 0; j < attributes.length; j++) {
                 for (var elem in result[i]) {
-                    console.log("comparaison", elem, avgattributes[j])
+                    //console.log("comparaison", elem, avgattributes[j])
                     if (elem == "sum." + avgattributes[j]) {
                         newRes[i]["avg." + avgattributes[j]] = result[i][elem] / count[i];
-                        console.log("calc", newRes[i]);
+                        //console.log("calc", newRes[i]);
                     } else {
                         newRes[i][elem] = result[i][elem];
                     }
@@ -278,10 +278,10 @@ avg = function (json, attributes, avgattributes) {
             for (var j = 0; j < avgattributes.length; j++) {
 
                 for (var elem in result[i]) {
-                    console.log("comparaison", elem, avgattributes[j])
+                    //console.log("comparaison", elem, avgattributes[j])
                     if (elem == "sum." + avgattributes[j]) {
                         newRes[i]["avg." + avgattributes[j]] = result[i][elem] / count[i];
-                        console.log("calc", newRes[i]);
+                        //console.log("calc", newRes[i]);
                     } else {
                         newRes[i][elem] = result[i][elem];
                     }
@@ -290,7 +290,7 @@ avg = function (json, attributes, avgattributes) {
         }
 
     }
-    console.log("avg res", newRes);
+    //console.log("avg res", newRes);
     return newRes;
 }
 
@@ -354,13 +354,13 @@ min = function (json, field, aux) {
         }
     }
     let res2 = [];
-    console.log(res)
+    //console.log(res)
     return res;
 }
 
 
 max = function (json, field, aux) {
-    console.log("max", json, aux, field)
+    //console.log("max", json, aux, field)
     var res = [];
     for (var i = 0; i < json.length; i++) {
         var found = false;
@@ -385,17 +385,17 @@ max = function (json, field, aux) {
             res.push(el);
         }
     }
-    //console.log(res)
+    ////console.log(res)
     return res;
 }
 
 where = function (json, attr, operator, value) {
-    console.log(attr)
+    //console.log(attr)
     var res = [];
     var at = [];
     if (attr === null)
         return json;
-    console.log("aahhhnnnn", json,attr, operator, value);
+    //console.log("aahhhnnnn", json,attr, operator, value);
     switch (operator) {
         case '>':
             for (var i = 0; i < json.length; i++) {
@@ -457,19 +457,19 @@ where = function (json, attr, operator, value) {
             }
             break;
     }
-    console.log("after where",res)
+    //console.log("after where",res)
     return res;
 }
 
 where2 = function (json, attr, operator, attr2) {
-    console.log(operator)
+    //console.log(operator)
     var res = [];
     if (attr === null)
         return json;
     switch (operator) {
         case '>':
             for (var i = 0; i < json.length; i++) {
-                console.log(json[i][attr], " ? > ", json[i][attr2], json[i][attr] > json[i][attr2]);
+                //console.log(json[i][attr], " ? > ", json[i][attr2], json[i][attr] > json[i][attr2]);
                 if (json[i][attr] > json[i][attr2]) {
                     res.push(json[i]);
                 }
@@ -528,7 +528,7 @@ joining = function (obj1, obj2, fields1, fields2, operation) {
             }
         }
     }
-    console.log("nenenneenenen", obj1, obj2, fields1, fields2, operation)
+    //console.log("nenenneenenen", obj1, obj2, fields1, fields2, operation)
     let a = {};
     var tableName1 = fields1[0].substring(0, fields1[0].indexOf(':'));
     var tableName2 = fields2[0].substring(0, fields2[0].indexOf(':'));
@@ -542,7 +542,7 @@ joining = function (obj1, obj2, fields1, fields2, operation) {
 }
 
 join = function (json1, json2, fields1, fields2, operations) {
-    console.log("jointure operation", fields1, fields2);
+    //console.log("jointure operation", fields1, fields2);
     var result = [];
     var joined;
     var auxJson1 = json1;
@@ -559,7 +559,7 @@ join = function (json1, json2, fields1, fields2, operations) {
         }
 
     }
-    console.log("jointure operation", result)
+    //console.log("jointure operation", result)
     return result;
 }
 
@@ -567,7 +567,7 @@ join = function (json1, json2, fields1, fields2, operations) {
 verifyAttributes = function (res, fieldon, type) {
     var result = [];
     for (var elem in res) {
-        //console.log(elem," ?= ",fieldon)
+        ////console.log(elem," ?= ",fieldon)
         if (elem == fieldon)
             result[type + '.' + elem] = res[elem];
         else
@@ -599,7 +599,7 @@ sortTableR = function (obj1, obj2, values) {
         } else {
             response[i] = 0;
         }
-        console.log("qqqqqqqqq", parseFloat(obj1[values.value[i]]), parseFloat(obj2[values.value[i]]), response[i]);
+        //console.log("qqqqqqqqq", parseFloat(obj1[values.value[i]]), parseFloat(obj2[values.value[i]]), response[i]);
     }
     return response;
 }
@@ -612,7 +612,7 @@ orderBy = function (json, values) {
         return eval(a[values.value[0]]) - eval(b[values.value[0]]);
     });
 
-    console.log("sorted data", data);
+    //console.log("sorted data", data);
     return data;
 }
 
